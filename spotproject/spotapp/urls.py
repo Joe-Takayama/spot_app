@@ -5,4 +5,5 @@ app_name = "spotapp"
 
 urlpatterns = [
     path('', views.index, name="index"),
+    path('tekito/', views.tekito, name="tekito"),
 ]
