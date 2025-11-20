@@ -37,6 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 利用者
+    'spotapp.apps.SpotappConfig',
+    # 管理者（職員）
+    'spotapp_admin.apps.SpotappAdminConfig',
 ]
 
 MIDDLEWARE = [
