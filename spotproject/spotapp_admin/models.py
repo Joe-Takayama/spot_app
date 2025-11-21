@@ -9,7 +9,7 @@ class Staff(models.Model):
     # 氏名
     name = models.CharField(max_length=100, verbose_name="氏名")
     # パスワード
-    password = models.CharField(max_length=100, verbose_name="パスワード")
+    password = models.CharField(max_length=128, verbose_name="パスワード")
 
 
 
