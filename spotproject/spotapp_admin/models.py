@@ -12,8 +12,6 @@ class Staff(models.Model):
     password = models.CharField(max_length=100, verbose_name="パスワード")
 
 
-
-
 # 観光地テーブル
 class Spot(models.Model):
     # 観光地ID
