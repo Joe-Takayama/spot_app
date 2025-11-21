@@ -12,6 +12,29 @@ class Staff(models.Model):
     password = models.CharField(max_length=100, verbose_name="パスワード")
 
 
+
+# 地区別テーブル
+class District(models.Model):
+    # 地区ID
+    district_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # 地区名称
+    district_name = models.CharField(max_length=100, verbose_name="地区名称")
+
+    def __str__(self):
+        return self.district_name
+
+
+# カテゴリテーブル
+class Category(models.Model):
+    # カテゴリID
+    category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # カテゴリ名称
+    category_name = models.CharField(max_length=100, verbose_name="カテゴリ名称")
+
+    def __str__(self):
+        return self.category_name
+
+
 # 観光地テーブル
 class Spot(models.Model):
     # 観光地ID
