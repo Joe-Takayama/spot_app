@@ -8,7 +8,11 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
+<<<<<<< HEAD
 set VIRTUAL_ENV=C:\spot_app\venv
+=======
+set VIRTUAL_ENV=C:\Users\ｆ_komatsuzaki\Desktop\spot_app\venv
+>>>>>>> 478983c0d1ed2c0aab9cbb2840d16278f87997c1
 
 if not defined PROMPT set PROMPT=$P$G
 
