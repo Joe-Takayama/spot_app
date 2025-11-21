@@ -3,6 +3,6 @@ from django.views import View
 
 class IndexView(View):
     def get(self, request):
-        return render(request, 'spotapp_admin/base.html')
+        return render(request, 'spotapp_admin/index.html')
     
 index = IndexView.as_view()
