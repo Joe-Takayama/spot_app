@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-<meta charset="UTF-8">
-<title>メニューHTML</title>
-</head>
-<body>
+    <head>
+        <meta charset="UTF-8" />
+        <title>メニューHTML</title>
+    </head>
+    <body>
 
-<!-- ナビ -->
-<nav>
-    <a href="#">ホームボタン</a>
+        <!-- ナビ -->
+        <nav>
+            <a href="#">ホームボタン</a>
 
-    <!-- 地区別（プルダウン） -->
-    <a href="#" onclick="toggleMenu('areaMenu'); return false;">地区別 ▼</a>
-    <div id="areaMenu" style="display:none;">
-        <ul>
-            <li>北地区</li>
-            <li>南地区</li>
-            <li>東地区</li>
-            <li>西地区</li>
-        </ul>
-    </div>
+            <!-- 地区別（プルダウン） -->
+            <a href="#" onclick="toggleMenu('areaMenu'); return false;">地区別 ▼</a>
+            <div id="areaMenu" style="display:none;">
+                <ul>
+                    <li>北地区</li>
+                    <li>南地区</li>
+                    <li>東地区</li>
+                    <li>西地区</li>
+                </ul>
+            </div>
 
-    <!-- カテゴリ（プルダウン） -->
-    <a href="#" onclick="toggleMenu('categoryMenu'); return false;">カテゴリ ▼</a>
-    <div id="categoryMenu" style="display:none;">
-        <ul>
-            <li>観光</li>
-            <li>グルメ</li>
-            <li>レジャー</li>
-            <li>ショッピング</li>
-        </ul>
-    </div>
+            <!-- カテゴリ（プルダウン） -->
+            <a href="#" onclick="toggleMenu('categoryMenu'); return false;">カテゴリ ▼</a>
+            <div id="categoryMenu" style="display:none;">
+                <ul>
+                    <li>観光</li>
+                    <li>グルメ</li>
+                    <li>レジャー</li>
+                    <li>ショッピング</li>
+                </ul>
+            </div>
 
-    <a href="#">お知らせ通知</a>
-    <a href="#">新規登録 / ログイン</a>
-</nav>
+            <a href="#">お知らせ通知</a>
+            <a href="#">新規登録 / ログイン</a>
+        </nav>
 
-<br>
+        <br>
 
-<!-- 検索バー -->
-<div>
-    <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
-</div>
+        <!-- 検索バー -->
+        <div>
+            <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
+        </div>
 
-<br>
-{% block body %}
+        <br>
+        {% block body %}
 
-{% endblock %}
-<!-- フッター -->
-<footer>
-    <span>E班</span>
-    <a href="#">お問い合わせ</a>
-</footer>
+        {% endblock %}
+    
+        <!-- フッター -->
+        <footer>
+            <span>E班</span>
+            <a href="#">お問い合わせ</a>
+        </footer>
 
-<script>
-function toggleMenu(id) {
-    const menu = document.getElementById(id);
-    menu.style.display = (menu.style.display === "none") ? "block" : "none";
-}
-</script>
+        <script>
+            function toggleMenu(id) {
+            const menu = document.getElementById(id);
+                menu.style.display = (menu.style.display === "none") ? "block" : "none";
+            }
+        </script>
 
-</body>
+    </body>
 </html>
