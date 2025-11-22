@@ -3,13 +3,36 @@
 {% block title %} 新規登録 {% endblock %} 
 
 {% block body %}
-<h2>ユーザー新規登録</h2>
 
+<div clas='singnup-form'>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">登録</button>
-</form>
+    <h2 class='singnup-title'>ユーザー新規登録</h2>
+
+   <form method="post">
+        {% csrf_token %}
+
+        <div class='form-group'>
+            <input type="text" name="username" placeholder="ユーザー名を入力してください" required>
+        </div>
+
+        <div class='form-group'>
+            <input type="email" name="email" placeholder="メールアドレスを入力してください" required>
+        </div>
+
+        <div class='form-group'>
+            <input type="password" name="password1" placeholder="パスワードを入力してください" required>
+        </div>
+
+    
+        <button type="submit">登録</button>
+    </form>
+
+    <div class='singnup-login'>
+        <a href = "{% url 'base' %}" class="back-link">← 戻る</a>
+        <a href="{% url 'spotapp:login' %}">ログインはこちら →</a>
+    </div>
+
+</div>
+
 
 {% endblock %}
