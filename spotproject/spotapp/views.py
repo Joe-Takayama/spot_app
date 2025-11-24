@@ -7,9 +7,6 @@ class IndexView(View):
     def get(self, request):
         return render(request, 'spotapp/index.html')
     
-class TekitoView(View):
-    def get(self, request):
-        return render(request, 'spotapp/tekito.html')
     
 class SignupView(View):
     def signup(request):
@@ -31,6 +28,5 @@ class SignupCompleteView(View):
     
     
 index = IndexView.as_view()
-tekito = TekitoView.as_view()
 signup = SignupView.signup
 signup_complete = SignupCompleteView.as_view()
