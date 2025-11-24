@@ -18,13 +18,19 @@ class SignupView(View):
             if form.is_valid():
                 user = form.save()
                 login(request, user)
-                return redirect('spotapp:index')
+                return redirect('spotapp:signup_complete')
         else:
             form = UserCreationForm()
 
         return render(request, 'spotapp/signup.html', {'form': form})
+
+class SignupCompleteView(View):
+    def get(self, request):
+        return render(request, 'spotapp/signup_complete.html')
+    
     
     
 index = IndexView.as_view()
 tekito = TekitoView.as_view()
 signup = SignupView.signup
+signup_complete = SignupCompleteView.as_view()
