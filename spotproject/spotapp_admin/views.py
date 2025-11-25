@@ -60,5 +60,5 @@ class updelView(View):
 index = IndexView.as_view() 
 login = LoginView.as_view()
 Registselect = RegistselectView.as_view()
-updel = updelView.as_View()
+updel = updelView.as_view()
 
