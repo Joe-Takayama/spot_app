@@ -7,7 +7,7 @@ from .forms import StaffForm
 class IndexView(View):
     def get(self, request):
         return render(request, 'spotapp_admin/index.html')
-    
+#登録選択画面
 class RegistselectView(View):
     def get(self,request):
         return render(request,'spotapp_admin/Registrationselection.html')
