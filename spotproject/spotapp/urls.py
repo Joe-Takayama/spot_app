@@ -12,4 +12,4 @@ urlpatterns = [
     path('review/create/',views.review_create,name="review_create"),
     path('review/complete/',views.review_complete,name="review_complete"),
 ]
-#今日の夕飯は麻婆豆腐です。
+
