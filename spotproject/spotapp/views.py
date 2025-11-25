@@ -90,6 +90,8 @@ class ReviewCompleteView(View):
 index = IndexView.as_view()
 signup = SignupView.signup
 signup_complete = SignupCompleteView.as_view()
+profile_edit = ProfileEditView.as_view()
+profile_edit_complete = ProfileEditCompleteView.as_view()
 spot_searchresult = SpotSearchResultView.as_view()
 spot_detail = SpotDetailView.as_view()
 review_create = ReviewCreateView.as_view()
