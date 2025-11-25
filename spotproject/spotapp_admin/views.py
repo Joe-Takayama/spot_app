@@ -4,7 +4,7 @@ from .forms import StaffForm
 from .models import Staff
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-
+from django.contrib.auth import logout
 
 #ホーム画面
 class IndexView(View):
@@ -47,10 +47,15 @@ class LoginView(View):
         # パスワード不一致
         messages.error(request, 'パスワードが違います')
         return render(request, 'accounts/login_form.html', {'form': form})
-    
+
+# ログアウト画面 
 class LogoutView(View):
     def get(self, request):
         return render(request, 'accounts/logout.html')
+    
+    def post(self, request):
+        logout(request)
+        return redirect('spotapp_admin:index')
 
 #更新削除選択画面
 class updelView(View):
@@ -60,9 +65,4 @@ class updelView(View):
 
 
     
-index = IndexView.as_view() 
-login = LoginView.as_view()
-logout = LogoutView.as_view()
-Registselect = RegistselectView.as_view()
-updel = updelView.as_view()
 
