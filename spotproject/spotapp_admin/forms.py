@@ -1,6 +1,8 @@
-from django.forms import ModelForm, TextInput, PasswordInput
-from .models import Staff
+from django.forms import ModelForm, TextInput, PasswordInput, Textarea
+from .models import Staff, Events, Photo
+from django import forms
 
+#職員ログインフォーム
 class StaffForm(ModelForm):
     class Meta:
         model = Staff
@@ -13,3 +15,33 @@ class StaffForm(ModelForm):
                 'placeholder': 'パスワードを入力してください'
             }),
         }
+
+# イベント登録フォーム
+class EventCreateForm(ModelForm):
+    class Meta:
+        model = Events
+        fields = ['event_name', 'event_date', 'venue', 'details', 'organizer']
+        widgets = {
+            'event_name': TextInput(attrs={
+                'placeholder': 'イベント名称を入力してください'
+            }),
+            'event_date': TextInput(attrs={
+                'placeholder': '日時を入力してください'
+            }),
+            'venue': TextInput(attrs={
+                'placeholder': '会場を入力してください'
+            }),
+            'deteils': Textarea(attrs={
+                'placeholder': '詳細情報を入力してください'
+            }),
+            'organizer': TextInput(attrs={
+                'placeholder': '主催者を入力してください'
+            }),
+        }
+
+# 写真登録
+class PhotoForm(ModelForm):
+    class Meta:
+        model = Photo
+        fields = ['image']
+        labels = {'image': '写真を登録してください'}

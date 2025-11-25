@@ -47,21 +47,21 @@
                     <li><a href="/update-delete">更新・削除</a></li>
                     <li><a href="/user-manage">ユーザー管理</a></li>
                     <li><a href="/notice-send">お知らせ送信</a></li>
-                    <li><a href="/logout">ログアウト</a></li>
+                    <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
             </ul>
         {% else %}
-            <a href="#">新規登録 / ログイン</a>
+            <a href="{% url 'spotapp_admin:login' %}">新規登録 / ログイン</a>
         {% endif %}
     </nav>
 
-    <div>
-        <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
+    <div style="text-align: center;">
+        <input type="text"  id="search" placeholder="検索バー（あいまい検索可能）">
     </div>
 
     {% block body %}
     {% endblock %}
 
-    <footer>
+    <footer class="footer">
         <span>E班</span>
         <a href="#">お問い合わせ</a>
     </footer>

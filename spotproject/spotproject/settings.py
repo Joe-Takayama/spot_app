@@ -123,7 +123,8 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (
     [
-        os.path.join(BASE_DIR, "static"), 
+        os.path.join(BASE_DIR,"spotapp" , "static"), 
+        os.path.join(BASE_DIR,"spotapp_admin", "static"),
     ]
 )
 
@@ -131,3 +132,11 @@ STATICFILES_DIRS = (
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# 未ログインでアクセスした場合、リダイレクト先のURL
+LOGIN_URL = '/admin_top/login/'
+# ログイン後のリダイレクト先URL
+LOGIN_REDIRECT_URL = '/admin_top/'
