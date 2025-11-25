@@ -118,8 +118,13 @@ signup_complete = SignupCompleteView.as_view()
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()
 
+password_change = PasswordChangeView.as_view()
+password_change_complete = PasswordChangeCompleteView.as_view()
+
 spot_searchresult = SpotSearchResultView.as_view()
 spot_detail = SpotDetailView.as_view()
 
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
+
+favorite_list = FavoriteListView.as_view()
