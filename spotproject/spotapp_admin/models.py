@@ -57,3 +57,44 @@ class Spot(models.Model):
 
     def __str__(self):
         return self.spot_name
+    
+
+class Events(models.Model):
+    # イベントID
+    event_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # イベント名称
+    event_name = models.CharField(max_length=255, verbose_name="イベント名称")
+    # 観光地ID
+    spot_id = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True, blank=True)
+    # 開催日
+    event_date = models.DateField(verbose_name="開催日")
+    # 会場
+    venue = models.CharField(max_length=255, verbose_name="会場")
+    # 詳細
+    details = models.TextField(max_length=2000, verbose_name="詳細情報")
+    # 主催者
+    organizer = models.CharField(max_length=255, verbose_name="主催者")
+    # 登録日
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
+
+    def __str__(self):
+        return self.event_name
+    
+
+class Photo(models.Model):
+    # 写真ID
+    photo_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # 写真
+    image = models.ImageField(upload_to='photos/', verbose_name="写真")
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="アップロード日時")
+
+    # SpotテーブルとEventsテーブルの両方に紐づけ
+    spot = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True, blank=True, related_name='photos')
+    event = models.ForeignKey(Events, on_delete=models.CASCADE, null=True, blank=True, related_name='photos')
+
+    def __str__(self):
+        if self.spot:
+            return f"{self.spot.spot_name}の写真"
+        if self.event:
+            return f"{self.event.event_name}の写真"
+        return f"未紐づけ写真{self.photo_id}"
