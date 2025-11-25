@@ -3,11 +3,32 @@
 {% block title %}プロフィール編集{% endblock %}
 
 {% block body %}
-<h1>プロフィール編集</h1>
+<div class="profile-edit-warapper">
+    <h1>プロフィール編集</h1>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">保存</button>
-</form>
-{% endblock %}
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class= "form-block">
+            <label>変更するユーザー名を入力してください</label>
+            {{ form.username }}
+        </div>
+
+        <div class= "form-block">
+            <label>変更するプロフィール画像を選択してください</label>
+            {{ form.profile_image }}
+        </div>
+
+        <div class= "form-block">
+            <label>変更するパスワードを入力してください</label>
+            {{ form.password }}
+        </div>
+
+
+
+     
+        <button type="submit">保存</button>
+    </form>
+    <a href="{% url 'spotapp:index' %}" class="back-link">← 戻る</a>
+</div>
+    {% endblock %}
