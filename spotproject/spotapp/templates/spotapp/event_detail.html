@@ -1,56 +1,68 @@
-{% extends 'base_admin.html' %}
-{% block title %}イベント一覧（管理画面）{% endblock %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>イベント詳細</title>
+</head>
+<body>
 
-{% block content %}
-<div class="admin-container">
+<header>
+    <button>← ホーム</button>
+    <div>👤 ゲストさん</div>
+</header>
 
-  <!-- 上部メニューバー -->
-  <nav class="top-menu">
-    <a href="#">ホームボタン</a>
-    <a href="#">地区別</a>
-    <a href="#">カテゴリ</a>
-    <a href="#">お知らせ送信</a>
-    <a href="#">新規登録 / ログイン</a>
-  </nav>
+<main>
 
-  <!-- タイトル -->
-  <h2 class="page-title">今月（毎月変わる）</h2>
+    <!-- イベント名 -->
+    <h1 class="event-title">イベント名が入ります</h1>
 
-  <!-- 月選択エリア -->
-  <div class="month-select">
-    <button>1月</button><button>2月</button><button>3月</button>
-    <button>4月</button><button>5月</button><button>6月</button>
-    <button>7月</button><button>8月</button><button>9月</button>
-    <button>10月</button><button>11月</button><button>12月</button>
-  </div>
+    <!-- メイン画像 -->
+    <div class="event-image">
+        イベント写真（メイン画像）
+    </div>
 
-  <!-- イベント一覧カード -->
-  <div class="event-card">
-    <h3>イベント名</h3>
-    <p>日時</p>
-    <p>場所</p>
-    <p>外部サイト</p>
-  </div>
+    <!-- 基本情報 -->
+    <div class="info-grid">
+        <div class="info-item">開催日時</div>
+        <div class="info-item">お気に入り登録</div>
+        <div class="info-item">開催場所</div>
+        <div class="info-item">主催者</div>
+        <div class="info-item">参加方法</div>
+        <div class="info-item">カテゴリー</div>
+        <div class="info-item">口コミ</div>
+        <div class="info-item">評価</div>
+    </div>
 
-  <div class="event-card">
-    <h3>イベント名</h3>
-    <p>日時</p>
-    <p>場所</p>
-    <p>外部サイト</p>
-  </div>
+    <!-- イベント説明 -->
+    <section class="section-box">
+        <h2>イベント詳細説明</h2>
+        <p>
+            イベントの概要、内容、特徴などを記載します。
+        </p>
+    </section>
 
-  <div class="event-card">
-    <h3>イベント名</h3>
-    <p>日時</p>
-    <p>場所</p>
-    <p>外部サイト</p>
-  </div>
+    <!-- アクセス情報 -->
+    <section class="section-box">
+        <h2>アクセス情報</h2>
+        <p>
+            交通手段・駐車場・最寄り駅などの情報を記載します。
+        </p>
+    </section>
 
-</div>
+    <!-- Map機能 -->
+    <section class="map-box">
+        <h2>Map（機能）</h2>
+        <ul>
+            <li>現在地からの距離・所要時間</li>
+            <li>徒歩/車でのルート案内</li>
+            <li>周辺施設やホテル情報の表示</li>
+        </ul>
+    </section>
 
-<!-- フッター -->
-<footer class="footer">
-  <span>E班</span>
-  <a href="#">お問い合わせ</a>
-</footer>
-{% endblock %}
+    <!-- 戻るボタン -->
+    <a href="event_list.html">← 一覧へ戻る</a>
+
+</main>
+
+</body>
+</html>

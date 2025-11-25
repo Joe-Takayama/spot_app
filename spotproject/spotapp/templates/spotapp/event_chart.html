@@ -1,0 +1,56 @@
+{% extends 'base_admin.html' %}
+{% block title %}イベント一覧（管理画面）{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+
+  <!-- 上部メニューバー -->
+  <nav class="top-menu">
+    <a href="#">ホームボタン</a>
+    <a href="#">地区別</a>
+    <a href="#">カテゴリ</a>
+    <a href="#">お知らせ送信</a>
+    <a href="#">新規登録 / ログイン</a>
+  </nav>
+
+  <!-- タイトル -->
+  <h2 class="page-title">今月（毎月変わる）</h2>
+
+  <!-- 月選択エリア -->
+  <div class="month-select">
+    <button>1月</button><button>2月</button><button>3月</button>
+    <button>4月</button><button>5月</button><button>6月</button>
+    <button>7月</button><button>8月</button><button>9月</button>
+    <button>10月</button><button>11月</button><button>12月</button>
+  </div>
+
+  <!-- イベント一覧カード -->
+  <div class="event-card">
+    <h3>イベント名</h3>
+    <p>日時</p>
+    <p>場所</p>
+    <p>外部サイト</p>
+  </div>
+
+  <div class="event-card">
+    <h3>イベント名</h3>
+    <p>日時</p>
+    <p>場所</p>
+    <p>外部サイト</p>
+  </div>
+
+  <div class="event-card">
+    <h3>イベント名</h3>
+    <p>日時</p>
+    <p>場所</p>
+    <p>外部サイト</p>
+  </div>
+
+</div>
+
+<!-- フッター -->
+<footer class="footer">
+  <span>E班</span>
+  <a href="#">お問い合わせ</a>
+</footer>
+{% endblock %}
