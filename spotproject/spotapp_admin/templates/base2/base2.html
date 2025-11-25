@@ -37,7 +37,7 @@
 
         <a href="#">お知らせ通知</a>
 
-        {% if user.is_authenticated %}
+        {% if request.session.staff_id %}
             <!-- 管理者プルダウン -->
             <div class="Nav-block" id="adminMenu_btn">
                     <button class="Menu_btn">管理者 ▼</button>

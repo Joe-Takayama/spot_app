@@ -1,0 +1,7 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+<h2>ログアウト</h2>
+<form method="get" action="{% url 'spotapp_admin:logout' %}">
+    <button type="submit">ログアウト</button>
+</form>
+{% endblock %}
