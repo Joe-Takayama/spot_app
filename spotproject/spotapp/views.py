@@ -29,7 +29,7 @@ class SpotSearchResultView(View):
     def get(self,request):
         return render(request, 'spotapp/spot_searchresult.html')
     
-class SpotDetailView(view):
+class SpotDetailView(View):
     def get(self,request):
         return render(request, 'spotapp/spot_detail.html')
 
