@@ -101,6 +101,15 @@ class ReviewCompleteView(View):
     def get(self,request):
         return render(request,"spotapp/review_complete.html")
 
+
+# お気に入り一覧ビュー
+class FavoriteListView(LoginRequiredMixin, View):
+    def get(self, request):
+        # データベース接続したらここにお気に入り取得を書く
+        favorite_list = []
+        return render(request, 'spotapp/favorite_list.html',
+                      {"favorites": favorite_list})
+
 index = IndexView.as_view()
 
 signup = SignupView.as_view()
