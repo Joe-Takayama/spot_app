@@ -48,9 +48,16 @@ class LoginView(View):
         messages.error(request, 'パスワードが違います')
         return render(request, 'accounts/login_form.html', {'form': form})
 
+#更新削除選択画面
+class updelView(View):
+    def get(self,request):
+        return render(request,'spotapp_admin/updatedelete.html')
+
+
 
     
 index = IndexView.as_view() 
 login = LoginView.as_view()
 Registselect = RegistselectView.as_view()
+updel = updelView.as_View()
 
