@@ -1,17 +1,21 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from .forms import StaffForm
+from .forms import StaffForm, EventCreateForm, PhotoForm
 from .models import Staff
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 #ホーム画面
 class IndexView(View):
     def get(self, request):
         return render(request, 'spotapp_admin/index.html')
+    
+
 #登録選択画面
-class RegistselectView(View):
+class RegistselectView(LoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/Registrationselection.html')
     
@@ -49,7 +53,7 @@ class LoginView(View):
         return render(request, 'accounts/login_form.html', {'form': form})
 
 # ログアウト画面 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'accounts/logout.html')
     
@@ -58,11 +62,27 @@ class LogoutView(View):
         return redirect('spotapp_admin:index')
 
 #更新削除選択画面
-class updelView(View):
+class updelView(LoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/updatedelete.html')
 
 
 
-    
+# イベント登録画面
+class EventRegistrationView(LoginRequiredMixin, View):
+    def get(self, request):
+        event_form = EventCreateForm()
+        photo_form = PhotoForm()
+        return render(request, 'spotapp_admin/event_registration.html', {'event_form': event_form, 'photo_form': photo_form})
 
+    def post(self, request):
+        event_form = EventCreateForm(request.POST)
+        photo_form = PhotoForm(request.POST, request.FILES)
+
+        if event_form.is_valid() and photo_form.is_valid():
+            event = event_form.save()
+            photo = photo_form.save(commit=False)
+            photo.event = event
+            photo.save()
+            return render(request, 'spotapp_admin/event_registration_complete.html')
+        return render(request, 'spotapp_admin/event_registration.html', {'event_form': event_form, 'photo_form': photo_form})
