@@ -14,18 +14,17 @@ class IndexView(View):
     
     
 class SignupView(View):
-    def signup(request):
-        if request.method == "POST":
-            form = UserCreationForm(request.POST)
-            if form.is_valid():
-                user = form.save()
-                login(request, user)
-                return redirect('spotapp:signup_complete')
-        else:
-            form = UserCreationForm()
+    def get(self, request):
+        form = UserCreationForm()
+        return render(request, "spotapp/signup.html", {"form": form})
 
-        return render(request, 'spotapp/signup.html', {'form': form})
-
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("spotapp:signup_complete")
+        return render(request, "spotapp/signup.html", {"form": form})
 class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
