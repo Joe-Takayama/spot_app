@@ -87,7 +87,7 @@ class ReviewCompleteView(View):
         return render(request,"spotapp/review_complete.html")
 
 index = IndexView.as_view()
-signup = SignupView.signup
+signup = SignupView.as_view()
 signup_complete = SignupCompleteView.as_view()
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()
