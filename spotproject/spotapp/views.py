@@ -5,7 +5,7 @@ from django.contrib.auth import login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import ProfileEditForm
+from .forms import ProfileEditForm, PasswordChangeOnlyForm
 
 class IndexView(View):
     def get(self, request):
@@ -52,6 +52,38 @@ class ProfileEditCompleteView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "spotapp/profile_edit_complete.html")
 
+
+#パスワード変更ビュー
+class PasswordChangeView(LoginRequiredMixin, View):
+    def get(self, request):
+        form = PasswordChangeOnlyForm()
+        return render(request, "spotapp/password_change.html", {"form": form})
+
+    def post(self, request):
+        user = request.user
+        form = PasswordChangeOnlyForm(request.POST)
+
+        if form.is_valid():
+            p1 = form.cleaned_data["new_password1"]
+            p2 = form.cleaned_data["new_password2"]
+
+            if p1 != p2:
+                return render(request, "spotapp/password_change.html",
+                              {"form": form, "error": "パスワードが一致しません"})
+
+            # 変更処理
+            user.set_password(p1)
+            user.save()
+            update_session_auth_hash(request, user)
+
+            return redirect("spotapp:password_change_complete")
+
+        return render(request, "spotapp/password_change.html", {"form": form})
+
+# パスワード変更完了ビュー
+class PasswordChangeCompleteView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, "spotapp/password_change_complete.html")
     
 class SpotSearchResultView(View):
     def get(self,request):
