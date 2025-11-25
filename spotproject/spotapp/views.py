@@ -29,12 +29,22 @@ class SpotSearchResultView(View):
     def get(self,request):
         return render(request, 'spotapp/spot_searchresult.html')
     
-class SpotDetailView(view):
+class SpotDetailView(View):
     def get(self,request):
         return render(request, 'spotapp/spot_detail.html')
+
+class ReviewCreateView(View):
+    def get(self,request):
+        return render(request,"spotapp/review_create.html")
+    
+class ReviewCompleteView(View):
+    def get(self,request):
+        return render(request,"spotapp/review_complete.html")
 
 index = IndexView.as_view()
 signup = SignupView.signup
 signup_complete = SignupCompleteView.as_view()
 spot_searchresult = SpotSearchResultView.as_view()
-spot_detail=SpotDetailView.as_view()
+spot_detail = SpotDetailView.as_view()
+review_create = ReviewCreateView.as_view()
+review_complete = ReviewCompleteView.as_view()
