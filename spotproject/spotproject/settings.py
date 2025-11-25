@@ -123,7 +123,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = (
     [
-        os.path.join(BASE_DIR,"spotproject","spotapp" , "static"), 
+        os.path.join(BASE_DIR,"spotapp" , "static"), 
     ]
 )
 
