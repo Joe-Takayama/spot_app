@@ -12,7 +12,7 @@
 
             <!-- 地区別（プルダウン） -->
             <a href="#" onclick="toggleMenu('areaMenu'); return false;">地区別 ▼</a>
-            <div id="areaMenu">
+            <div id="areaMenu" style="display:none;">
                 <ul>
                     <li>北地区</li>
                     <li>南地区</li>
@@ -43,7 +43,7 @@
                 </ul>
             </div>
         {% else %}
-            <a href="#">新規登録 / ログイン</a>
+            <a href="{% url "spotapp:signup" %}">新規登録 / ログイン</a>
         {% endif %}
         </nav>
 

@@ -1,8 +1,16 @@
-{% extends "base/base.html" %}
-
-{% block title %}新規登録完了{% endblock %}
+{% load static %}
 
 {% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp:index' %}">ホーム</a>    
+</div>
+
+<div class="user-info-right">
+    <div class="user-icon">
+        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+    </div>
+    <p>{{ request.user.username }} さん</p>
+</div>
 
 <div style="padding: 30px; text-align:center;">
 
