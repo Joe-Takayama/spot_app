@@ -53,7 +53,7 @@ class LoginView(View):
         return render(request, 'accounts/login_form.html', {'form': form})
 
 # ログアウト画面 
-class LogoutView(LoginRequiredMixin, View):
+class LogoutView(View):
     def get(self, request):
         return render(request, 'accounts/logout.html')
     
@@ -69,7 +69,7 @@ class updelView(LoginRequiredMixin, View):
 
 
 # イベント登録画面
-class EventRegistrationView(LoginRequiredMixin, View):
+class EventRegistrationView(View):
     def get(self, request):
         event_form = EventCreateForm()
         photo_form = PhotoForm()

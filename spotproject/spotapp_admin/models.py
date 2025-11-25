@@ -85,7 +85,7 @@ class Photo(models.Model):
     # 写真ID
     photo_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # 写真
-    image = models.ImageField(upload_to='photos/', verbose_name="写真")
+    image = models.ImageField(upload_to='spotapp_admin/photos/', verbose_name="写真")
     uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="アップロード日時")
 
     # SpotテーブルとEventsテーブルの両方に紐づけ
