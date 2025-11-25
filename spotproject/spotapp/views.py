@@ -25,8 +25,11 @@ class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
     
-    
+class SpotSearchResultView(View):
+    def get(self,request):
+        return render(request, 'spotapp/spot_searchresult.html')
     
 index = IndexView.as_view()
 signup = SignupView.signup
 signup_complete = SignupCompleteView.as_view()
+spot_searchresult = SpotSearchResultView.as_view()
