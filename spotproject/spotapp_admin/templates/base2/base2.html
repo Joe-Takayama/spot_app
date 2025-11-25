@@ -33,7 +33,7 @@
             </div>
 
             <a href="#">お知らせ通知</a>
-        {% if user.is_authenticated %}
+        {% if request.session.staff_id %}
             <!-- 管理者プルダウン -->
             <a href="#" onclick="toggleMenu('adminMenu'); return false;">管理者 ▼</a>
             <div id="adminMenu" style="display:none;">

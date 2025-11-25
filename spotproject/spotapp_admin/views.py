@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from .forms import StaffForm
 from .models import Staff
@@ -42,8 +42,7 @@ class LoginView(View):
         if check_password(password, staff.password):
             # ログイン成功
             request.session['staff_id'] = str(staff.staff_id)
-
-            return render(request, 'accounts/login_success.html', {'statt': staff})
+            return redirect('spotapp_admin:index')
         
         # パスワード不一致
         messages.error(request, 'パスワードが違います')

@@ -1,7 +1,6 @@
 import uuid
 from django.db import models
 
-
 # 職員（管理者）テーブル
 class Staff(models.Model):
     # 職員ID
