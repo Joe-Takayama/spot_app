@@ -81,3 +81,21 @@
         footer {
             margin-top: 20px;
         }
+
+        #search{
+            text-align: center;
+            width: 80%;
+            padding: 8px 16px;
+            background: #fff;
+            border-radius: 5px;
+            margin: 5% 0%;
+        }
+
+        .footer{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            border-top:solid 3px #333;
+        }
+        
