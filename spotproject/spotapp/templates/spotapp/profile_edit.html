@@ -1,13 +1,34 @@
-{% extends "base/user_base.html" %}
-
-{% block title %}プロフィール編集{% endblock %}
+{% load static %}
 
 {% block body %}
-<h1>プロフィール編集</h1>
+<div class="page">
+    <header class="page-header">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">保存</button>
-</form>
+        <div class="user-info">
+            <div class="user-icon-placeholder">ユーザー<br>アイコン</div>
+            <div class="user-name-text">
+                {{ request.user.username }} さん
+            </div>
+        </div>
+    </header>
+
+    <main class="page-main">
+        <h2 class="page-title">プロフィール編集</h2>
+
+        <form method="post" class="form-card">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+            </div>
+
+            <button type="submit" class="btn-primary">変更する</button>
+        </form>
+
+        <a href="{% url 'spotapp:password_change' %}" class="btn-primary-outline">パスワードを変更する</a>
+
+        <a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
+    </main>
+</div>
 {% endblock %}

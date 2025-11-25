@@ -1,0 +1,40 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}お気に入り一覧{% endblock %}
+
+{% block body %}
+
+<div class="favorite-wrapper">
+
+    <!-- 左上ホームボタン -->
+    <div class="home-btn">
+        <a href="{% url 'spotapp:index' %}">ホーム</a>
+    </div>
+
+
+
+    <h2 class="favorite-title">お気に入り一覧</h2>
+
+    <div class="favorite-list">
+
+        {% for f in favorites %}
+            <div class="favorite-item">
+                <a href="{% url 'spotapp:spot_detail' f.spot.id %}">
+                    {{ f.spot.name }}
+                </a>
+            </div>
+        {% empty %}
+            <p>お気に入りはまだありません</p>
+        {% endfor %}
+
+    </div>
+
+    <!-- 戻るボタン -->
+    <div class="back-link">
+        <a href="{% url 'spotapp:index' %}">← 戻る</a>
+    </div>
+
+</div>
+
+{% endblock %}

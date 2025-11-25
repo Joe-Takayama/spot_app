@@ -1,14 +1,76 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html lang="ja">
     <head>
         <meta charset="UTF-8" />
-        <title>考え中</title>
+        <title>メニューHTML</title>
     </head>
     <body>
-        <header>
-        </header>
-        <h1>利用者画面だよーー</h1>
+
+        <!-- ナビ -->
+        <nav>
+            <a href="#">ホームボタン</a>
+
+            <!-- 地区別（プルダウン） -->
+            <a href="#" onclick="toggleMenu('areaMenu'); return false;">地区別 ▼</a>
+            <div id="areaMenu" style="display:none;">
+                <ul>
+                    <li>北地区</li>
+                    <li>南地区</li>
+                    <li>東地区</li>
+                    <li>西地区</li>
+                </ul>
+            </div>
+
+            <!-- カテゴリ（プルダウン） -->
+            <a href="#" onclick="toggleMenu('categoryMenu'); return false;">カテゴリ ▼</a>
+            <div id="categoryMenu" style="display:none;">
+                <ul>
+                    <li>観光</li>
+                    <li>グルメ</li>
+                    <li>レジャー</li>
+                    <li>ショッピング</li>
+                </ul>
+            </div>
+            <a href="#">お気に入り一覧</a>
+            <a href="#">お知らせ通知</a>
+        {% if user.is_authenticated %}
+            <!-- 管理者プルダウン -->
+            <a href="#" onclick="toggleMenu('userMenu'); return false;">ユーザー ▼</a>
+            <div id="userMenu" style="display:none;">
+                <ul>
+                    <li><a href="/admin/dashboard">プロフィール編集</a></li>
+                    <li><a href="/logout">ログアウト</a></li>
+                </ul>
+            </div>
+        {% else %}
+            <a href="{% url "spotapp:signup" %}">新規登録 / ログイン</a>
+        {% endif %}
+        </nav>
+
+        <br>
+
+        <!-- 検索バー -->
+        <div>
+            <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
+        </div>
+
+        <br>
         {% block body %}
+
         {% endblock %}
+    
+        <!-- フッター -->
+        <footer>
+            <span>E班</span>
+            <a href="#">お問い合わせ</a>
+        </footer>
+
+        <script>
+            function toggleMenu(id) {
+            const menu = document.getElementById(id);
+                menu.style.display = (menu.style.display === "none") ? "block" : "none";
+            }
+        </script>
+
     </body>
 </html>

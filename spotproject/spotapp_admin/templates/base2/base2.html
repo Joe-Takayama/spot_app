@@ -1,65 +1,70 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
-    <head>
-        <meta charset="UTF-8" />
-        <title>メニューHTML</title>
-    </head>
-    <body>
+<head>
+    <meta charset="UTF-8" />
+    <title>メニューHTML</title>
+    <link href="{% static 'css/admin.css' %}" rel="stylesheet">
+</head>
 
-        <!-- ナビ -->
-        <nav>
-            <a href="#">ホームボタン</a>
+<body>
 
-            <!-- 地区別（プルダウン） -->
-            <a href="#" onclick="toggleMenu('areaMenu'); return false;">地区別 ▼</a>
-            <div id="areaMenu">
-                <ul>
-                    <li>北地区</li>
-                    <li>南地区</li>
-                    <li>東地区</li>
-                    <li>西地区</li>
-                </ul>
-            </div>
+    <nav>
+        <a href="#">ホームボタン</a>
 
-            <!-- カテゴリ（プルダウン） -->
-            <a href="#" onclick="toggleMenu('categoryMenu'); return false;">カテゴリ ▼</a>
-            <div id="categoryMenu" style="display:none;">
-                <ul>
-                    <li>観光</li>
-                    <li>グルメ</li>
-                    <li>レジャー</li>
-                    <li>ショッピング</li>
-                </ul>
-            </div>
+        <!-- 地域別（プルダウン） -->
+        <div class="Nav-block" id="areaMenu_btn">
+            <button class="Menu_btn">地区別 ▼</button>
+        </div>
+        <ul class="menu_down" id="areaMenu_down">
+            <li><a href="#">北地区</a></li>
+            <li><a href="#">南地区</a></li>
+            <li><a href="#">東地区</a></li>
+            <li><a href="#">西地区</a></li>
+        </ul>
 
-            <a href="#">お知らせ通知</a>
-            <a href="#">新規登録 / ログイン</a>
-        </nav>
-
-        <br>
-
-        <!-- 検索バー -->
-        <div>
-            <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
+        <!-- カテゴリ（プルダウン） -->
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn">カテゴリ ▼</button>
         </div>
 
-        <br>
-        {% block body %}
+        <ul class="menu_down" id="categoryMenu_down">
+            <li><a href="#">観光</a></li>
+            <li><a href="#">グルメ</a></li>
+            <li><a href="#">レジャー</a></li>
+            <li><a href="#">ショッピング</a></li>
+        </ul>
 
-        {% endblock %}
-    
-        <!-- フッター -->
-        <footer>
-            <span>E班</span>
-            <a href="#">お問い合わせ</a>
-        </footer>
+        <a href="#">お知らせ通知</a>
 
-        <script>
-            function toggleMenu(id) {
-            const menu = document.getElementById(id);
-                menu.style.display = (menu.style.display === "none") ? "block" : "none";
-            }
-        </script>
+        {% if request.session.staff_id %}
+            <!-- 管理者プルダウン -->
+            <div class="Nav-block" id="adminMenu_btn">
+                    <button class="Menu_btn">管理者 ▼</button>
+            </div>
+            <ul class="menu_down" id="adminMenu_down">
+                    <li><a href="{% url 'spotapp_admin:Registselect' %}">登録</a></li>
+                    <li><a href="/update-delete">更新・削除</a></li>
+                    <li><a href="/user-manage">ユーザー管理</a></li>
+                    <li><a href="/notice-send">お知らせ送信</a></li>
+                    <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
+            </ul>
+        {% else %}
+            <a href="{% url 'spotapp_admin:login' %}">新規登録 / ログイン</a>
+        {% endif %}
+    </nav>
 
-    </body>
+    <div style="text-align: center;">
+        <input type="text"  id="search" placeholder="検索バー（あいまい検索可能）">
+    </div>
+
+    {% block body %}
+    {% endblock %}
+
+    <footer class="footer">
+        <span>E班</span>
+        <a href="#">お問い合わせ</a>
+    </footer>
+
+</body>
 </html>

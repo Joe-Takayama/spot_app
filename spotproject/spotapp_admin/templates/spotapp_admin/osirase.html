@@ -1,8 +1,40 @@
+{% load static %}
 {% extends "base2/base2.html" %}
 {% block body %}
-<div>管理者から継承してます、とりあえず画面だけ制作</div>
-<form>
-    <textarea name="osirase" id="osirase"></textarea>
-    <!-- idとかnameはcssで使うやつ -->
+<style>
+    .osirase {
+        display: flex;
+        flex-direction: column; /* 縦並びにする */
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        background: orange;
+        gap: 10px; /* 各要素の間隔 */
+        padding: 20px;
+    }
+    .osirase input[type="text"],
+    .osirase textarea {
+        width: 80%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+    .osirase input[type="submit"] {
+        padding: 8px 16px;
+        background: #fff;
+        border: 1px solid #333;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .osirase input[type="submit"]:hover {
+        background: #f0f0f0;
+    }
+</style>
+
+<form class="osirase" action="" method="POST">
+    {% csrf_token %}   <!-- POSTを使う際使用  -->
+    <input type="text" name="title" placeholder="題名">
+    <textarea name="osirase" placeholder="お知らせする内容を入力してください"></textarea>
+    <input type="submit" value="送信">
 </form>
 {% endblock %}
