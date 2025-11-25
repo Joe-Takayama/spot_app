@@ -47,6 +47,10 @@ class LoginView(View):
         # パスワード不一致
         messages.error(request, 'パスワードが違います')
         return render(request, 'accounts/login_form.html', {'form': form})
+    
+class LogoutView(View):
+    def get(self, request):
+        return render(request, 'accounts/logout.html')
 
 #更新削除選択画面
 class updelView(View):
@@ -58,6 +62,7 @@ class updelView(View):
     
 index = IndexView.as_view() 
 login = LoginView.as_view()
+logout = LogoutView.as_view()
 Registselect = RegistselectView.as_view()
 updel = updelView.as_view()
 
