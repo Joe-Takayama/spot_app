@@ -6,4 +6,5 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('Registselect/',views.Registselect,name='Registselect'),
     path('login/', views.login, name="login"),
+    path('updel/',views.updel,name='updel')
 ]
