@@ -47,7 +47,7 @@
                     <li><a href="/update-delete">更新・削除</a></li>
                     <li><a href="/user-manage">ユーザー管理</a></li>
                     <li><a href="/notice-send">お知らせ送信</a></li>
-                    <li><a href="/logout">ログアウト</a></li>
+                    <li><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
             </ul>
         {% else %}
             <a href="#">新規登録 / ログイン</a>
