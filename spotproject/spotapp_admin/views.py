@@ -4,8 +4,7 @@ from .forms import StaffForm, EventCreateForm, PhotoForm
 from .models import Staff
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from django.contrib.auth import logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from .mixins import StaffLoginRequiredMixin
 
 
 #ホーム画面
@@ -15,7 +14,7 @@ class IndexView(View):
     
 
 #登録選択画面
-class RegistselectView(LoginRequiredMixin, View):
+class RegistselectView(StaffLoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/Registrationselection.html')
     
@@ -24,13 +23,13 @@ class RegistselectView(LoginRequiredMixin, View):
 class LoginView(View):
     def get(self, request):
         form = StaffForm()
-        return render(request, 'accounts/login_form.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})
     
     def post(self, request):
         form = StaffForm(request.POST)
 
         if not form.is_valid():
-            return render(request, 'accounts/login_form.html', {'form': form})
+            return render(request, 'registration/login.html', {'form': form})
         
         name = form.cleaned_data['name']
         password = form.cleaned_data['password']
@@ -40,7 +39,7 @@ class LoginView(View):
             staff = Staff.objects.get(name=name)
         except Staff.DoesNotExist:
             messages.error(request, '職員名が正しくありません')
-            return render(request, 'accounts/login_form.html', {'form': form})
+            return render(request, 'registration/login.html', {'form': form})
         
         # パスワード照合
         if check_password(password, staff.password):
@@ -50,26 +49,26 @@ class LoginView(View):
         
         # パスワード不一致
         messages.error(request, 'パスワードが違います')
-        return render(request, 'accounts/login_form.html', {'form': form})
+        return render(request, 'registration/login.html', {'form': form})
 
 # ログアウト画面 
 class LogoutView(View):
     def get(self, request):
-        return render(request, 'accounts/logout.html')
+        return render(request, 'registration/logout.html')
     
     def post(self, request):
-        logout(request)
+        request.session.flush()
         return redirect('spotapp_admin:index')
 
 #更新削除選択画面
-class updelView(LoginRequiredMixin, View):
+class updelView(StaffLoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/updatedelete.html')
 
 
 
 # イベント登録画面
-class EventRegistrationView(View):
+class EventRegistrationView(StaffLoginRequiredMixin, View):
     def get(self, request):
         event_form = EventCreateForm()
         photo_form = PhotoForm()
