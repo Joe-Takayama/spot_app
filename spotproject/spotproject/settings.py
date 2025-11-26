@@ -135,8 +135,3 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'spotapp_admin/media')
-
-# 未ログインでアクセスした場合、リダイレクト先のURL
-LOGIN_URL = '/admin_top/login/'
-# ログイン後のリダイレクト先URL
-LOGIN_REDIRECT_URL = '/admin_top/'
