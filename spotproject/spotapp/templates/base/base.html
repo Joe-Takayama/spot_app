@@ -41,7 +41,7 @@
             <a href="#" onclick="toggleMenu('userMenu'); return false;">ユーザー ▼</a>
             <div id="userMenu" style="display:none;">
                 <ul>
-                    <li><a href="/admin/dashboard">プロフィール編集</a></li>
+                    <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
                     <li><a href="/logout">ログアウト</a></li>
                 </ul>
             </div>
