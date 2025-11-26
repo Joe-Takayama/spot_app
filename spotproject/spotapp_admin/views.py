@@ -95,12 +95,12 @@ class EventListView(StaffLoginRequiredMixin, View):
 # イベント更新画面  
 class EventUpdateView(StaffLoginRequiredMixin, View):
     def get(self, request, event_id):
-        page = get_object_or_404(Events,event_id=event_id)
+        page = get_object_or_404(Events, pk=event_id)
         form = EventCreateForm(instance=page)
         return render(request, 'spotapp_admin/event_update.html', {'form': form})
     
     def post(self, request, event_id):
-        page = get_object_or_404(Events, event_id=event_id)
+        page = get_object_or_404(Events, pk=event_id)
         form = EventCreateForm(request.POST, request.FILES, instance=page)
         if form.is_valid():
             form.save()

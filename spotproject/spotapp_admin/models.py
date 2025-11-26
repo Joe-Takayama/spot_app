@@ -61,7 +61,7 @@ class Spot(models.Model):
 
 class Events(models.Model):
     # イベントID
-    event_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event_id = models.UUIDField(primary_key=True, default=uuid.uuid4, unique=True, null=False, blank=False, editable=False)
     # イベント名称
     event_name = models.CharField(max_length=255, verbose_name="イベント名称")
     # 観光地ID

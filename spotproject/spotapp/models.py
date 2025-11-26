@@ -1,7 +1,7 @@
 import uuid
 from django.db import models
 
-# ★ ここで .models を import してたのは削除！（同じファイルだからいらない）
+
 
 RATING_CHOICES = [
     (1, '★1'),
