@@ -1,6 +1,16 @@
 {% extends "base2/base2.html" %}
 {% block body %}
 <h2>イベント更新</h2>
+
+{% if page.photos.all %}
+    <div>
+        <p>現在の写真</p>
+        {% for photo in page.photos.all %}
+            <img src="{{ photo.image.url }}" alt="Event Photo" style="max-width:200px; max-height:200px;">
+        {% endfor %}
+    </div>
+    <br>
+{% endif %}
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ event_form.as_p }}

@@ -12,8 +12,8 @@
     <tr>
         <td>{{ events.event_name }}</td>
         <td>
-            {% if events.id %}
-                <a href="{% url 'spotapp_admin:event_update' events.id %}">更新</a>
+            {% if events.event_id %}
+                <a href="{% url 'spotapp_admin:event_update' events.event_id %}">更新</a>
             {% else %}
                 <span style="color: red;">更新不可</span>
             {% endif %}

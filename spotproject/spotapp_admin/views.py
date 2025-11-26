@@ -96,16 +96,20 @@ class EventListView(StaffLoginRequiredMixin, View):
 class EventUpdateView(StaffLoginRequiredMixin, View):
     def get(self, request, event_id):
         page = get_object_or_404(Events, pk=event_id)
-        form = EventCreateForm(instance=page)
-        return render(request, 'spotapp_admin/event_update.html', {'form': form})
+        event_form = EventCreateForm(instance=page)
+        event_photo = PhotoForm(instance=page)
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': event_photo, 'page': page})
     
     def post(self, request, event_id):
         page = get_object_or_404(Events, pk=event_id)
-        form = EventCreateForm(request.POST, request.FILES, instance=page)
-        if form.is_valid():
-            form.save()
+        event_form = EventCreateForm(request.POST, request.FILES, instance=page)
+        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+
+        if event_form.is_valid() and photo_form.is_valid():
+            event_form.save()
+            photo_form.save()
             return redirect('spotapp_admin:event_update_complete')
-        return render(request, 'spotapp_admin/event_update.html', {'form': form})
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'page': page})
 
 class SpotRegistrationView(StaffLoginRequiredMixin, View):
     def get(self, request):
