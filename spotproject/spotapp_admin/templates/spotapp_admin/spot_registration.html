@@ -1,0 +1,13 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+
+<h2>観光地登録</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ spot_form.as_p }}
+    {{ photo_form.as_p }}
+    <button type="submit">登録</button>
+</form>
+
+{% endblock %}
