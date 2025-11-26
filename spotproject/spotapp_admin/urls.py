@@ -16,5 +16,4 @@ urlpatterns = [
     # イベント一覧
     path('event_list/', EventListView.as_view(), name='event_list'),
     # イベント登録画面
-    path('event_list/', EventRegistrationView.as_view(), name='event_list'),
 ]
