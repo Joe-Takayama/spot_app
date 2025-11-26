@@ -50,21 +50,18 @@ class PhotoForm(ModelForm):
 class SpotCreateForm(ModelForm):
     class Meta:
         model = Spot
-        fields = ['spot_name', 'spot-address', 'spot-time', 'Admission fee', 'etailed information']
+        fields = ['spot_name', 'address', 'business_hours',  'explanation']
         widgets = {
             'spot_name': TextInput(attrs={
                 'placeholder': '観光地名称を入力してください'
             }),
-            'spot-address': TextInput(attrs={
+            'address': TextInput(attrs={
                 'placeholder': '住所を入力してください'
             }),
-            'spot-time': TextInput(attrs={
+            'business_hours': TextInput(attrs={
                 'placeholder': '営業時間を入力してください'
             }),
-            'Admission fee': Textarea(attrs={
-                'placeholder': '入場料を入力してください'
-            }),
-            'etailed information': TextInput(attrs={
+            'explanation': TextInput(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
         }
