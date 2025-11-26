@@ -1,0 +1,10 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+<h2>このイベントを削除しますか?</h2>
+    <p>イベント名: {{ page.event_name }}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">はい</button>
+        </form>
+        <a href="{% url 'spotapp_admin:event_list' %}">いいえ</a>
+{% endblock %}
