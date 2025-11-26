@@ -23,4 +23,8 @@ urlpatterns = [
     path('review/complete/',views.review_complete,name="review_complete"),
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
+    
+    path('event/chart/', views.event_chart, name='event_chart'),
+    path('event/detail/', views.event_detail, name='event_detail'),
+
 ]
