@@ -12,8 +12,9 @@ urlpatterns = [
     path('profile_edit/', views.profile_edit, name='profile_edit'),
     path('profile_edit/complete/', views.profile_edit_complete, name='profile_edit_complete'),
 
-    path('password_change/', views.password_change, name="password_change"),
-    path('password_change/complete/', views.password_change_complete, name="password_change_complete"),
+    path('password/change/', views.PasswordChangeView.as_view(), name="password_change"),
+    path('password/change/complete/', views.PasswordChangeCompleteView.as_view(), name="password_change_complete"),
+
 
     path('spot/searchresult/',views.spot_searchresult,name="spot_searchresult"),
     path('spot/detail/',views.spot_detail,name="spot_detail"), 
