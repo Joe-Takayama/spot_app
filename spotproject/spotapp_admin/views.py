@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm
-from .models import Staff
+from .models import Staff, Events
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
@@ -85,3 +85,23 @@ class EventRegistrationView(StaffLoginRequiredMixin, View):
             photo.save()
             return render(request, 'spotapp_admin/event_registration_complete.html')
         return render(request, 'spotapp_admin/event_registration.html', {'event_form': event_form, 'photo_form': photo_form})
+    
+
+class EventListView(StaffLoginRequiredMixin, View):
+    def get(self, request):
+        event_list = Events.objects.order_by('-event_date')
+        return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list})
+    
+class EventUpdateView(StaffLoginRequiredMixin, View):
+    def get(self, request, event_id):
+        page = get_object_or_404(Events,event_id=event_id)
+        form = EventCreateForm(instance=page)
+        return render(request, 'spotapp_admin/event_update.html', {'form': form})
+    
+    def post(self, request, event_id):
+        page = get_object_or_404(Events, event_id=event_id)
+        form = EventCreateForm(request.POST, request.FILES, instance=page)
+        if form.is_valid():
+            form.save()
+            return redirect('spotapp_admin:event_update_complete')
+        return render(request, 'spotapp_admin/event_update.html', {'form': form})
