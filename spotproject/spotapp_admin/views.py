@@ -106,7 +106,7 @@ class EventUpdateView(StaffLoginRequiredMixin, View):
             form.save()
             return redirect('spotapp_admin:event_update_complete')
         return render(request, 'spotapp_admin/event_update.html', {'form': form})
-
+#観光地登録画面
 class SpotRegistrationView(StaffLoginRequiredMixin, View):
     def get(self, request):
         spot_form = SpotCreateForm()
