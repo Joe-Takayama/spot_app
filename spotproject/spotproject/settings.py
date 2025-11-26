@@ -136,4 +136,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'spotapp_admin/media')
 
+# 職員ログイン用URL
 LOGIN_URL = '/admin_top/login/'
