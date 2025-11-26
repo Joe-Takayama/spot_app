@@ -1,0 +1,21 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+
+<h2>イベント一覧</h2>
+
+<table border="1" cellpadding="8", cellspacing="5">
+    <tr>
+        <th>イベント名称</th>
+    </tr>
+
+    {% for events in event_list %}
+    <tr>
+        <td>{{ events.event_name }}</td>
+        <td>
+            <a href="#">更新</a>
+            <a href="#">削除</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
