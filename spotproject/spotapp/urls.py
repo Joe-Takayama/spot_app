@@ -24,4 +24,3 @@ urlpatterns = [
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
 ]
-
