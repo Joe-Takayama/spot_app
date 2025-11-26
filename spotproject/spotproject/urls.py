@@ -24,4 +24,5 @@ urlpatterns = [
     path('home/', include('spotapp.urls')),
     # 職員のパス
     path('admin_top/', include('spotapp_admin.urls')),
+
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
