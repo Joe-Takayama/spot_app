@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import StaffForm, EventCreateForm, PhotoForm
+from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm
 from .models import Staff, Events
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -106,3 +106,21 @@ class EventUpdateView(StaffLoginRequiredMixin, View):
             form.save()
             return redirect('spotapp_admin:event_update_complete')
         return render(request, 'spotapp_admin/event_update.html', {'form': form})
+
+class SpotRegistrationView(StaffLoginRequiredMixin, View):
+    def get(self, request):
+        spot_form = SpotCreateForm()
+        photo_form = PhotoForm()
+        return render(request, 'spotapp_admin/spot_registration.html', {'spot_form': spot_form, 'photo_form': photo_form})
+
+    def post(self, request):
+        spot_form = SpotCreateForm(request.POST)
+        photo_form = PhotoForm(request.POST, request.FILES)
+
+        if spot_form.is_valid() and photo_form.is_valid():
+            spot = spot_form.save()
+            photo = photo_form.save(commit=False)
+            photo.spot = spot
+            photo.save()
+            return render(request, 'spotapp_admin/spot_registration_complete.html')
+        return render(request, 'spotapp_admin/spot_registration.html', {'spot_form': spot_form, 'photo_form': photo_form})
