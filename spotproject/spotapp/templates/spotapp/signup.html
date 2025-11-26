@@ -1,4 +1,9 @@
-{% load static %}
+
+<head>
+    {% load static %}
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/signup.css' %}" rel="stylesheet">
+</head>
 
 {% block body %}
 <div class="home-btn">
@@ -12,7 +17,7 @@
     <p>{{ request.user.username }} さん</p>
 </div>
 
-<div clas='singnup-form'>
+<div class='singnup-form'>
 
     <h2 class='singnup-title'>ユーザー新規登録</h2>
 
