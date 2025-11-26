@@ -46,6 +46,7 @@ class PhotoForm(ModelForm):
         fields = ['image']
         labels = {'image': '写真を登録してください'}
 
+# 観光地登録フォーム
 class SpotCreateForm(ModelForm):
     class Meta:
         model = Spot
