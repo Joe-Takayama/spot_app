@@ -109,6 +109,19 @@ class FavoriteListView(LoginRequiredMixin, View):
         favorite_list = []
         return render(request, 'spotapp/favorite_list.html',
                       {"favorites": favorite_list})
+    
+
+# イベント一覧ビュー
+class EventChartView(View):
+    def get(self, request):
+        return render(request, 'spotapp/event_chart.html')
+
+
+# イベント詳細ビュー
+class EventDetailView(View):
+    def get(self, request):
+        return render(request, 'spotapp/event_detail.html')
+
 
 index = IndexView.as_view()
 
@@ -128,3 +141,6 @@ review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
 
 favorite_list = FavoriteListView.as_view()
+
+event_chart = EventChartView.as_view()
+event_detail = EventDetailView.as_view()
