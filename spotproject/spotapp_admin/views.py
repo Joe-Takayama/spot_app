@@ -86,12 +86,13 @@ class EventRegistrationView(StaffLoginRequiredMixin, View):
             return render(request, 'spotapp_admin/event_registration_complete.html')
         return render(request, 'spotapp_admin/event_registration.html', {'event_form': event_form, 'photo_form': photo_form})
     
-
+# イベント一覧画面
 class EventListView(StaffLoginRequiredMixin, View):
     def get(self, request):
         event_list = Events.objects.order_by('-event_date')
         return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list})
-    
+
+# イベント更新画面  
 class EventUpdateView(StaffLoginRequiredMixin, View):
     def get(self, request, event_id):
         page = get_object_or_404(Events,event_id=event_id)
