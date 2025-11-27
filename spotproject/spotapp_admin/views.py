@@ -61,7 +61,7 @@ class LogoutView(View):
         return redirect('spotapp_admin:index')
 
 #更新削除選択画面
-class updelView(StaffLoginRequiredMixin, View):
+class UpdelView(StaffLoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/updatedelete.html')
 

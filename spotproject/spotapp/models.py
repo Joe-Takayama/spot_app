@@ -1,5 +1,8 @@
 import uuid
 from django.db import models
+from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 
@@ -107,3 +110,24 @@ class Review(models.Model):
 
     def __str__(self):
         return f"{self.spot} - {self.rating}点"
+
+
+# ユーザープロフィール（Django標準Userを拡張）
+class Profile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    icon = models.ImageField(upload_to='profile_icons/', null=True, blank=True)
+
+    def __str__(self):
+        return f"Profile: {self.user.username}"
+
+
+# User 作成時に Profile を自動作成
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'profile'):
+        instance.profile.save()
