@@ -1,0 +1,10 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+<h2>この観光地を削除しますか?</h2>
+    <p>観光地名称: {{ page.spot_name }}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">はい</button>
+        </form>
+        <a href="{% url 'spotapp_admin:spot_list' %}">いいえ</a>
+{% endblock %}
