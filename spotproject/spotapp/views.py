@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm,Us
+from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm,UserForm
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from .models import User
