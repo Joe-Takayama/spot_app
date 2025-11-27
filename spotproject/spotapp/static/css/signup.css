@@ -58,7 +58,7 @@
 
 
 /* サインアップフォームのコンテナ（全体の枠） */
-.singnup-form {
+.signup-form {
     position: absolute;            /* 直近のposition:relativeな親要素（またはページ）を基準に配置 */
     top: 50%;                     
     left: 50%;                   
@@ -73,7 +73,7 @@
 }
 
 /* フォームのタイトル（「ユーザー新規登録」など）のスタイル */
-.singnup-title {
+.signup-title {
     font-size: 22px;               
     font-weight: bold;             
     text-align: center;          
@@ -81,7 +81,7 @@
 }
 
 /* フォームの入力欄（<input>タグ）のスタイル */
-.singnup-form input {
+.signup-form input {
     width: 100%;                   
     padding: 12px;                 
     border-radius: 6px;            
@@ -90,7 +90,7 @@
 }
 
 /* 送信ボタン（<button>タグ）のスタイル */
-.singnup-form button {
+.signup-form button {
     width: 100%;                   
     padding: 12px;                 
     background: #0077cc;           
@@ -101,7 +101,7 @@
 }
 
 /* ログインリンクや戻るボタンを並べるコンテナ */
-.singnup-login {
+.signup-login {
     display: flex;                 
     justify-content: space-between;/* 子要素を左右の端に配置（スペース最大） */
     margin-top: 15px;              

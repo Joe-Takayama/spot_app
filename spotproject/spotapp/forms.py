@@ -1,8 +1,12 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from django import forms
-from .models import User
+from django.contrib.auth.models import User
 
-# 新規登録用フォーム
+from django.contrib.auth.hashers import check_password
+
+# ------------------------
+# 新規登録フォーム
+# ------------------------
 class SignupForm(forms.ModelForm):
     password = forms.CharField(
         label="パスワード",
@@ -11,24 +15,35 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["user_name", "email", "password"]
-        
+        fields = ["username", "email", "password"]  # 標準 User に合わせる
+        widgets = {
+            "username": forms.TextInput(attrs={
+                "placeholder": "ユーザー名を入力してください"
+            }),
+            "email": forms.EmailInput(attrs={
+                "placeholder": "メールアドレスを入力してください"
+            }),
+
+        }
+        help_texts = {
+            "username": "",  # ユーザー名の補助テキストを非表示にする
+        }
+
+    # パスワード暗号化
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password"])  # パスワード暗号化
+        user.set_password(self.cleaned_data["password"])  # ← set_password は標準UserでOK
         if commit:
             user.save()
         return user
 
 #プロフィール編集用フォーム
 class ProfileEditForm(forms.ModelForm):
-    """プロフィール編集（パスワード欄は無し）"""
-
     class Meta:
         model = User
-        fields = ["user_name"]
+        fields = ["username"]
         labels = {
-            "user_name": "変更するユーザー名を入力してください",
+            "username": "変更後のユーザー名",
         }
 
 # パスワード変更用フォーム
@@ -51,19 +66,18 @@ class ContactForm(forms.Form):
     message = forms.CharField(widget=forms.Textarea,label="お問い合わせ内容")
 
 
-#ユーザーログインフォーム
-class UserForm(ModelForm):
-    class Meta:
-        model = User
-        fields = ['user_name', 'email','password']
-        widgets = {
-            'user_name':TextInput(attrs={
-                'placeholder': 'ユーザー名を入力してください'
-            }),
-            'password':PasswordInput(attrs={
-                'placeholder': 'パスワードを入力してください'
-            }),
-        }
+# ------------------------
+# ログインフォーム
+# ------------------------
+class LoginForm(forms.Form):
+    username = forms.CharField(
+        label="ユーザー名",
+        widget=forms.TextInput(attrs={"placeholder": "ユーザー名を入力してください"})
+    )
+    password = forms.CharField(
+        label="パスワード",
+        widget=forms.PasswordInput(attrs={"placeholder": "パスワードを入力してください"})
+    )
 
 
 
