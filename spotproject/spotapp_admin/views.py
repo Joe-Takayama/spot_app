@@ -169,7 +169,7 @@ class SpotDeleteView(StaffLoginRequiredMixin, View):
     
     def post(self, request, spot_id):
         page = get_object_or_404(Spot, pk=spot_id)
-        spot_name = page.spotname
+        spot_name = page.spot_name
         page.delete()
         return render(request, 'spotapp_admin/spot_delete_complete.html', {'spot_name': spot_name})
     
