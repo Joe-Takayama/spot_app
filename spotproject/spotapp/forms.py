@@ -43,3 +43,20 @@ class PasswordChangeOnlyForm(forms.Form):
         label="新しいパスワード（確認）",
         widget=forms.PasswordInput
     )
+
+
+# ④ ✨イベント登録・編集フォーム 
+from .models import Event
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
+        fields = ['title', 'date', 'location', 'url', 'description']
+
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'date': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '例: 2025年3月1日〜3日'}),
+            'location': forms.TextInput(attrs={'class': 'form-control'}),
+            'url': forms.URLInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+        }
