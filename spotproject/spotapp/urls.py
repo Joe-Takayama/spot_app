@@ -20,7 +20,7 @@ urlpatterns = [
     #観光地検索結果画面
     path('spot/searchresult/',views.spot_searchresult,name="spot_searchresult"),
     #観光地詳細画面
-    path('spot/detail/',views.spot_detail,name="spot_detail"), 
+    path('spot/detail/',views.spot_detail,name="spot_detail"),
 
     #レビュー投稿画面
     path('review/create/',views.review_create,name="review_create"),
@@ -28,7 +28,7 @@ urlpatterns = [
     path('review/complete/',views.review_complete,name="review_complete"),
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
-    
+
     path('event/chart/', views.event_chart, name='event_chart'),
     path('event/detail/', views.event_detail, name='event_detail'),
 

@@ -2,7 +2,6 @@ from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from django import forms
 from .models import User
 
-
 # 新規登録用フォーム
 class SignupForm(forms.ModelForm):
     password = forms.CharField(
@@ -13,7 +12,7 @@ class SignupForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ["user_name", "email", "password"]
-
+        
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])  # パスワード暗号化
@@ -48,8 +47,9 @@ class PasswordChangeOnlyForm(forms.Form):
 #お問い合わせフォーム
 class ContactForm(forms.Form):
     name = forms.CharField(label="ユーザー名")
-    email = forms.EmailField(label="メールアドレス") 
+    email = forms.EmailField(label="メールアドレス")
     message = forms.CharField(widget=forms.Textarea,label="お問い合わせ内容")
+
 
 #ユーザーログインフォーム
 class UserForm(ModelForm):
@@ -64,3 +64,6 @@ class UserForm(ModelForm):
                 'placeholder': 'パスワードを入力してください'
             }),
         }
+
+
+
