@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm
-from .models import Staff, Events
+from .models import Staff, Events,Spot
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
@@ -141,3 +141,40 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
             photo.save()
             return render(request, 'spotapp_admin/spot_registration_complete.html')
         return render(request, 'spotapp_admin/spot_registration.html', {'spot_form': spot_form, 'photo_form': photo_form})
+
+#観光地更新画面
+class SpotUpdateView(StaffLoginRequiredMixin, View):
+    def get(self, request, spot_id):
+        page = get_object_or_404(Spot, pk=spot_id)
+        spot_form = SpotCreateForm(instance=page)
+        spot_photo = PhotoForm(instance=page)
+        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': spot_photo, 'page': page})
+    
+    def post(self, request, spot_id):
+        page = get_object_or_404(Spot, pk=spot_id)
+        spot_form = SpotCreateForm(request.POST, request.FILES, instance=page)
+        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+
+        if spot_form.is_valid() and photo_form.is_valid():
+            spot_form.save()
+            photo_form.save()
+            return render(request, 'spotapp_admin/spot_update_complete.html')
+        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': photo_form, 'page': page})
+    
+# 観光地削除確認画面
+class SpotDeleteView(StaffLoginRequiredMixin, View):
+    def get(self, request, spot_id):
+        page = get_object_or_404(Spot, pk=spot_id)
+        return render(request, 'spotapp_admin/spot_delete.html', {'page': page})
+    
+    def post(self, request, spot_id):
+        page = get_object_or_404(Spot, pk=spot_id)
+        spot_name = page.spotname
+        page.delete()
+        return render(request, 'spotapp_admin/spot_delete_complete.html', {'spot_name': spot_name})
+    
+# 観光地一覧画面
+class SpotListView(StaffLoginRequiredMixin, View):
+    def get(self, request):
+        spot_list = Events.objects.order_by('-spot_date')
+        return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})

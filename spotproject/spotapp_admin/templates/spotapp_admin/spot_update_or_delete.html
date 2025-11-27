@@ -1,0 +1,25 @@
+{% extends "base2/base2.html" %}
+{% block body %}
+
+<h2>観光地一覧</h2>
+
+<table border="1" cellpadding="8", cellspacing="5">
+    <tr>
+        <th>観光地名称</th>
+    </tr>
+
+    {% for spots in spot_list %}
+    <tr>
+        <td>{{ spots.spot_name }}</td>
+        <td>
+            {% if spots.spot_id %}
+                <a href="{% url 'spotapp_admin:spot_update' spots.spot_id %}">更新</a>
+            {% else %}
+                <span style="color: red;">更新不可</span>
+            {% endif %}
+            <a href="{% url 'spotapp_admin:spot_delete' spots.spot_id %}">削除</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

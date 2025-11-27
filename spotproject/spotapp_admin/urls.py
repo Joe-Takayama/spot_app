@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, LoginView, LogoutView, RegistselectView, updelView, EventRegistrationView, EventListView, EventUpdateView, EventDeleteView,SpotRegistrationView
+from .views import IndexView, LoginView, LogoutView, RegistselectView, updelView, EventRegistrationView, EventListView, EventUpdateView, EventDeleteView,SpotRegistrationView,SpotUpdateView,SpotDeleteView
  
 app_name = 'spotapp_admin'
 urlpatterns = [
@@ -23,4 +23,9 @@ urlpatterns = [
     path('event_delete/<uuid:event_id>/', EventDeleteView.as_view(), name='event_delete'),
     #観光地登録画面
     path('spot_registration/',SpotRegistrationView.as_view(),name='spot_registration'),
+    #観光地更新画面
+    path('spot_update/<uuid:spot_id>/',SpotUpdateView.as_view(),name='spot_update'),
+    #観光地削除画面
+    path('spot_delete/<uuid:spot_id>/',SpotDeleteView.as_view(),name='spot_delete'),
+
 ]
