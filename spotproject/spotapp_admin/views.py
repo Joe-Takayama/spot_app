@@ -15,9 +15,15 @@ class IndexView(View):
 
 #登録選択画面
 class RegistselectView(StaffLoginRequiredMixin, View):
-    def get(self,request):
+    def get(self, request):
         return render(request,'spotapp_admin/Registrationselection.html')
     
+    
+#更新削除選択画面
+class UpdelView(StaffLoginRequiredMixin, View):
+    def get(self,request):
+        return render(request,'spotapp_admin/updatedelete.html')
+
 
 # ログイン画面
 class LoginView(View):
@@ -59,11 +65,6 @@ class LogoutView(View):
     def post(self, request):
         request.session.flush()
         return redirect('spotapp_admin:index')
-
-#更新削除選択画面
-class UpdelView(StaffLoginRequiredMixin, View):
-    def get(self,request):
-        return render(request,'spotapp_admin/updatedelete.html')
 
 
 
