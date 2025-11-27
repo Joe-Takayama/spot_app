@@ -47,6 +47,20 @@ class ProfileEditView(LoginRequiredMixin, View):
 
         if form.is_valid():
             form.save()
+
+            # アイコンファイルが送信されていたら Profile に保存
+            icon_file = request.FILES.get('icon')
+            try:
+                profile = user.profile
+            except Exception:
+                # もし Profile がなければ作成
+                from .models import Profile
+                profile = Profile.objects.create(user=user)
+
+            if icon_file:
+                profile.icon = icon_file
+                profile.save()
+
             return redirect("spotapp:profile_edit_complete")
 
         return render(request, "spotapp/profile_edit.html", {"form": form})

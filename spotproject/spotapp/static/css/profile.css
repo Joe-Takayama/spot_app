@@ -49,6 +49,13 @@
     text-align: center;
 }
 
+.user-icon img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .user-name-text {
     font-size: 14px;
     font-weight: bold;

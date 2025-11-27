@@ -1,4 +1,5 @@
 {% load static %}
+<a href="{% static 'css/style.css' %}" rel="stylesheet">
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -37,8 +38,19 @@
             <a href="favorite/list">お気に入り一覧</a>
             <a href="#">お知らせ通知</a>
         {% if user.is_authenticated %}
-            <!-- 管理者プルダウン -->
-            <a href="#" onclick="toggleMenu('userMenu'); return false;">ユーザー ▼</a>
+            <div class="user-info" onclick="toggleMenu('userMenu'); return false;" style="cursor:pointer;">
+                <div class="user-icon">
+                    {% if request.user.profile.icon %}
+                        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                    {% else %}
+                        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                    {% endif %}
+                </div>
+                <div class="user-name-text">
+                    {{ request.user.username }} さん
+                </div>
+            </div>
+
             <div id="userMenu" style="display:none;">
                 <ul>
                     <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
