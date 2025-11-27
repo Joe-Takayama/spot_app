@@ -12,7 +12,7 @@ urlpatterns = [
     # 登録選択画面
     path('Registselect/',RegistselectView.as_view(),name='Registselect'),
     #更新削除選択画面
-    path('updel/',UpdelView.as_view(),name='updel'),
+    path('Updel/',UpdelView.as_view(),name='Updel'),
     # イベント一覧
     path('event_list/', EventListView.as_view(), name='event_list'),
     # イベント登録画面
