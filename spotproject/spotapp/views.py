@@ -1,22 +1,26 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth import login
+from django.contrib.auth import update_session_auth_hash,authenticate, login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm,UserForm
+from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
+
+
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from .models import User
 
 
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
+from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm, LoginForm
+
 
 class IndexView(View):
     def get(self, request):
         return render(request, 'spotapp/index.html')
     
-#  新規登録ビュー   
+# ------------------------
+# 新規登録ビュー
+# ------------------------
 class SignupView(View):
     def get(self, request):
         form = SignupForm()
@@ -26,11 +30,8 @@ class SignupView(View):
         form = SignupForm(request.POST)
 
         if form.is_valid():
-            user = form.save(commit=False)   # まず user インスタンス作成（DB にはまだ保存しない）
-            user.set_password(form.cleaned_data["password"])  # パスワードをハッシュ化
-            user.save()  # ← DB に保存！（ここが本物の save）
-
-            login(request, user)  # 自動ログイン
+            user = form.save()  # ← パスワード暗号化は forms.py 側
+            login(request, user)  # 自動ログインOK
             return redirect("spotapp:signup_complete")
 
         return render(request, "spotapp/signup.html", {"form": form})
@@ -61,7 +62,8 @@ class ProfileEditView(LoginRequiredMixin, View):
             except Exception:
                 # もし Profile がなければ作成
                 from .models import Profile
-                profile = Profile.objects.create(user=user)
+                profile, created = Profile.objects.get_or_create(user=user)
+
 
             if icon_file:
                 profile.icon = icon_file
@@ -190,34 +192,27 @@ class ContactCompleteView(View):
 #ログインビュー
 class LoginView(View):
     def get(self, request):
-        form = UserForm()
+        form = LoginForm()
         return render(request, 'registration/login.html', {'form': form})
     
     def post(self, request):
-        form = UserForm(request.POST)
+        form = LoginForm(request.POST)
 
         if not form.is_valid():
             return render(request, 'registration/login.html', {'form': form})
-        
-        user_name = form.cleaned_data['user_name']
-        password = form.cleaned_data['password']
 
-        # 名前で検索
-        try:
-            user = User.objects.get(user_name=user_name)
-        except User.DoesNotExist:
-            messages.error(request, '名前が正しくありません')
+        username = form.cleaned_data["username"]
+        password = form.cleaned_data["password"]
+
+        # Django標準の認証
+        user = authenticate(request, username=username, password=password)
+
+        if user is None:
+            messages.error(request, "ユーザー名またはパスワードが違います")
             return render(request, 'registration/login.html', {'form': form})
-        
-        # パスワード照合
-        if check_password(password, user.password):
-            # ログイン成功
-            request.session['user_id'] = str(user.user_id)
-            return redirect('spotapp:index')
-        
-        # パスワード不一致
-        messages.error(request, 'パスワードが違います')
-        return render(request, 'registration/login.html', {'form': form})
+
+        login(request, user)  # ← 標準ログイン
+        return redirect('spotapp:index')
 
 
 index = IndexView.as_view()

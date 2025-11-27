@@ -1,15 +1,20 @@
+{% load static %}
+
 <head>
-    {% load static %}
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <link href="{% static 'css/signup.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 
 {% block body %}
+
+<!-- ホームへ戻る -->
 <div class="home-btn">
-    <a href="{% url 'spotapp:index' %}">ホーム</a>    
+    <a href="{% url 'spotapp:index' %}">ホーム</a>
 </div>
 
-<div class="user-info">
+<!-- ログインしてるなら右上にプロフィール -->
+{% if request.user.is_authenticated %}
+<div class="user-info-right">
     <div class="user-icon">
         {% if request.user.profile.icon %}
             <img src="{{ request.user.profile.icon.url }}" alt="icon">
@@ -17,37 +22,28 @@
             <img src="{% static 'img/default_icon.png' %}" alt="icon">
         {% endif %}
     </div>
-    <div class="user-name-text">
-        {{ request.user.username }} さん
-    </div>
+    <p>{{ request.user.username }} さん</p>
 </div>
+{% endif %}
 
-<div class='singnup-form'>
+<!-- 中央の新規登録フォーム -->
+<div class="signup-form">
 
-    <h2 class='singnup-title'>ユーザー新規登録</h2>
+    <h2 class="signup-title">ユーザー新規登録</h2>
 
-   <form method="post" action="{% url 'spotapp:signup' %}">
+    <form method="post">
         {% csrf_token %}
 
-        <div class='form-group'>
-            <input type="text" name="username" placeholder="ユーザー名を入力してください" required>
-        </div>
-
-        <div class='form-group'>
-            <input type="email" name="email" placeholder="メールアドレスを入力してください" required>
-        </div>
-
-        <div class='form-group'>
-            <input type="password" name="password" placeholder="パスワードを入力してください" required>
-        </div>
+        <!-- Django form の内容（username / email / password） -->
+        {{ form.as_p }}
 
         <button type="submit">登録</button>
     </form>
 
-    <div class='singnup-login'>
-        <a href = "{% url 'spotapp:index' %}" class="back-link">← 戻る</a>
+    <div class="signup-login">
+        <a href="{% url 'spotapp:index' %}" class="back-link">← 戻る</a>
         <a href="{% url 'spotapp:login' %}">ログインはこちら →</a>
     </div>
-
 </div>
+
 {% endblock %}
