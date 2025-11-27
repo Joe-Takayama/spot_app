@@ -66,7 +66,7 @@
 
         <!-- 検索バー -->
         <div>
-            <input type="text" placeholder="検索バー（あいまい検索可能）" style="width:300px;">
+            <input type="text" placeholder="検索バー（あいまい検索可能）" id="search">
         </div>
 
         
@@ -77,7 +77,7 @@
         <!-- フッター -->
         <footer>
             <span>E班</span>
-            <a href="#">お問い合わせ</a>
+            <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
         </footer>
 
         <script>
