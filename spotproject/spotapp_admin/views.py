@@ -176,5 +176,5 @@ class SpotDeleteView(StaffLoginRequiredMixin, View):
 # 観光地一覧画面
 class SpotListView(StaffLoginRequiredMixin, View):
     def get(self, request):
-        spot_list = Events.objects.order_by('-spot_date')
+        spot_list = Events.objects.order_by('-created_at')
         return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})
