@@ -3,9 +3,9 @@ from django.db import models
 from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-
-
-
+ 
+ 
+ 
 RATING_CHOICES = [
     (1, '★1'),
     (2, '★2'),
@@ -13,7 +13,7 @@ RATING_CHOICES = [
     (4, '★4'),
     (5, '★5'),
 ]
-
+ 
 # 利用者テーブル
 class User(models.Model):
     # ユーザーid
@@ -26,33 +26,33 @@ class User(models.Model):
     password = models.CharField(max_length=128, verbose_name="パスワード")
     # 登録日
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日")
-
+ 
     def __str__(self):
         return self.user_name
-
-
+ 
+ 
 # 地区別テーブル
 class District(models.Model):
     # 地区ID
     district_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # 地区名称
     district_name = models.CharField(max_length=100, verbose_name="地区名称")
-
+ 
     def __str__(self):
         return self.district_name
-
-
+ 
+ 
 # カテゴリテーブル
 class Category(models.Model):
     # カテゴリID
     category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # カテゴリ名称
     category_name = models.CharField(max_length=100, verbose_name="カテゴリ名称")
-
+ 
     def __str__(self):
         return self.category_name
-
-
+ 
+ 
 # 観光地テーブル
 class Spot(models.Model):
     # 観光地ID
@@ -73,11 +73,11 @@ class Spot(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
     # 地区
     district = models.ForeignKey('District', on_delete=models.SET_NULL, null=True)
-
+ 
     def __str__(self):
         return self.spot_name
-
-
+ 
+ 
 # お気に入り
 class Favorite(models.Model):
     # お気に入りid
@@ -88,11 +88,11 @@ class Favorite(models.Model):
     spot = models.ForeignKey('Spot', on_delete=models.CASCADE)
     # 登録日
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日")
-
+ 
     def __str__(self):
         return f"{self.user.user_name} - {self.spot}"
-
-
+ 
+ 
 # レビュー
 class Review(models.Model):
     # レビューid
@@ -107,27 +107,28 @@ class Review(models.Model):
     comment = models.TextField()
     # 投稿日
     posted_at = models.DateTimeField(auto_now_add=True)
-
+ 
     def __str__(self):
         return f"{self.spot} - {self.rating}点"
-
-
+ 
+ 
 # ユーザープロフィール（Django標準Userを拡張）
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     icon = models.ImageField(upload_to='profile_icons/', null=True, blank=True)
-
+ 
     def __str__(self):
         return f"Profile: {self.user.username}"
-
-
+ 
+ 
 # User 作成時に Profile を自動作成
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
-
+ 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
+ 
