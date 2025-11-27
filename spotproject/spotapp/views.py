@@ -3,8 +3,11 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth import login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
+from .forms import ContactForm
 
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm
+
+from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
 
 class IndexView(View):
     def get(self, request):
@@ -145,6 +148,41 @@ class EventDetailView(View):
     def get(self, request):
         return render(request, 'spotapp/event_detail.html')
 
+#お問い合わせビュー
+from django.views import View
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
+from .forms import ContactForm
+
+class ContactView(View):
+    def get(self, request):
+        form = ContactForm()
+        return render(request, "spotapp/contact.html", {"form": form})
+
+    def post(self, request):
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            email = form.cleaned_data["email"]
+            message = form.cleaned_data["message"]
+
+            recipient = "igakouga2n2n@gmail.com"
+
+            send_mail(
+                subject=f"お問い合わせ: {name}",
+                message=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}",
+                from_email="no-reply@example.com",  # サーバー側の送信元
+                recipient_list=[recipient],
+            )
+            return redirect("spotapp:contact_complete")  # 成功ページへリダイレクト
+
+        # バリデーションエラー時は再表示
+        return render(request, "spotapp/contact.html", {"form": form})
+    
+# お問い合わせ完了ビュー
+class ContactCompleteView(View):
+    def get(self,request):
+        return render(request,"spotapp/contact_complete.html")
 
 index = IndexView.as_view()
 
@@ -167,3 +205,5 @@ favorite_list = FavoriteListView.as_view()
 
 event_chart = EventChartView.as_view()
 event_detail = EventDetailView.as_view()
+
+contact_complete = ContactCompleteView.as_view()

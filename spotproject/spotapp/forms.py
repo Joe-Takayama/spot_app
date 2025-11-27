@@ -43,3 +43,9 @@ class PasswordChangeOnlyForm(forms.Form):
         label="新しいパスワード（確認）",
         widget=forms.PasswordInput
     )
+
+#お問い合わせフォーム
+class ContactForm(forms.Form):
+    name = forms.CharField(label="ユーザー名")
+    email = forms.EmailField(label="メールアドレス") 
+    message = forms.CharField(widget=forms.Textarea,label="お問い合わせ内容")
