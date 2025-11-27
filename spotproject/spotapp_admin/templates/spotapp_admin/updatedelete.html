@@ -3,14 +3,14 @@
 
 <!-- 観光地 更新・削除 -->
 <div>
-    <a href="/spots/update-delete">観光地更新・削除</a>
+    <a href="{% url 'spotapp_admin:spotapp_update_or_delete' %}">観光地更新・削除</a>
 </div>
 
 <br><br>
 
 <!-- イベント 更新・削除 -->
 <div>
-    <a href="/events/update-delete">イベント更新・削除</a>
+    <a href="{% url 'spotapp_admin:spotapp_update_or_delete' %}">イベント更新・削除</a>
 </div>
 
 {% endblock %}
