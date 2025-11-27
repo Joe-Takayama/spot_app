@@ -3,19 +3,10 @@
 {% block title %} お問い合わせ {% endblock %}
 
 {% block body %}
-<style>
-    .contact textarea {
-        width: 80%;
-        padding: 8px;
-        border-radius: 5px;
-       
-    }
-</style>
-
-<form class="contact" action="" method="POST">
+<h2>お問い合わせ</h2>
+<form method="post">
     {% csrf_token %}
-    <p><label>ユーザー名<input type="text" name="username"></label></p>
-    <p><label>メールアドレス<input type="text" name="email"></label></p>
-    <p><label>お問い合わせ内容<br><textarea name="contact" placeholder="お問い合わせ内容をご入力ください"></textarea></label></p>
-    <input type="submit" value="送信">
+    {{ form.as_p }}
+    <button type="submit">送信</button>
 </form>
+{% endblock %}

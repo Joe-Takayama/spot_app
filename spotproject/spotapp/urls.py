@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from .views import ContactView
+
 
 app_name = "spotapp"
 
@@ -29,5 +31,9 @@ urlpatterns = [
     
     path('event/chart/', views.event_chart, name='event_chart'),
     path('event/detail/', views.event_detail, name='event_detail'),
+
+    #お問い合わせ画面
+    path('contact/', ContactView.as_view(),name="contact"),
+    path('contact/complete', views.contact_complete, name='contact_complete'),
 
 ]

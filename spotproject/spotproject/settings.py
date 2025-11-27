@@ -138,3 +138,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'spotapp_admin/media')
 
 # 職員ログイン用URL
 LOGIN_URL = '/admin_top/login/'
+
+#お問い合わせメールアドレス(まだコンソールに表示するだけ)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
