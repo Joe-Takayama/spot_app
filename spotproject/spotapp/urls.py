@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ContactView
+from .views import ContactView,LoginView
 
 
 app_name = "spotapp"
@@ -20,7 +20,7 @@ urlpatterns = [
     #観光地検索結果画面
     path('spot/searchresult/',views.spot_searchresult,name="spot_searchresult"),
     #観光地詳細画面
-    path('spot/detail/',views.spot_detail,name="spot_detail"), 
+    path('spot/detail/',views.spot_detail,name="spot_detail"),
 
     #レビュー投稿画面
     path('review/create/',views.review_create,name="review_create"),
@@ -28,12 +28,15 @@ urlpatterns = [
     path('review/complete/',views.review_complete,name="review_complete"),
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
-    
+
     path('event/chart/', views.event_chart, name='event_chart'),
     path('event/detail/', views.event_detail, name='event_detail'),
 
     #お問い合わせ画面
     path('contact/', ContactView.as_view(),name="contact"),
     path('contact/complete', views.contact_complete, name='contact_complete'),
+
+    #ログイン画面
+    path('login/',LoginView.as_view(),name="login")
 
 ]

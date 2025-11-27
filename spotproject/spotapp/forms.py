@@ -1,6 +1,6 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from django import forms
-from django.contrib.auth.models import User
+from .models import User
 
 # 新規登録用フォーム
 class SignupForm(forms.ModelForm):
@@ -11,8 +11,8 @@ class SignupForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username", "email", "password"]
-
+        fields = ["user_name", "email", "password"]
+        
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password"])  # パスワード暗号化
@@ -26,9 +26,9 @@ class ProfileEditForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["username"]
+        fields = ["user_name"]
         labels = {
-            "username": "変更するユーザー名を入力してください",
+            "user_name": "変更するユーザー名を入力してください",
         }
 
 # パスワード変更用フォーム
@@ -47,5 +47,23 @@ class PasswordChangeOnlyForm(forms.Form):
 #お問い合わせフォーム
 class ContactForm(forms.Form):
     name = forms.CharField(label="ユーザー名")
-    email = forms.EmailField(label="メールアドレス") 
+    email = forms.EmailField(label="メールアドレス")
     message = forms.CharField(widget=forms.Textarea,label="お問い合わせ内容")
+
+
+#ユーザーログインフォーム
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ['user_name', 'email','password']
+        widgets = {
+            'user_name':TextInput(attrs={
+                'placeholder': 'ユーザー名を入力してください'
+            }),
+            'password':PasswordInput(attrs={
+                'placeholder': 'パスワードを入力してください'
+            }),
+        }
+
+
+

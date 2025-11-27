@@ -1,29 +1,31 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block title %}イベント一覧（管理画面）{% endblock %}
-
+ 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/event_chart.css' %}">
 {% endblock %}
-
+ 
 {% block body %}
 <div class="admin-container">
-
+ 
   <h2 class="page-title">イベント一覧</h2>
-
+ 
   <div class="month-select">
     <button>1月</button><button>2月</button><button>3月</button>
     <button>4月</button> <button>5月</button> <button>6月</button>
     <button>7月</button> <button>8月</button> <button>9月</button>
     <button>10月</button><button>11月</button><button>12月</button>
   </div>
-
+ 
   <div class="event-card">
     <h3>偕楽園 梅まつり</h3>
     <p>📅 2025年2月14日〜3月31日</p>
     <p>📍 水戸市 偕楽園</p>
     <p>🔗 <a href="#">公式サイト</a></p>
+    <p>サンプルです</p>
   </div>
-
+ 
 </div>
 {% endblock %}
+ 

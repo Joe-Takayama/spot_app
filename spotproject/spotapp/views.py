@@ -4,7 +4,10 @@ from django.contrib.auth import login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from .forms import ContactForm
+from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm,UserForm
+from django.contrib.auth.hashers import check_password
+from django.contrib import messages
+from .models import User
 
 
 from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
@@ -91,7 +94,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
             if p1 != p2:
                 return render(request, "spotapp/password_change.html",
-                              {"form": form, "error": "パスワードが一致しません"})
+                    {"form": form, "error": "パスワードが一致しません"})
 
             # 変更処理
             user.set_password(p1)
@@ -134,7 +137,7 @@ class FavoriteListView(LoginRequiredMixin, View):
         # データベース接続したらここにお気に入り取得を書く
         favorite_list = []
         return render(request, 'spotapp/favorite_list.html',
-                      {"favorites": favorite_list})
+            {"favorites": favorite_list})
     
 
 # イベント一覧ビュー
@@ -183,6 +186,39 @@ class ContactView(View):
 class ContactCompleteView(View):
     def get(self,request):
         return render(request,"spotapp/contact_complete.html")
+
+#ログインビュー
+class LoginView(View):
+    def get(self, request):
+        form = UserForm()
+        return render(request, 'registration/login.html', {'form': form})
+    
+    def post(self, request):
+        form = UserForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, 'registration/login.html', {'form': form})
+        
+        user_name = form.cleaned_data['user_name']
+        password = form.cleaned_data['password']
+
+        # 名前で検索
+        try:
+            user = User.objects.get(user_name=user_name)
+        except User.DoesNotExist:
+            messages.error(request, '名前が正しくありません')
+            return render(request, 'registration/login.html', {'form': form})
+        
+        # パスワード照合
+        if check_password(password, user.password):
+            # ログイン成功
+            request.session['user_id'] = str(user.user_id)
+            return redirect('spotapp:index')
+        
+        # パスワード不一致
+        messages.error(request, 'パスワードが違います')
+        return render(request, 'registration/login.html', {'form': form})
+
 
 index = IndexView.as_view()
 
