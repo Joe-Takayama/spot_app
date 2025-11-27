@@ -27,7 +27,9 @@ urlpatterns = [
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
     
+    # 👇イベント一覧
     path('event/chart/', views.event_chart, name='event_chart'),
-    path('event/detail/', views.event_detail, name='event_detail'),
-
+    
+    # 👇イベント詳細（UUIDで指定） ← 修正！
+    path('event/detail/<uuid:event_id>/', views.event_detail, name='event_detail'),
 ]
