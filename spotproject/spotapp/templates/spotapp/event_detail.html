@@ -1,68 +1,39 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>イベント詳細</title>
-</head>
-<body>
+from django.urls import path
+from . import views
 
-<header>
-    <button>← ホーム</button>
-    <div>👤 ゲストさん</div>
-</header>
+app_name = "spotapp"
 
-<main>
+urlpatterns = [
+    path('', views.index, name="index"),
 
-    <!-- イベント名 -->
-    <h1 class="event-title">イベント名が入ります</h1>
+    path('signup/', views.signup, name="signup"),
+    path('signup/complete/', views.signup_complete, name="signup_complete"),
 
-    <!-- メイン画像 -->
-    <div class="event-image">
-        イベント写真（メイン画像）
-    </div>
+    path('profile_edit/', views.profile_edit, name='profile_edit'),
+    path('profile_edit/complete/', views.profile_edit_complete, name='profile_edit_complete'),
 
-    <!-- 基本情報 -->
-    <div class="info-grid">
-        <div class="info-item">開催日時</div>
-        <div class="info-item">お気に入り登録</div>
-        <div class="info-item">開催場所</div>
-        <div class="info-item">主催者</div>
-        <div class="info-item">参加方法</div>
-        <div class="info-item">カテゴリー</div>
-        <div class="info-item">口コミ</div>
-        <div class="info-item">評価</div>
-    </div>
+    path('password/change/', views.PasswordChangeView.as_view(), name="password_change"),
+    path('password/change/complete/', views.PasswordChangeCompleteView.as_view(), name="password_change_complete"),
 
-    <!-- イベント説明 -->
-    <section class="section-box">
-        <h2>イベント詳細説明</h2>
-        <p>
-            イベントの概要、内容、特徴などを記載します。
-        </p>
-    </section>
+    #観光地検索結果画面
+    path('spot/searchresult/',views.spot_searchresult,name="spot_searchresult"),
+    #観光地詳細画面
+    path('spot/detail/',views.spot_detail,name="spot_detail"), 
 
-    <!-- アクセス情報 -->
-    <section class="section-box">
-        <h2>アクセス情報</h2>
-        <p>
-            交通手段・駐車場・最寄り駅などの情報を記載します。
-        </p>
-    </section>
+    #レビュー投稿画面
+    path('review/create/',views.review_create,name="review_create"),
+    #レビュー投稿完了画面
+    path('review/complete/',views.review_complete,name="review_complete"),
 
-    <!-- Map機能 -->
-    <section class="map-box">
-        <h2>Map（機能）</h2>
-        <ul>
-            <li>現在地からの距離・所要時間</li>
-            <li>徒歩/車でのルート案内</li>
-            <li>周辺施設やホテル情報の表示</li>
-        </ul>
-    </section>
+    path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
+    
 
-    <!-- 戻るボタン -->
-    <a href="{% url 'spotapp:event_chart' %}">← 一覧へ戻る</a>
+    # ============================
+    # 🌟イベント一覧ビュー
+    # ============================
+    path('event/chart/', views.event_chart, name='event_chart'),
 
-</main>
+    # 🌟イベント詳細ページ（個別表示）
+    path('event/detail/<uuid:event_id>/', views.event_detail, name='event_detail'),  # 👈 修正
 
-</body>
-</html>
+]
