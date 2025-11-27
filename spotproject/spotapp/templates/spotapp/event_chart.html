@@ -11,19 +11,28 @@
 
   <h2 class="page-title">イベント一覧</h2>
 
+  <!-- 月ボタン -->
   <div class="month-select">
     <button>1月</button><button>2月</button><button>3月</button>
-    <button>4月</button> <button>5月</button> <button>6月</button>
-    <button>7月</button> <button>8月</button> <button>9月</button>
+    <button>4月</button><button>5月</button><button>6月</button>
+    <button>7月</button><button>8月</button><button>9月</button>
     <button>10月</button><button>11月</button><button>12月</button>
   </div>
 
-  <div class="event-card">
-    <h3>偕楽園 梅まつり</h3>
-    <p>📅 2025年2月14日〜3月31日</p>
-    <p>📍 水戸市 偕楽園</p>
-    <p>🔗 <a href="#">公式サイト</a></p>
-  </div>
+  <!-- 👇修正：DBのイベントを一覧表示（ループ） -->
+  {% for event in events %}   <!-- 👈修正 -->
+    <div class="event-card">
+      <h3>{{ event.event_name }}</h3>   <!-- 👈修正 -->
+      <p>📅 {{ event.start_date }} 〜 {{ event.end_date }}</p>   <!-- 👈修正 -->
+      <p>📍 {{ event.location }}</p>   <!-- 👈修正 -->
+      <p>🔗 <a href="{{ event.official_url }}" target="_blank">公式サイト</a></p>   <!-- 👈修正 -->
+
+      <!-- 👇修正：詳細ページに遷移できるリンク追加 -->
+      <a href="{% url 'spotapp:event_detail' event.event_id %}" class="detail-link">詳細を見る</a>  <!-- 👈修正 -->
+    </div>
+  {% empty %}
+    <p>イベント情報がありません。</p>  <!-- 👈修正 -->
+  {% endfor %}
 
 </div>
 {% endblock %}
