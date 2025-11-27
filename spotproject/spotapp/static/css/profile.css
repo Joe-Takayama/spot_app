@@ -54,6 +54,7 @@
     height: 56px;
     border-radius: 50%;
     object-fit: cover;
+    transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .user-name-text {

@@ -116,6 +116,14 @@
     height: 56px;
     border-radius: 50%;
     object-fit: cover;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.user-icon img:hover {
+    transform: scale(1.08);   /* 少し大きく */
+    opacity: 0.85;            /* ちょい薄く */
+    cursor: pointer;
+    color: blue;
 }
 
 .user-name-text {

@@ -33,6 +33,7 @@
 
 /* マウスをアイコン上に乗せたときの効果 */
 .user-info-right img:hover {
+    color: #0077cc;
     opacity: 0.8;                  
     cursor: pointer;               /* マウスカーソルをポインター（手）に変える（クリック可能な雰囲気） */
 }
