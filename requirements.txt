@@ -2,3 +2,12 @@ asgiref==3.11.0
 Django==5.2.8
 sqlparse==0.5.3
 tzdata==2025.2
+
+# PostgreSQL へ接続するため
+psycopg2-binary
+
+# .env 読み込み
+python-dotenv
+
+# DATABASE_URL を自動解析する
+dj-database-url
