@@ -2,7 +2,8 @@
 __pycache__/
 db.sqlite3
 db.sqlite3-journal
-spotapp_admin/media/
+spotapp_admin/media/spotapp_admin/photos/
+spotapp_admin/media/profile_icons/
 
 # 仮想環境
 venv/
