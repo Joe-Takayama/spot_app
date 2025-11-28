@@ -13,10 +13,11 @@
 
   <!-- 🔹月ボタン（そのままでOK） -->
   <div class="month-select">
-    {% for m in "1 2 3 4 5 6 7 8 9 10 11 12".split %}
-      <button>{{ m }}月</button>
-    {% endfor %}
-  </div>
+  {% for m in 1|make_list %}
+    <button>{{ forloop.counter }}月</button>
+  {% endfor %}
+</div>
+
 
   <!-- 🔹イベント一覧ループ -->
   {% for event in events %}
