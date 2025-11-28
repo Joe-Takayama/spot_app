@@ -1,68 +1,90 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <title>イベント詳細</title>
-</head>
-<body>
- 
-<header>
-    <button>← ホーム</button>
-    <div>👤 ゲストさん</div>
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}イベント詳細{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/event_detail.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<header class="detail-header">
+    <a href="{% url 'spotapp:event_chart' %}" class="back-btn">← 一覧へ戻る</a>
+    <div class="user-info">
+        {% if user.is_authenticated %}
+            👤 {{ user.username }} さん
+        {% else %}
+            👤 ゲストさん
+        {% endif %}
+    </div>
 </header>
- 
-<main>
- 
+
+<main class="detail-container">
+
     <!-- イベント名 -->
-    <h1 class="event-title">イベント名が入ります</h1>
- 
+    <h1 class="event-title">{{ event.event_name|default:"イベント名" }}</h1>
+
     <!-- メイン画像 -->
-    <div class="event-image">
-        イベント写真（メイン画像）
+    <div class="main-photo-box">
+        {% if event.main_image %}
+            <img src="{{ event.main_image.url }}" alt="{{ event.event_name }}">
+        {% else %}
+            <p>イベント写真がありません</p>
+        {% endif %}
     </div>
- 
+
     <!-- 基本情報 -->
-    <div class="info-grid">
-        <div class="info-item">開催日時</div>
-        <div class="info-item">お気に入り登録</div>
-        <div class="info-item">開催場所</div>
-        <div class="info-item">主催者</div>
-        <div class="info-item">参加方法</div>
-        <div class="info-item">カテゴリー</div>
-        <div class="info-item">口コミ</div>
-        <div class="info-item">評価</div>
+    <div class="info-section">
+
+        <div class="info-row">
+            <span class="info-label">住所</span>
+            <span class="info-value">{{ event.location|default:"未登録" }}</span>
+            <button class="fav-btn">お気に入り登録</button>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">営業時間</span>
+            <span class="info-value">{{ event.start_date }}〜{{ event.end_date }}</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">入場料</span>
+            <span class="info-value">（今後DB追加）</span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">口コミ</span>
+            <a href="#" class="info-link">口コミを見る</a>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">評価</span>
+            <span class="info-value">⭐ {{ event.rating|default:"評価なし" }}</span>
+        </div>
     </div>
- 
-    <!-- イベント説明 -->
+
+    <!-- 詳細説明 -->
     <section class="section-box">
         <h2>イベント詳細説明</h2>
-        <p>
-            イベントの概要、内容、特徴などを記載します。
-        </p>
+        <p>{{ event.description|default:"イベントの説明が登録されていません。" }}</p>
     </section>
- 
-    <!-- アクセス情報 -->
+
+    <!-- その他情報 -->
     <section class="section-box">
-        <h2>アクセス情報</h2>
-        <p>
-            交通手段・駐車場・最寄り駅などの情報を記載します。
-        </p>
+        <h2>その他情報</h2>
+        <p>主催者・参加方法・注意事項など今後追加</p>
     </section>
- 
+
     <!-- Map機能 -->
     <section class="map-box">
-        <h2>Map（機能）</h2>
+        <h2>Map（機能予定）</h2>
         <ul>
-            <li>現在地からの距離・所要時間</li>
-            <li>徒歩/車でのルート案内</li>
-            <li>周辺施設やホテル情報の表示</li>
+            <li>現在地からの距離・所要時間（徒歩・車・電車）</li>
+            <li>ルート案内</li>
+            <li>周辺施設・ホテル情報表示</li>
         </ul>
     </section>
- 
-    <!-- 戻るボタン -->
-    <a href="{% url 'spotapp:event_chart' %}">← 一覧へ戻る</a>
- 
+
 </main>
- 
-</body>
-</html>
+
+{% endblock %}
