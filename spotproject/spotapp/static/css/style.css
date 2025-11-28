@@ -31,7 +31,7 @@
         /* nav直下の menu_down を nav 幅で表示 */
         .menu_down {
             position: absolute;      /* nav が基準 */
-            top: 100%;               /* nav の真下 */
+            top: 105%;               /* nav の真下 */
             left: 0;
             width: 100%;             /* nav の幅いっぱい */
 

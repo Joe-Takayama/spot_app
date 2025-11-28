@@ -96,3 +96,13 @@ li {
 .indicator li:first-of-type {
   background-color: #000;
 }
+
+.event_bar{
+    text-align: center;
+    padding: 12px 5px;
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    background-color: #ffea00;
+    border:solid 3px #333;
+}
