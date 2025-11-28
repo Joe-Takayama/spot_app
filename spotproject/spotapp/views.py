@@ -2,7 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash,authenticate, login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import send_mail
+from django.core.mail import get_connection, EmailMessage
+from .forms import ContactForm
+
+
 from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
 
 
@@ -154,15 +157,29 @@ class EventDetailView(View):
         return render(request, 'spotapp/event_detail.html')
 
 #お問い合わせビュー
-from django.views import View
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
-from .forms import ContactForm
-
 class ContactView(View):
     def get(self, request):
         form = ContactForm()
         return render(request, "spotapp/contact.html", {"form": form})
+
+    @staticmethod
+    def send_mail_from_account(subject, body, to, from_user, password):
+        connection = get_connection(
+            backend='django.core.mail.backends.smtp.EmailBackend',
+            host='smtp.gmail.com',
+            port=587,
+            username='igakouga2n2n@gmail.com',
+            password='ustl imeu qdcn zaql',
+            use_tls=True,
+        )
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email=from_user,
+            to=['mit2471573@stu.o-hara.ac.jp'],#ここにリスト型で他のメールアドレスを入れられる
+            connection=connection,
+        )
+        email.send() 
 
     def post(self, request):
         form = ContactForm(request.POST)
@@ -173,15 +190,17 @@ class ContactView(View):
 
             recipient = "igakouga2n2n@gmail.com"
 
-            send_mail(
+            # 複数アカウントを切り替えて送信
+            self.send_mail_from_account(
                 subject=f"お問い合わせ: {name}",
-                message=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}",
-                from_email="no-reply@example.com",  # サーバー側の送信元
-                recipient_list=[recipient],
+                body=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}",
+                to=[recipient],
+                from_user="your_account@gmail.com",
+                password="your_app_password"
             )
-            return redirect("spotapp:contact_complete")  # 成功ページへリダイレクト
 
-        # バリデーションエラー時は再表示
+            return redirect("spotapp:contact_complete")
+
         return render(request, "spotapp/contact.html", {"form": form})
     
 # お問い合わせ完了ビュー

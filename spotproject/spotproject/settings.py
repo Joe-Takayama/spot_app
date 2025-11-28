@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
-import os, dj_database_url
+import os
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
@@ -79,13 +79,18 @@ WSGI_APPLICATION = 'spotproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASE_URL = os.getenv('DATABASE_URL')
+#DATABASE_URL = os.getenv('DATABASE_URL')
+
+#database_config = dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
 
 DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
-DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+
 
 
 # Password validation
@@ -142,5 +147,3 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'spotapp_admin/media')
 # 職員ログイン用URL
 LOGIN_URL = '/admin_top/login/'
 
-#お問い合わせメールアドレス(まだコンソールに表示するだけ)
-EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
