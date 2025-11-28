@@ -1,36 +1,44 @@
-{% extends "base/base.html" %}
+<head>
 {% load static %}
-
-{% block title %} レビュー投稿 {% endblock %}
-
-{% block extra_css %}
 <link href="{% static 'css/review_create.css' %}" rel="stylesheet">
-{% endblock %}
+</head>
 
 {% block body %}
 
-<form method="POST" action="">
-    {% csrf_token %}
+<div class="review-container">
 
-    <div class="star-rating">
-        <input type="radio" id="star5" name="rating" value="5">
-        <label for="star5">★</label>
+    <form method="POST" action="">
+        {% csrf_token %}
 
-        <input type="radio" id="star4" name="rating" value="4">
-        <label for="star4">★</label>
+        <div class="rating-wrapper">
 
-        <input type="radio" id="star3" name="rating" value="3">
-        <label for="star3">★</label>
+            <span class="rating-label bad">悪い</span>
 
-        <input type="radio" id="star2" name="rating" value="2">
-        <label for="star2">★</label>
+            <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5">
+                <label for="star5">★</label>
 
-        <input type="radio" id="star1" name="rating" value="1">
-        <label for="star1">★</label>
-    </div>
+                <input type="radio" id="star4" name="rating" value="4">
+                <label for="star4">★</label>
 
-    <textarea name="comment" placeholder="感想やレビューを書く" required></textarea>
-    <button type="submit">投稿</button>
-</form>
+                <input type="radio" id="star3" name="rating" value="3">
+                <label for="star3">★</label>
+
+                <input type="radio" id="star2" name="rating" value="2">
+                <label for="star2">★</label>
+
+                <input type="radio" id="star1" name="rating" value="1">
+                <label for="star1">★</label>
+            </div>
+
+            <span class="rating-label good">良い</span>
+
+        </div>
+
+        <textarea name="comment" placeholder="感想やレビューを書く" required></textarea>
+        <button type="submit">投稿</button>
+    </form>
+
+</div>
 
 {% endblock %}
