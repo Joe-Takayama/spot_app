@@ -1,0 +1,25 @@
+.star-rating {
+    direction: rtl;         /* ⭐ 右から左に読むことで、星5→1 の順に並ぶ */
+    display: inline-flex;
+    font-size: 2.5rem;
+}
+
+.star-rating input {
+    display: none;          /* ラジオボタンは非表示 */
+}
+
+.star-rating label {
+    cursor: pointer;
+    color: #ddd;
+    transition: color 0.2s;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;            /* ホバーで星が光る */
+}
+
+/* ラジオボタン選択時の色 */
+.star-rating input:checked ~ label {
+    color: gold;
+}
