@@ -1,7 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ContactView,LoginView, LogoutView
-
+from .views import ContactView, LoginView, LogoutView
 
 app_name = "spotapp"
 
@@ -17,29 +16,31 @@ urlpatterns = [
     path('password/change/', views.PasswordChangeView.as_view(), name="password_change"),
     path('password/change/complete/', views.PasswordChangeCompleteView.as_view(), name="password_change_complete"),
 
-    #観光地検索結果画面
-    path('spot/searchresult/',views.spot_searchresult,name="spot_searchresult"),
-    #観光地詳細画面
-    path('spot/detail/',views.spot_detail,name="spot_detail"),
+    # 観光地検索結果画面
+    path('spot/searchresult/', views.spot_searchresult, name="spot_searchresult"),
 
-    #レビュー投稿画面
-    path('review/create/',views.review_create,name="review_create"),
-    #レビュー投稿完了画面
-    path('review/complete/',views.review_complete,name="review_complete"),
+    # 観光地詳細画面
+    path('spot/detail/', views.spot_detail, name="spot_detail"),
+
+    # レビュー投稿画面
+    path('review/create/', views.review_create, name="review_create"),
+    # レビュー投稿完了画面
+    path('review/complete/', views.review_complete, name="review_complete"),
 
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
 
-    path('event/chart/', views.event_chart, name='event_chart'),
-    path('event/detail/', views.event_detail, name='event_detail'),
+    path('event/chart/', views.event_chart, name='event_chart'),  # イベント一覧（OK）
 
-    #お問い合わせ画面
-    path('contact/', ContactView.as_view(),name="contact"),
+    # 🔧 修正箇所：<uuid:event_id> を追加して、イベントごとの詳細ページを表示できるように修正！
+    path('event/detail/<uuid:event_id>/', views.event_detail, name='event_detail'),  # ← 修正済み！
+
+    # お問い合わせ画面
+    path('contact/', ContactView.as_view(), name="contact"),
     path('contact/complete', views.contact_complete, name='contact_complete'),
 
-    #ログイン画面
-    path('login/',LoginView.as_view(),name="login"),
-    
-    #ログアウト画面
-    path('logout/',views.LogoutView.as_view(),name="logout"),
+    # ログイン画面
+    path('login/', LoginView.as_view(), name="login"),
 
+    # ログアウト画面
+    path('logout/', views.LogoutView.as_view(), name="logout"),
 ]
