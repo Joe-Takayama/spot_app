@@ -1,25 +1,88 @@
+/* 全体中央寄せ用 */
+.review-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* 星と「悪い」「良い」の配置 */
+.rating-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.rating-label {
+    font-size: 1rem;
+    color: #555;
+}
+
+.rating-label.bad {
+    margin-right: 8px;
+}
+
+.rating-label.good {
+    margin-left: 8px;
+}
+
+/* 星評価 */
 .star-rating {
-    direction: rtl;         /* ⭐ 右から左に読むことで、星5→1 の順に並ぶ */
+    direction: rtl; /* 右→左で5→1の順に並べる */
     display: inline-flex;
     font-size: 2.5rem;
 }
 
 .star-rating input {
-    display: none;          /* ラジオボタンは非表示 */
+    display: none;
 }
 
 .star-rating label {
     cursor: pointer;
-    color: #ddd;
+    color: #ccc;
     transition: color 0.2s;
 }
 
+/* ホバーで光る */
 .star-rating label:hover,
 .star-rating label:hover ~ label {
-    color: gold;            /* ホバーで星が光る */
+    color: gold;
 }
 
-/* ラジオボタン選択時の色 */
+/* 選択した後も色保持 */
 .star-rating input:checked ~ label {
     color: gold;
+}
+
+/* コメント欄 */
+textarea[name="comment"] {
+    width: 100%;
+    max-width: 500px;
+    min-height: 120px;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font-size: 1rem;
+}
+
+/* 投稿ボタン */
+button[type="submit"] {
+    padding: 10px 20px;
+    background: #333;
+    color: #fff;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    opacity: 0.9;
 }
