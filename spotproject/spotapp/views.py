@@ -169,8 +169,11 @@ class FavoriteListView(LoginRequiredMixin, View):
 class EventChartView(View):
     def get(self, request):
         events = Event.objects.all()  # ★DBから全件取得
-        return render(request, 'spotapp/event_chart.html', {'events': events})
-
+        months = range(1, 13)  # ★追記：1〜12月のリスト作成
+        return render(request, 'spotapp/event_chart.html', {
+            'events': events,
+            'months': months,  # ★テンプレートへ渡す
+        })
 
 # ------------------------
 # イベント詳細ビュー（DB対応＆event_id取得対応）
