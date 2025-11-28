@@ -1,31 +1,35 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}イベント一覧（管理画面）{% endblock %}
- 
+{% block title %}イベント一覧{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/event_chart.css' %}">
 {% endblock %}
- 
+
 {% block body %}
 <div class="admin-container">
- 
+
   <h2 class="page-title">イベント一覧</h2>
- 
+
   <div class="month-select">
-    <button>1月</button><button>2月</button><button>3月</button>
-    <button>4月</button> <button>5月</button> <button>6月</button>
-    <button>7月</button> <button>8月</button> <button>9月</button>
-    <button>10月</button><button>11月</button><button>12月</button>
+    {% for m in "1 2 3 4 5 6 7 8 9 10 11 12".split %}
+      <button>{{ m }}月</button>
+    {% endfor %}
   </div>
- 
+
+  {% for event in events %}
   <div class="event-card">
-    <h3>偕楽園 梅まつり</h3>
-    <p>📅 2025年2月14日〜3月31日</p>
-    <p>📍 水戸市 偕楽園</p>
-    <p>🔗 <a href="#">公式サイト</a></p>
-    <p>サンプルです</p>
+    <h3>{{ event.event_name }}</h3>
+    <p>📅 {{ event.start_date }} 〜 {{ event.end_date }}</p>
+    <p>📍 {{ event.location }}</p>
+    {% if event.official_url %}
+      <p>🔗 <a href="{{ event.official_url }}" target="_blank">公式サイト</a></p>
+    {% endif %}
+    <p>{{ event.description|default:"説明は登録されていません" }}</p>
   </div>
- 
+  {% empty %}
+    <p>イベント情報はありません。</p>
+  {% endfor %}
+
 </div>
 {% endblock %}
- 
