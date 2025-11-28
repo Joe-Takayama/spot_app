@@ -13,8 +13,8 @@
 
   <!-- 🔹月ボタン（そのままでOK） -->
   <div class="month-select">
-  {% for m in 1|make_list %}
-    <button>{{ forloop.counter }}月</button>
+  {% for m in 1|to_int|make_list:"123456789101112" %}
+      <button>{{ m }}月</button>
   {% endfor %}
 </div>
 
