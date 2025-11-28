@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import update_session_auth_hash,authenticate, login
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import update_session_auth_hash, authenticate, login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
@@ -8,13 +8,22 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth.models import User
 
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm, LoginForm
+from .forms import (
+    ProfileEditForm, PasswordChangeOnlyForm,
+    SignupForm, ContactForm, LoginForm
+)
+
+from .models import Event  # ★ 追加：Eventモデルを読み込む
 
 
+# ------------------------
+# インデックス
+# ------------------------
 class IndexView(View):
     def get(self, request):
         return render(request, 'spotapp/index.html')
-    
+
+
 # ------------------------
 # 新規登録ビュー
 # ------------------------
@@ -27,19 +36,21 @@ class SignupView(View):
         form = SignupForm(request.POST)
 
         if form.is_valid():
-            user = form.save()  # ← パスワード暗号化は forms.py 側
-            login(request, user)  # 自動ログインOK
+            user = form.save()
+            login(request, user)
             return redirect("spotapp:signup_complete")
 
         return render(request, "spotapp/signup.html", {"form": form})
 
-    
-# 新規登録完了ビュー
+
 class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
 
+
+# ------------------------
 # プロフィール編集ビュー
+# ------------------------
 class ProfileEditView(LoginRequiredMixin, View):
     def get(self, request):
         form = ProfileEditForm(instance=request.user)
@@ -52,15 +63,12 @@ class ProfileEditView(LoginRequiredMixin, View):
         if form.is_valid():
             form.save()
 
-            # アイコンファイルが送信されていたら Profile に保存
             icon_file = request.FILES.get('icon')
             try:
                 profile = user.profile
             except Exception:
-                # もし Profile がなければ作成
                 from .models import Profile
                 profile, created = Profile.objects.get_or_create(user=user)
-
 
             if icon_file:
                 profile.icon = icon_file
@@ -71,13 +79,14 @@ class ProfileEditView(LoginRequiredMixin, View):
         return render(request, "spotapp/profile_edit.html", {"form": form})
 
 
-# プロフィール編集完了ビュー
 class ProfileEditCompleteView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "spotapp/profile_edit_complete.html")
 
 
-#パスワード変更ビュー
+# ------------------------
+# パスワード変更・完了ビュー
+# ------------------------
 class PasswordChangeView(LoginRequiredMixin, View):
     def get(self, request):
         form = PasswordChangeOnlyForm()
@@ -92,10 +101,12 @@ class PasswordChangeView(LoginRequiredMixin, View):
             p2 = form.cleaned_data["new_password2"]
 
             if p1 != p2:
-                return render(request, "spotapp/password_change.html",
-                    {"form": form, "error": "パスワードが一致しません"})
+                return render(
+                    request,
+                    "spotapp/password_change.html",
+                    {"form": form, "error": "パスワードが一致しません"}
+                )
 
-            # 変更処理
             user.set_password(p1)
             user.save()
             update_session_auth_hash(request, user)
@@ -104,53 +115,75 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
         return render(request, "spotapp/password_change.html", {"form": form})
 
-# パスワード変更完了ビュー
+
 class PasswordChangeCompleteView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "spotapp/password_change_complete.html")
 
-#検索結果ビュー    
+
+# ------------------------
+# 観光地検索結果ビュー
+# ------------------------
 class SpotSearchResultView(View):
-    def get(self,request):
+    def get(self, request):
         return render(request, 'spotapp/spot_searchresult.html')
 
-#観光地詳細ビュー
+
+# ------------------------
+# 観光地詳細ビュー
+# ------------------------
 class SpotDetailView(View):
-    def get(self,request):
+    def get(self, request):
         return render(request, 'spotapp/spot_detail.html')
 
-#レビュー投稿ビュー
+
+# ------------------------
+# レビュー投稿・完了ビュー
+# ------------------------
 class ReviewCreateView(View):
-    def get(self,request):
-        return render(request,"spotapp/review_create.html")
-    
-#投稿完了ビュー
+    def get(self, request):
+        return render(request, "spotapp/review_create.html")
+
+
 class ReviewCompleteView(View):
-    def get(self,request):
-        return render(request,"spotapp/review_complete.html")
+    def get(self, request):
+        return render(request, "spotapp/review_complete.html")
 
 
+# ------------------------
 # お気に入り一覧ビュー
+# ------------------------
 class FavoriteListView(LoginRequiredMixin, View):
     def get(self, request):
-        # データベース接続したらここにお気に入り取得を書く
         favorite_list = []
-        return render(request, 'spotapp/favorite_list.html',
-            {"favorites": favorite_list})
-    
+        return render(
+            request,
+            'spotapp/favorite_list.html',
+            {"favorites": favorite_list}
+        )
 
-# イベント一覧ビュー
+
+# ------------------------
+# イベント一覧ビュー（DB対応済）
+# ------------------------
 class EventChartView(View):
     def get(self, request):
-        return render(request, 'spotapp/event_chart.html')
+        events = Event.objects.all()  # ★DBから全件取得
+        return render(request, 'spotapp/event_chart.html', {'events': events})
 
 
-# イベント詳細ビュー
+# ------------------------
+# イベント詳細ビュー（DB対応＆event_id取得対応）
+# ------------------------
 class EventDetailView(View):
-    def get(self, request):
-        return render(request, 'spotapp/event_detail.html')
+    def get(self, request, event_id):  # ★URL側からevent_idを受け取る
+        event = get_object_or_404(Event, event_id=event_id)  # ★1件取得
+        return render(request, 'spotapp/event_detail.html', {'event': event})
 
-#お問い合わせビュー
+
+# ------------------------
+# お問い合わせフォームビュー
+# ------------------------
 class ContactView(View):
     def get(self, request):
         form = ContactForm()
@@ -170,10 +203,10 @@ class ContactView(View):
             subject=subject,
             body=body,
             from_email=from_user,
-            to=['mit2471573@stu.o-hara.ac.jp'],#ここにリスト型で他のメールアドレスを入れられる
+            to=['mit2471573@stu.o-hara.ac.jp'],
             connection=connection,
         )
-        email.send() 
+        email.send()
 
     def post(self, request):
         form = ContactForm(request.POST)
@@ -184,7 +217,6 @@ class ContactView(View):
 
             recipient = "igakouga2n2n@gmail.com"
 
-            # 複数アカウントを切り替えて送信
             self.send_mail_from_account(
                 subject=f"お問い合わせ: {name}",
                 body=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}",
@@ -196,18 +228,21 @@ class ContactView(View):
             return redirect("spotapp:contact_complete")
 
         return render(request, "spotapp/contact.html", {"form": form})
-    
-# お問い合わせ完了ビュー
-class ContactCompleteView(View):
-    def get(self,request):
-        return render(request,"spotapp/contact_complete.html")
 
-#ログインビュー
+
+class ContactCompleteView(View):
+    def get(self, request):
+        return render(request, "spotapp/contact_complete.html")
+
+
+# ------------------------
+# ログイン・ログアウトビュー
+# ------------------------
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
         return render(request, 'spotapp/login.html', {'form': form})
-    
+
     def post(self, request):
         form = LoginForm(request.POST)
 
@@ -217,26 +252,28 @@ class LoginView(View):
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
 
-        # Django標準の認証
         user = authenticate(request, username=username, password=password)
 
         if user is None:
             messages.error(request, "ユーザー名またはパスワードが違います")
             return render(request, 'spotapp/login.html', {'form': form})
 
-        login(request, user)  # ← 標準ログイン
+        login(request, user)
         return redirect('spotapp:index')
 
-# ログアウト画面 
+
 class LogoutView(View):
     def get(self, request):
         return render(request, 'spotapp/logout.html')
-    
+
     def post(self, request):
         request.session.flush()
         return redirect('spotapp:index')
 
 
+# ------------------------
+# as_view() の定義
+# ------------------------
 index = IndexView.as_view()
 
 signup = SignupView.as_view()
