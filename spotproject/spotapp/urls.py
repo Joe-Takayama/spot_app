@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ContactView,LoginView
+from .views import ContactView,LoginView, LogoutView
 
 
 app_name = "spotapp"
@@ -37,6 +37,9 @@ urlpatterns = [
     path('contact/complete', views.contact_complete, name='contact_complete'),
 
     #ログイン画面
-    path('login/',LoginView.as_view(),name="login")
+    path('login/',LoginView.as_view(),name="login"),
+    
+    #ログアウト画面
+    path('logout/',views.LogoutView.as_view(),name="logout"),
 
 ]

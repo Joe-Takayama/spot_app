@@ -3,16 +3,10 @@ from django.contrib.auth import update_session_auth_hash,authenticate, login
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
-from .forms import ContactForm
-
-
-from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm
-
 
 from django.contrib.auth.hashers import check_password
 from django.contrib import messages
-from .models import User
-
+from django.contrib.auth.models import User
 
 from .forms import ProfileEditForm, PasswordChangeOnlyForm, SignupForm, ContactForm, LoginForm
 
@@ -212,13 +206,13 @@ class ContactCompleteView(View):
 class LoginView(View):
     def get(self, request):
         form = LoginForm()
-        return render(request, 'registration/login.html', {'form': form})
+        return render(request, 'spotapp/login.html', {'form': form})
     
     def post(self, request):
         form = LoginForm(request.POST)
 
         if not form.is_valid():
-            return render(request, 'registration/login.html', {'form': form})
+            return render(request, 'spotapp/login.html', {'form': form})
 
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
@@ -228,9 +222,18 @@ class LoginView(View):
 
         if user is None:
             messages.error(request, "ユーザー名またはパスワードが違います")
-            return render(request, 'registration/login.html', {'form': form})
+            return render(request, 'spotapp/login.html', {'form': form})
 
         login(request, user)  # ← 標準ログイン
+        return redirect('spotapp:index')
+
+# ログアウト画面 
+class LogoutView(View):
+    def get(self, request):
+        return render(request, 'spotapp/logout.html')
+    
+    def post(self, request):
+        request.session.flush()
         return redirect('spotapp:index')
 
 

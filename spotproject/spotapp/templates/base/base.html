@@ -54,7 +54,7 @@
             <div id="userMenu" style="display:none;">
                 <ul>
                     <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
-                    <li><a href="/logout">ログアウト</a></li>
+                    <li><a href="{% url 'spotapp:logout' %}">ログアウト</a></li>
                 </ul>
             </div>
         {% else %}
