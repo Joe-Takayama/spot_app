@@ -1,20 +1,23 @@
 {% load static %}
-<a href="{% static 'css/style.css' %}" rel="stylesheet">
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8" />
-    <title>メニューHTML</title>
+    <title>{%  block title %}メニューHTML{% endblock %}</title>
+    <!--共通css-->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!--テンプレごとのcss-->
+    {% block extra_css %} {% endblock %}
 </head>
 <body>
 
         <!-- ナビ -->
     <nav>
-       <a href="{% url 'spotapp:index' %}">ホームボタン</a>
+        <a href="{% url 'spotapp:index' %}">ホームボタン</a>
 
         <!-- 地区別（プルダウン） -->
-         <div class="Nav-block" id="areaMenu_btn">
+        <div class="Nav-block" id="areaMenu_btn">
             <button class="Menu_btn">地区別 ▼</button>
         </div>
         <ul class="menu_down" id="areaMenu_down">
