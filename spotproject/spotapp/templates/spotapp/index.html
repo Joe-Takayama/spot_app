@@ -1,4 +1,39 @@
 {% extends "base/base.html" %}
+{% load static %}
+{% block head %}
+    {%  block title %}ホーム{% endblock %}
+    {% block extra_css %} <link href="{% static 'css/index.css' %}" rel="stylesheet">{% endblock %}
+{% endblock %}
+
 {% block body %}
-<div>継承してます</div>
+
+    <!-- ココのコピペ 　https://tagnote.net/js-parts/slideshow/-->
+    <!-- スライドの外枠 -->
+    <div class="slide-wrapper">
+    <!-- スライド（コンテンツ） -->
+    <div id="slide" class="slide">
+        <div>
+        <p>スライド１</p>
+        </div>
+        <div>
+        <p>スライド２</p>
+        </div>
+        <div>
+        <p>スライド３</p>
+        </div>
+    </div>
+    <!-- 左右のボタン -->
+    <span id="prev" class="prev"></span>
+    <span id="next" class="next"></span>
+    <!-- インジケーター -->
+    <ul class="indicator" id="indicator">
+        <li class="list"></li>
+        <li class="list"></li>
+        <li class="list"></li>
+    </ul>
+    </div>
+{% endblock %}
+
+{%block script %}
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

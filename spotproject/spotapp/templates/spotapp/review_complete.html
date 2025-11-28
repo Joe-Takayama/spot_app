@@ -1,6 +1,10 @@
-{% extends "base/base.html" %}
-{% block title %} レビュー完了 {% endblock %}
+<head>
+{% load static %}
+<link href="{% static 'css/review_complete.css' %}" rel="stylesheet">
+</head>
 
 {% block body %}
-<h1>投稿が完了しました。</h1>
+<div class="page-center">
+    <h1>投稿が完了しました。</h1>
+</div>
 {% endblock %}

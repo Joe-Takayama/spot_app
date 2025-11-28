@@ -11,21 +11,35 @@
 
   <h2 class="page-title">イベント一覧</h2>
 
+  <!-- 🔹月ボタン（そのままでOK） -->
   <div class="month-select">
-    {% for m in "1 2 3 4 5 6 7 8 9 10 11 12".split %}
+  {% for m in months %}
       <button>{{ m }}月</button>
-    {% endfor %}
-  </div>
+  {% endfor %}
+</div>
 
+
+  <!-- 🔹イベント一覧ループ -->
   {% for event in events %}
   <div class="event-card">
     <h3>{{ event.event_name }}</h3>
     <p>📅 {{ event.start_date }} 〜 {{ event.end_date }}</p>
     <p>📍 {{ event.location }}</p>
+
     {% if event.official_url %}
       <p>🔗 <a href="{{ event.official_url }}" target="_blank">公式サイト</a></p>
     {% endif %}
-    <p>{{ event.description|default:"説明は登録されていません" }}</p>
+
+    <!-- 説明文 -->
+    <p class="description">
+      {{ event.description|default:"※説明は登録されていません。" }}
+    </p>
+
+    <!-- 🔹ここを追加：詳細ページへ遷移するリンク -->
+    <a href="{% url 'spotapp:event_detail' event.event_id %}" class="detail-link">
+      詳細を見る →
+    </a>
+
   </div>
   {% empty %}
     <p>イベント情報はありません。</p>
