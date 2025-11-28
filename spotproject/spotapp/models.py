@@ -110,6 +110,22 @@ class Review(models.Model):
  
     def __str__(self):
         return f"{self.spot} - {self.rating}点"
+    
+
+# イベント
+class Event(models.Model):
+    event_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event_name = models.CharField(max_length=200, verbose_name="イベント名称")
+    start_date = models.DateField(verbose_name="開始日")
+    end_date = models.DateField(verbose_name="終了日")
+    location = models.CharField(max_length=200, verbose_name="開催場所")
+    official_url = models.URLField(blank=True, null=True, verbose_name="公式サイトURL")
+    description = models.TextField(blank=True, null=True, verbose_name="イベント説明")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日")
+
+    def __str__(self):
+        return self.event_name
+
  
  
 # ユーザープロフィール（Django標準Userを拡張）
@@ -131,3 +147,4 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
+
