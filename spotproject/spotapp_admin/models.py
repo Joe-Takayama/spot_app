@@ -98,3 +98,19 @@ class Photo(models.Model):
         if self.event:
             return f"{self.event.event_name}の写真"
         return f"未紐づけ写真{self.photo_id}"
+
+class Osirase(models.Model):
+
+    TYPE_CHOICES = [
+        ("maintenance", "メンテナンス"),
+        ("cancel", "中止・延期"),
+        ("other", "その他"),
+    ]
+
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    title = models.CharField(max_length=255)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

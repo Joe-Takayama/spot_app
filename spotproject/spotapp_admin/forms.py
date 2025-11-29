@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
-from .models import Staff, Events, Photo, Spot
+from .models import Staff, Events, Photo, Spot,Osirase
 from django import forms
 
 #職員ログインフォーム
@@ -64,4 +64,19 @@ class SpotCreateForm(ModelForm):
             'explanation': TextInput(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
+        }
+
+class OsiraseForm(forms.ModelForm):
+    class Meta:
+        model = Osirase
+        fields = ["type", "title", "body"]
+
+        widgets = {
+            "type": forms.RadioSelect,
+            "title": forms.TextInput(attrs={
+                "placeholder": "題名を入力",
+            }),
+            "body": forms.Textarea(attrs={
+                "placeholder": "本文を入力してください",
+            })
         }

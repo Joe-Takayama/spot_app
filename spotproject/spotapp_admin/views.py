@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm
+from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
 from .models import Staff, Events,Spot
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -179,3 +179,15 @@ class SpotListView(StaffLoginRequiredMixin, View):
     def get(self, request):
         spot_list = Spot.objects.order_by('-created_at')
         return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})
+
+#お知らせ送信画面
+def OsieaseSendView(request):
+    if request.method == "POST":
+        form = OsiraseForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("home")   # ホーム画面へ戻る
+    else:
+        form = OsiraseForm()
+
+    return render(request, "osirase.html", {"form": form})
