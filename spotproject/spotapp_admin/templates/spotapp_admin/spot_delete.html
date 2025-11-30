@@ -2,7 +2,7 @@
 {% block body %}
 <h2>この観光地を削除しますか?</h2>
     <p>観光地名称: {{ page.spot_name }}</p>
-        <form method="POST">
+        <form method="POST", action="{% url 'spot_delete' %}">
             {% csrf_token %}
             <button type="submit">はい</button>
         </form>

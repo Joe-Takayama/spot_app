@@ -2,7 +2,7 @@
 {% block body %}
 <h2>このイベントを削除しますか?</h2>
     <p>イベント名: {{ page.event_name }}</p>
-        <form method="POST">
+        <form method="POST", action="{% url 'spotapp_admin:event_delete' %}">
             {% csrf_token %}
             <button type="submit">はい</button>
         </form>

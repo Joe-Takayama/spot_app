@@ -1,5 +1,5 @@
-{% load static %}
 {% extends "base2/base2.html" %}
+{% load static %}
 {% block body %}
 <style>
     .osirase {
@@ -31,7 +31,7 @@
     }
 </style>
 
-<form class="osirase" action="" method="POST">
+<form class="osirase" action="{% url 'spotapp_admin:osirase_send' %}" method="POST">
     {% csrf_token %}   <!-- POSTを使う際使用  -->
     <input type="text" name="title" placeholder="題名">
     <textarea name="osirase" placeholder="お知らせする内容を入力してください"></textarea>

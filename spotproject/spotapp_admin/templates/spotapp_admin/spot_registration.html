@@ -3,7 +3,7 @@
 
 <h2>観光地登録</h2>
 
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:spot_registration' %}">
     {% csrf_token %}
     {{ spot_form.as_p }}
     {{ photo_form.as_p }}

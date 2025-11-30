@@ -3,7 +3,7 @@
 
 <div>
     <h2>ログイン</h2>
-    <form method="post">
+    <form method="post", action="{% url 'spotapp_admin:login' %}">
         {% csrf_token %}
         {{ form.as_p}}
         <button type="submit">ログイン</button>

@@ -11,7 +11,7 @@
     </div>
     <br>
 {% endif %}
-<form method="POST" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:event_update' %}">
     {% csrf_token %}
     {{ event_form.as_p }}
     {{ photo_form.as_p }}

@@ -181,13 +181,19 @@ class SpotListView(StaffLoginRequiredMixin, View):
         return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})
 
 #お知らせ送信画面
-def OsieaseSendView(request):
-    if request.method == "POST":
-        form = OsiraseForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("home")   # ホーム画面へ戻る
-    else:
-        form = OsiraseForm()
 
-    return render(request, "osirase.html", {"form": form})
+class OsiraseView(StaffLoginRequiredMixin, View):
+    def get(self, request):
+        form = OsiraseForm()
+        return render(request, 'spotapp_admin/osirase.html', {'form': form})
+
+
+    def post(self, request):
+        if request.method == "POST":
+            form = OsiraseForm(request.POST)
+            if form.is_valid():
+                form.save()
+                return render(request, 'spotapp_admin/osirase_complete.html')   # ホーム画面へ戻る
+            else:
+                form = OsiraseForm()
+                return render(request, "spotapp_admin/osirase.html", {"form": form})
