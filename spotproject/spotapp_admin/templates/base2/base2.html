@@ -5,15 +5,20 @@
     <meta charset="UTF-8" />
     <title>メニューHTML</title>
     <link href="{% static 'css/admin.css' %}" rel="stylesheet">
+<<<<<<< HEAD
     <link rel="stylesheet", href="{% static 'css/logout.css' %}">
     {% block head %}{% endblock %}
+=======
+    <link href="{% static 'css/logout.css' %}" rel="stylesheet">
+>>>>>>> 0c9ee451f0d2ccdc6d018d5eb3813a0e5fdba358
 </head>
 
 <body>
 
     <nav>
-        <a href="{% url 'spotapp_admin:index' %}">ホームボタン</a>
-
+        <div class="home-btn">
+            <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+        </div>
         <!-- 地域別（プルダウン） -->
         <div class="Nav-block" id="areaMenu_btn">
             <button class="Menu_btn">地区別 ▼</button>
