@@ -1,8 +1,10 @@
 {% extends "base/base.html" %}
 {% load static %}
-{% block head %}
-    {%  block title %}ホーム{% endblock %}
-    {% block extra_css %} <link href="{% static 'css/index.css' %}" rel="stylesheet">{% endblock %}
+
+
+{%  block title %}ホーム{% endblock %}
+{% block extra_css %}
+<link href="{% static 'css/index.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -12,16 +14,11 @@
     <div class="slide-wrapper">
     <!-- スライド（コンテンツ） -->
     <div id="slide" class="slide">
-        <div>
-        <p>スライド１</p>
-        </div>
-        <div>
-        <p>スライド２</p>
-        </div>
-        <div>
-        <p>スライド３</p>
-        </div>
+        <div><p>スライド１</p></div>
+        <div><p>スライド２</p></div>
+        <div><p>スライド３</p></div>
     </div>
+
     <!-- 左右のボタン -->
     <span id="prev" class="prev"></span>
     <span id="next" class="next"></span>
@@ -39,6 +36,7 @@
     
 {% endblock %}
 
-{%block script %}
-<script src="{% static 'js/main.js' %}"></script>
+{% block script %}
+    {{ block.super }}
+    <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

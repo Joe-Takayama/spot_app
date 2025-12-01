@@ -12,42 +12,46 @@
 </head>
 <body>
 
-        <!-- ナビ -->
-    <nav>
-        <a href="{% url 'spotapp:index' %}">ホームボタン</a>
 
-        <!-- 地区別（プルダウン） -->
+        <!-- ナビ -->
+<nav>
+    <div class="nav-left">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+    </div>
+
+    <div class="nav-center">
         <div class="Nav-block" id="areaMenu_btn">
             <button class="Menu_btn">地区別 ▼</button>
+            <ul class="menu_down" id="areaMenu_down">
+                <li><a href="#">北地区</a></li>
+                <li><a href="#">南地区</a></li>
+                <li><a href="#">東地区</a></li>
+                <li><a href="#">西地区</a></li>
+            </ul>
         </div>
-        <ul class="menu_down" id="areaMenu_down">
-            <li><a href="#">北地区</a></li>
-            <li><a href="#">南地区</a></li>
-            <li><a href="#">東地区</a></li>
-            <li><a href="#">西地区</a></li>
-        </ul>
 
-        <!-- カテゴリ（プルダウン） -->
-                <div class="Nav-block" id="categoryMenu_btn">
+        <div class="Nav-block" id="categoryMenu_btn">
             <button class="Menu_btn">カテゴリ ▼</button>
+            <ul class="menu_down" id="categoryMenu_down">
+                <li><a href="#">観光</a></li>
+                <li><a href="#">グルメ</a></li>
+                <li><a href="#">レジャー</a></li>
+                <li><a href="#">ショッピング</a></li>
+            </ul>
         </div>
-
-        <ul class="menu_down" id="categoryMenu_down">
-            <li><a href="#">観光</a></li>
-            <li><a href="#">グルメ</a></li>
-            <li><a href="#">レジャー</a></li>
-            <li><a href="#">ショッピング</a></li>
-        </ul>
 
         {% if user.is_authenticated %}
-        <a href="favorite/list">お気に入り一覧</a>
+            <button class="Menu_btn" onclick="location.href='{% url 'spotapp:favorite_list' %}'">お気に入り一覧</button>
         {% endif %}
 
+        <button class="Menu_btn">お知らせ通知</button>
+    </div>
 
-            <a href="#">お知らせ通知</a>
+    <div class="nav-right">
         {% if user.is_authenticated %}
+        <div class="user-menu-wrapper">
 
-            <div class="user-info" onclick="toggleMenu('userMenu'); return false;" style="cursor:pointer;">
+            <div class="user-info" id="userMenuBtn">
                 <div class="user-icon">
                     {% if request.user.profile.icon %}
                         <img src="{{ request.user.profile.icon.url }}" alt="icon">
@@ -55,21 +59,22 @@
                         <img src="{% static 'img/default_icon.png' %}" alt="icon">
                     {% endif %}
                 </div>
-                <div class="user-name-text">
-                    {{ request.user.username }} さん
-                </div>
+                <!-- 名前をアイコンの下にしたい場合はここ変更 -->
+                <div class="user-name">{{ request.user.username }} さん</div>
             </div>
 
-            <div id="userMenu" style="display:none;">
-                <ul>
-                    <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
-                    <li><a href="{% url 'spotapp:logout' %}">ログアウト</a></li>
-                </ul>
-            </div>
+            <ul class="user-menu" id="userMenu">
+                <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
+                <li><a href="{% url 'spotapp:logout' %}">ログアウト</a></li>
+            </ul>
+
+        </div>
         {% else %}
-            <a href="{% url "spotapp:signup" %}">新規登録 / ログイン</a>
+            <a href="{% url 'spotapp:signup' %}">新規登録 / ログイン</a>
         {% endif %}
-        </nav>
+    </div>
+</nav>
+
 
         
 
@@ -79,24 +84,42 @@
         </div>
 
         
-        {% block body %}
+    {% block body %}
 
-        {% endblock %}
+    {% endblock %}
     
         <!-- フッター -->
-        <footer class="footer">
-            <span>E班</span>
-            <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
-        </footer>
+    <footer class="footer">
+        <span>E班</span>
+        <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
+    </footer>
 
-        <script>
-            function toggleMenu(id) {
-            const menu = document.getElementById(id);
-                menu.style.display = (menu.style.display === "none") ? "block" : "none";
+    {% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const menuBtn = document.getElementById("userMenuBtn");
+        const menu = document.getElementById("userMenu");
+
+        // 要素が存在しなければ終了（エラー防止）
+        if (!menuBtn || !menu) return;
+
+        // ▼ アイコンクリックで開閉
+        menuBtn.addEventListener("click", function(e) {
+            e.stopPropagation();
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        });
+
+        // ▼ 画面のどこかをクリックしたら閉じる
+        document.addEventListener("click", function() {
+            if (menu.style.display === "flex") {
+                menu.style.display = "none";
             }
-        </script>
-        <!-- 各スクリプトを入れるやつ -->
-        {% block script %}
-        {% endblock %}
+        });
+
+    });
+</script>
+
+    {% endblock %}
 </body>
 </html>
