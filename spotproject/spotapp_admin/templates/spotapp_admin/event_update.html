@@ -1,21 +1,36 @@
-{% extends "base2/base2.html" %}
-{% block body %}
-<h2>イベント更新</h2>
+{% load static %}
+<head>
+    <link rel="stylesheet", href="{% static 'css/event_update.css' %}">
+</head>
 
-{% if page.photos.all %}
-    <div>
-        <p>現在の写真</p>
-        {% for photo in page.photos.all %}
-            <img src="{{ photo.image.url }}" alt="Event Photo" style="max-width:200px; max-height:200px;">
-        {% endfor %}
+{% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
+<div class="event_update-container">
+    <div class="event_update-form">
+        <h2>イベント更新</h2>
+
+        <div class="image-gallery">
+            {% if page.photos.all %}
+                <p class="gallery-title">現在の写真</p>
+                <div class="gallery">
+                    {% for photo in page.photos.all %}
+                        <div class="photo-item">
+                            <img src="{{ photo.image.url }}" alt="イベント写真">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        <form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:event_update' page.pk %}">
+            {% csrf_token %}
+            {{ event_form.as_p }}
+            {{ photo_form.as_p }}
+            <button type="submit">更新</button>
+        </form>
     </div>
-    <br>
-{% endif %}
-<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:event_update' %}">
-    {% csrf_token %}
-    {{ event_form.as_p }}
-    {{ photo_form.as_p }}
-    <button type="submit">更新</button>
-</form>
+</div>
 <a href="{% url 'spotapp_admin:event_list' %}">イベント一覧に戻る</a>
 {% endblock %}

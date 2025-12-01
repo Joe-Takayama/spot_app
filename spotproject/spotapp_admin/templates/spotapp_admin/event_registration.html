@@ -1,13 +1,24 @@
-{% extends "base2/base2.html" %}
+
+{% load static %}
+<head>
+    <link rel="stylesheet", href="{% static 'css/event_registration.css' %}">
+</head>
+
 {% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
 
-<h2>イベント登録</h2>
+<div class="event_registration-container">
+    <div class="event_registration-form">
+        <h2>イベント登録</h2>
 
-<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:event_registration'%}">
-    {% csrf_token %}
-    {{ event_form.as_p }}
-    {{ photo_form.as_p }}
-    <button type="submit">登録</button>
-</form>
-
+        <form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:event_registration'%}">
+            {% csrf_token %}
+            {{ event_form.as_p }}
+            {{ photo_form.as_p }}
+            <button type="submit">登録</button>
+        </form>
+    </div>
+</div>
 {% endblock %}
