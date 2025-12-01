@@ -13,8 +13,9 @@ from .forms import (
     SignupForm, ContactForm, LoginForm
 )
 
-from .models import Event  # ★ 追加：Eventモデルを読み込む
+from .models import Events,Spot
 
+from spotapp_admin.models import Events,Spot
 
 # ------------------------
 # インデックス
@@ -168,7 +169,7 @@ class FavoriteListView(LoginRequiredMixin, View):
 # ------------------------
 class EventChartView(View):
     def get(self, request):
-        events = Event.objects.all()  # ★DBから全件取得
+        events = Events.objects.all()  # ★DBから全件取得
         months = range(1, 13)  # ★追記：1〜12月のリスト作成
         return render(request, 'spotapp/event_chart.html', {
             'events': events,
@@ -180,8 +181,13 @@ class EventChartView(View):
 # ------------------------
 class EventDetailView(View):
     def get(self, request, event_id):  # ★URL側からevent_idを受け取る
-        event = get_object_or_404(Event, event_id=event_id)  # ★1件取得
+        event = get_object_or_404(Events, event_id=event_id)  # ★1件取得
         return render(request, 'spotapp/event_detail.html', {'event': event})
+# イベント一覧画面
+class EventListView(View):
+    def get(self, request):
+        event_list = Events.objects.order_by('-event_date')
+        return render(request, 'spotapp/event_chart.html', {'event_list': event_list})
 
 
 # ------------------------
