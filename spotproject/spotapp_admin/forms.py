@@ -31,7 +31,7 @@ class EventCreateForm(ModelForm):
             'venue': TextInput(attrs={
                 'placeholder': '会場を入力してください'
             }),
-            'deteils': Textarea(attrs={
+            'details': Textarea(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
             'organizer': TextInput(attrs={
