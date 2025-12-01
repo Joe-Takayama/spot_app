@@ -1,0 +1,61 @@
+.home-btn {
+    margin-left: 30px;
+    margin-top: 20px;
+}
+
+.home-btn a {
+    display: inline-block;
+    background-color: #0077cc;        /*背景色*/
+    border-radius: 8px;
+    color: white;                     /*文字の色*/
+    text-decoration: none;              /*リンクの線*/
+    padding: 8px 14px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.home-btn a:hover {
+    color: white;
+    background-color: #005fa3;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form h2 {
+    margin-left: 150px;
+}
+
+.login-form {
+    padding: 20px 30px;
+    background-color: #fff;
+    width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.login-form input {
+    width: 100%;                   
+    padding: 12px;                 
+    border-radius: 6px;            
+    border: 1px solid #bbb;        /* 上下左右に1px・グレーの枠線を追加 */
+    margin-bottom: 18px;           /* 下に18pxの余白を追加（次の入力欄との距離） */
+}
+
+.login-form button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #0077cc;
+    border-radius: 8px;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.login-form button:hover {
+    background-color: #005fa3;
+    color: white;
+}

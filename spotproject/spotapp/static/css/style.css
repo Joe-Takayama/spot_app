@@ -1,82 +1,135 @@
+/* ===============================
+   ▼ ナビバー全体の設定
+   =============================== */
+nav {
+    width: 100%;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e1e5e9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    box-sizing: border-box;
 
-        nav {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            position: relative;  /* nav を基準にする */
-            align-items: center;
-        }
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    padding: 10px 20px;
+    box-sizing: border-box;
 
-        .Nav-block {
-            text-align: center;
-            position: relative;
-            font-family: 'Arial', sans-serif;
-        }
+    position: relative;
+    z-index: 999999;
+}
 
-        .Menu_btn {
-            padding: 12px 20px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
+.nav-left {
+    flex: 0 0 auto;
 
-        .Menu_btn:hover {
-            background: #5a6fd8;
-        }
+}
 
-        /* nav直下の menu_down を nav 幅で表示 */
-        .menu_down {
-            position: absolute;      /* nav が基準 */
-            top: 105%;               /* nav の真下 */
-            left: 0;
-            width: 100%;             /* nav の幅いっぱい */
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            border: 1px solid #e1e5e9;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
 
-            padding: 0;
-            margin: 0;
-            list-style: none;
+/* 右ブロック */
+.nav-right {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
 
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
 
-        .menu_down li {
-            flex: 1;
-            text-align: center;
-        }
 
-        .menu_down a {
-            display: block;
-            padding: 12px 0;
-            color: #333;
-            text-decoration: none;
-        }
+/* ======================================
+   ▼ Nav-block：ボタン＋メニューの親箱
+   これがないとドロップダウンの位置がズレる
+   ====================================== */
+.Nav-block {
+    position: relative;
 
-        .menu_down a:hover {
-            background: #f8f9fa;
-            color: #667eea;
-        }
+}
 
-        /* hover で menu_down を表示 */
-        .Nav-block:hover + .menu_down,
-        .menu_down:hover {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+/* ===============================
+   ▼ ホームボタンのスタイル
+   =============================== */
+.btn-home {
+    background: #0077cc;
+    padding: 10px 15px;
+    color: #fff;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-home:hover {
+    background: #005fa3;
+}
+
+/* ===============================
+   ▼ ドロップダウンを出すボタン部分
+   =============================== */
+.Menu_btn {
+    padding: 12px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.Menu_btn:hover {
+    background: #5a6fd8;
+}
+
+/* ============================================
+   ▼ ドロップダウンメニュー本体（最初は非表示）
+   position:absolute にして Nav-block の下に出す
+   ============================================ */
+.menu_down {
+    position: absolute;
+    top: 100%;    /* ボタンの真下 */
+    left: 0;
+
+    min-width: 160px;
+    background: #fff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: none;
+    flex-direction: column;
+    z-index: 1000;
+}
+
+/* hover で出す */
+.Nav-block:hover > .menu_down {
+    display: flex;
+}
+
+/* =======================================
+   ▼ メニューのそれぞれの項目
+   ======================================= */
+.menu_down li a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+.menu_down li a:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
 
         footer {
             margin-top: 20px;
@@ -99,6 +152,16 @@
             border-top:solid 3px #333;
         }
 
+.user-info {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+
+}
+
 .user-icon-placeholder {
     width: 55px;
     height: 55px;
@@ -116,18 +179,69 @@
     height: 56px;
     border-radius: 50%;
     object-fit: cover;
+
+    pointer-events: auto;
     transition: transform 0.2s ease, opacity 0.2s ease;
+   
 }
 
 .user-icon img:hover {
-    transform: scale(1.08);   /* 少し大きく */
-    opacity: 0.85;            /* ちょい薄く */
+    transform: scale(1.08);
+    opacity: 0.85;
     cursor: pointer;
-    color: blue;
 }
 
-.user-name-text {
+.user-name {
     font-size: 14px;
     font-weight: bold;
+    text-align: center;
 }
-        
+
+/* ▼ ユーザーメニューの親（位置の基準） */
+.user-menu-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* ▼ メニュー本体（最初は非表示） */
+.user-menu {
+    position: absolute;
+    top: 110%;     /* アイコンの少し下 */
+    right: 0;
+
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: none;       /* ← 初期は隠す */
+    flex-direction: column;
+    z-index: 2000;
+}
+
+/* ▼ メニュー項目 */
+.user-menu li a {
+    display: block;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: #333;
+}
+
+.user-menu li a:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
+.user-menu-wrapper:hover .user-menu {
+    display: none;
+}
+
+
+
+
+
+    

@@ -1,8 +1,14 @@
 {% extends "base2/base2.html" %}
+
 {% block body %}
-<h2>ログアウト</h2>
-<form method="POST" action="{% url 'spotapp_admin:logout' %}">
-    {% csrf_token %}
-    <button type="submit">ログアウト</button>
-</form>
+
+<div class="logout-container">
+    <div class="logout-form">
+        <h2>ログアウト</h2>
+            <form method="POST" action="{% url 'spotapp_admin:logout' %}">
+                {% csrf_token %}
+                <button type="submit">ログアウト</button>
+            </form>
+    </div>
+</div>
 {% endblock %}
