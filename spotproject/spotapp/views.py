@@ -187,7 +187,11 @@ class EventDetailView(View):
 class EventListView(View):
     def get(self, request):
         event_list = Events.objects.order_by('-event_date')
-        return render(request, 'spotapp/event_chart.html', {'event_list': event_list})
+        months = range(1, 13)
+        return render(request, 'spotapp/event_chart.html',{
+            'event_list': event_list,
+            'months': months,
+        })
 
 
 # ------------------------
@@ -302,7 +306,7 @@ review_complete = ReviewCompleteView.as_view()
 
 favorite_list = FavoriteListView.as_view()
 
-event_chart = EventChartView.as_view()
+event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()
 
 contact_complete = ContactCompleteView.as_view()
