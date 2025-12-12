@@ -110,9 +110,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
             user.set_password(p1)
             user.save()
-jectjjjjh
             return redirect("spotapp:password_change_complete")
-
         return render(request, "spotapp/password_change.html", {"form": form})
 
 
