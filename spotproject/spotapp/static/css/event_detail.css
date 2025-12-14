@@ -156,3 +156,7 @@ main.detail-container {
     width: 100%;
     max-width: 1300px;
 }
+main.detail-container {
+    background: rgba(255, 0, 0, 0.15);
+    outline: 5px solid red;
+}
