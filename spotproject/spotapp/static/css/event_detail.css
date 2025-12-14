@@ -3,6 +3,7 @@
 =========================== */
 .detail-container {
     max-width: 1300px;
+    width: 100%; 
     margin: 0 auto;
     padding: 25px;
     font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
