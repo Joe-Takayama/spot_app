@@ -1,28 +1,40 @@
 /* ===============================
-   ▼ ナビバー全体の設定
+   ▼ ベースレイアウト（重要）
+   =============================== */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+/* ===============================
+   ▼ ナビバー全体
    =============================== */
 nav {
     width: 100%;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e5e9;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 10px 0;
-    box-sizing: border-box;
 
     display: flex;
     justify-content: space-between;
-    gap: 20px;
     align-items: center;
+    gap: 20px;
+
     padding: 10px 20px;
     box-sizing: border-box;
 
     position: relative;
-    z-index: 999999;
+    z-index: 999;
 }
 
 .nav-left {
     flex: 0 0 auto;
-
 }
 
 .nav-center {
@@ -30,10 +42,8 @@ nav {
     display: flex;
     justify-content: center;
     gap: 20px;
-
 }
 
-/* 右ブロック */
 .nav-right {
     flex: 0 0 auto;
     display: flex;
@@ -41,23 +51,19 @@ nav {
     gap: 20px;
 }
 
-
-
-/* ======================================
-   ▼ Nav-block：ボタン＋メニューの親箱
-   これがないとドロップダウンの位置がズレる
-   ====================================== */
+/* ===============================
+   ▼ Nav-block（ドロップダウン親）
+   =============================== */
 .Nav-block {
     position: relative;
-
 }
 
 /* ===============================
-   ▼ ホームボタンのスタイル
+   ▼ ホームボタン
    =============================== */
 .btn-home {
     background: #0077cc;
-    padding: 20px 20px;
+    padding: 12px 20px;
     color: #fff;
     border-radius: 6px;
     text-decoration: none;
@@ -69,7 +75,7 @@ nav {
 }
 
 /* ===============================
-   ▼ ドロップダウンを出すボタン部分
+   ▼ メニューボタン
    =============================== */
 .Menu_btn {
     padding: 12px 20px;
@@ -86,13 +92,12 @@ nav {
     background: #5a6fd8;
 }
 
-/* ============================================
-   ▼ ドロップダウンメニュー本体（最初は非表示）
-   position:absolute にして Nav-block の下に出す
-   ============================================ */
+/* ===============================
+   ▼ ドロップダウンメニュー
+   =============================== */
 .menu_down {
     position: absolute;
-    top: 100%;    /* ボタンの真下 */
+    top: 100%;
     left: 0;
 
     min-width: 160px;
@@ -110,14 +115,10 @@ nav {
     z-index: 1000;
 }
 
-/* hover で出す */
 .Nav-block:hover > .menu_down {
     display: flex;
 }
 
-/* =======================================
-   ▼ メニューのそれぞれの項目
-   ======================================= */
 .menu_down li a {
     display: block;
     padding: 12px 16px;
@@ -130,28 +131,21 @@ nav {
     color: #667eea;
 }
 
+/* ===============================
+   ▼ 検索バー
+   =============================== */
+#search {
+    width: 80%;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    display: block;
+}
 
-        footer {
-            margin-top: 20px;
-        }
-
-        #search{
-            text-align: center;
-            width: 80%;
-            padding: 8px 16px;
-            background: #fff;
-            border-radius: 5px;
-            margin: 5% 0%;
-        }
-
-        .footer{
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            border-top:solid 3px #333;
-        }
-
+/* ===============================
+   ▼ ユーザー情報
+   =============================== */
 .user-info {
     cursor: pointer;
     display: flex;
@@ -159,19 +153,6 @@ nav {
     align-items: center;
     gap: 6px;
     position: relative;
-
-}
-
-.user-icon-placeholder {
-    width: 55px;
-    height: 55px;
-    background: #e0e0e0;
-    border-radius: 50%;
-    font-size: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
 }
 
 .user-icon img {
@@ -179,33 +160,30 @@ nav {
     height: 56px;
     border-radius: 50%;
     object-fit: cover;
-
-    pointer-events: auto;
     transition: transform 0.2s ease, opacity 0.2s ease;
-   
 }
 
 .user-icon img:hover {
     transform: scale(1.08);
     opacity: 0.85;
-    cursor: pointer;
 }
 
 .user-name {
     font-size: 14px;
     font-weight: bold;
-    text-align: center;
 }
 
-/* ▼ ユーザーメニューの親（位置の基準） */
+/* ===============================
+   ▼ ユーザーメニュー
+   =============================== */
 .user-menu-wrapper {
     display: inline-block;
+    position: relative;
 }
 
-/* ▼ メニュー本体（最初は非表示） */
 .user-menu {
     position: absolute;
-    top: 110%;     /* アイコンの少し下 */
+    top: 110%;
     right: 0;
 
     background: white;
@@ -217,12 +195,11 @@ nav {
     padding: 0;
     margin: 0;
 
-    display: none;       /* ← 初期は隠す */
+    display: none;
     flex-direction: column;
     z-index: 2000;
 }
 
-/* ▼ メニュー項目 */
 .user-menu li a {
     display: block;
     padding: 12px 18px;
@@ -235,10 +212,6 @@ nav {
     color: #667eea;
 }
 
-.user-menu-wrapper:hover .user-menu {
-    display: none;
-}
-
 .user-btn {
     background: #0077cc;
     padding: 10px 15px;
@@ -248,8 +221,20 @@ nav {
     font-size: 14px;
 }
 
+/* ===============================
+   ▼ フッター（最重要修正）
+   =============================== */
+.footer {
+    margin-top: auto;              /* ← これが決定打 */
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #ccc;
+    font-size: 14px;
+    background: #fafafa;
+}
 
-
-
-
-    
+.footer a {
+    color: #4a60d3;
+    text-decoration: none;
+}
