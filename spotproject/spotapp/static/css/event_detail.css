@@ -1,17 +1,17 @@
 /* ===========================
-   ページ全体レイアウト
-=========================== */
+   イベント詳細：ベース
+   =========================== */
 .detail-container {
-    max-width: 1300px;
-    width: 100%; 
-    margin: 0 auto;
+    width: 100%;
+    margin: 0;
     padding: 25px;
+    box-sizing: border-box;
     font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
 }
 
 /* ===========================
-   ヘッダー（戻る＋ユーザー情報）
-=========================== */
+   ヘッダー
+   =========================== */
 .detail-header {
     display: flex;
     justify-content: space-between;
@@ -35,7 +35,7 @@
 
 /* ===========================
    イベント名
-=========================== */
+   =========================== */
 .event-title {
     text-align: center;
     font-size: 32px;
@@ -45,7 +45,7 @@
 
 /* ===========================
    メイン写真
-=========================== */
+   =========================== */
 .main-photo-box {
     background: #f6f6f6;
     text-align: center;
@@ -56,6 +56,7 @@
 
 .main-photo-box img {
     width: 100%;
+    height: auto;
     max-height: 380px;
     object-fit: cover;
     border-radius: 10px;
@@ -66,10 +67,10 @@
 }
 
 /* ===========================
-   基本情報（カード風）
-=========================== */
+   基本情報
+   =========================== */
 .info-section {
-    background: #ffffff;
+    background: #fff;
     padding: 20px 25px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
@@ -79,17 +80,17 @@
 .info-row {
     display: flex;
     align-items: center;
+    gap: 10px;
     margin-bottom: 12px;
 }
 
 .info-label {
-    width: 100px;
+    min-width: 100px;
     font-weight: bold;
     color: #333;
 }
 
 .info-value {
-    flex: 1;
     color: #555;
 }
 
@@ -99,11 +100,11 @@
 }
 
 .fav-btn {
+    margin-left: auto;
     background: #ffbf00;
     border: none;
-    padding: 6px 10px;
+    padding: 6px 12px;
     border-radius: 6px;
-    margin-left: 10px;
     cursor: pointer;
     font-size: 13px;
     font-weight: bold;
@@ -111,52 +112,25 @@
 }
 
 /* ===========================
-    セクションデザイン
-=========================== */
-.section-box {
-    background: #ffffff;
+   セクション共通
+   =========================== */
+.section-box,
+.map-box {
+    background: #fff;
     padding: 20px 25px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
     margin-bottom: 30px;
 }
 
-.section-box h2 {
-    font-size: 22px;
-    margin-bottom: 10px;
-}
-
-.section-box p {
-    line-height: 1.8;
-    color: #444;
-}
-
-/* ===========================
-   MAP セクション
-=========================== */
-.map-box {
-    background: #ffffff;
-    padding: 20px 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    margin-bottom: 40px;
-}
-
+.section-box h2,
 .map-box h2 {
     font-size: 22px;
     margin-bottom: 10px;
 }
 
-.map-box ul li {
+.section-box p,
+.map-box li {
     line-height: 1.8;
     color: #444;
-}
-
-main.detail-container {
-    width: 100%;
-    max-width: 1300px;
-}
-main.detail-container {
-    background: rgba(255, 0, 0, 0.15);
-    outline: 5px solid red;
 }
