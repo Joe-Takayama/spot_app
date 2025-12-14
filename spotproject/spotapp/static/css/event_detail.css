@@ -2,7 +2,7 @@
    ページ全体レイアウト
 =========================== */
 .detail-container {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 25px;
     font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
