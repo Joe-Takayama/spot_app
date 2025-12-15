@@ -124,9 +124,16 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 # ------------------------
 class SpotSearchResultView(View):
     def get(self, request):
-        return render(request, 'spotapp/spot_searchresult.html')
+        keyword = request.GET.get('q')
+        spots = Spot.objects.all()
 
+        if keyword:
+            spots = spots.filter(spot_name__icontains=keyword)
 
+        return render(request, 'spotapp/spot_searchresult.html', {
+            'keyword': keyword,
+            'spots': spots,
+        })
 # ------------------------
 # 観光地詳細ビュー
 # ------------------------
