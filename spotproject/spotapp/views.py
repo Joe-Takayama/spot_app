@@ -8,12 +8,15 @@ from django.contrib.auth.hashers import check_password
 from django.contrib import messages
 from django.contrib.auth.models import User
 
+from django.shortcuts import render
+
+
 from .forms import (
     ProfileEditForm, PasswordChangeOnlyForm,
     SignupForm, ContactForm, LoginForm
 )
 
-from .models import Events,Spot
+from .models import Events,Spot,Review
 
 from spotapp_admin.models import Events,Spot
 
