@@ -5,9 +5,10 @@
 
 <!-- 検索結果一覧 -->
 <div class="spot-list">
-
     {% for spot in spots %}
     <div class="spot-card">
+
+        <h3 class="spot-name">{{ spot.spot_name }}</h3>
 
         <!-- 左：写真 -->
         <div class="spot-image">
@@ -16,17 +17,10 @@
 
         <!-- 右：情報 -->
         <div class="spot-info">
-            <h3 class="spot-name">{{ spot.spot_name }}</h3>
-
-            
-            <div class="spot-address">{{ spot.address}}
-                住所
+            <div class="spot-hours">営業時間
+                {{ spot.business_hours}}                
             </div>
-
-            <div class="spot-hours">{{ spot.business_hours}}
-                営業時間
-            </div>
-            
+        
             <div class="spot-rating">{{ review.rating}}
     
             </div>
