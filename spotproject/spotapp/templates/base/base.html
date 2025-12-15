@@ -1,5 +1,5 @@
 {% load static %}
- 
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -11,14 +11,14 @@
     {% block extra_css %} {% endblock %}
 </head>
 <body>
- 
- 
+
+
         <!-- ナビ -->
 <nav>
     <div class="nav-left">
         <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
     </div>
- 
+
     <div class="nav-center">
         <div class="Nav-block" id="areaMenu_btn">
             <button class="Menu_btn">地区別 ▼</button>
@@ -29,7 +29,7 @@
                 <li><a href="#">西地区</a></li>
             </ul>
         </div>
- 
+
         <div class="Nav-block" id="categoryMenu_btn">
             <button class="Menu_btn">カテゴリ ▼</button>
             <ul class="menu_down" id="categoryMenu_down">
@@ -39,7 +39,7 @@
                 <li><a href="#">ショッピング</a></li>
             </ul>
         </div>
- 
+
 <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn">
     お気に入り一覧
 </a>
@@ -47,11 +47,11 @@
 
         <button class="Menu_btn">お知らせ通知</button>
     </div>
- 
+
     <div class="nav-right">
         {% if user.is_authenticated %}
         <div class="user-menu-wrapper">
- 
+
             <div class="user-info" id="userMenuBtn">
                 <div class="user-icon">
                     {% if request.user.profile.icon %}
@@ -63,26 +63,27 @@
                 <!-- 名前をアイコンの下にしたい場合はここ変更 -->
                 <div class="user-name">{{ request.user.username }} さん</div>
             </div>
- 
+
             <ul class="user-menu" id="userMenu">
                 <li><a href="{% url 'spotapp:profile_edit' %}">プロフィール編集</a></li>
                 <li><a href="{% url 'spotapp:logout' %}">ログアウト</a></li>
             </ul>
- 
+
         </div>
         {% else %}
             <a href="{% url 'spotapp:signup' %}" class="user-btn">新規登録 / ログイン</a>
         {% endif %}
     </div>
 </nav>
- 
- 
-       
- 
+
+
+
+
         <!-- 検索バー -->
-        <div style="text-align: center;">
-            <input type="text"  id="search" placeholder="検索バー（あいまい検索可能）">
-        </div>
+        <form action="{% url 'spotapp:spot_searchresult' %}" method="get" style="text-align: center;">
+            <input type="text" name="key" id="search" placeholder="検索バー（あいまい検索可能）">
+            <button type="submit">検索</button>
+        </form>
 
             <!-- ★ 中央幅の基準 -->
         <div class="page-container">
@@ -90,39 +91,39 @@
         {% endblock %}
         </div>
 
- 
+
         <!-- フッター -->
     <footer class="footer">
         <span>E班</span>
         <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
     </footer>
- 
+
     {% block script %}
 <script>
     document.addEventListener("DOMContentLoaded", function () {
- 
+
         const menuBtn = document.getElementById("userMenuBtn");
         const menu = document.getElementById("userMenu");
- 
+
         // 要素が存在しなければ終了（エラー防止）
         if (!menuBtn || !menu) return;
- 
+
         // ▼ アイコンクリックで開閉
         menuBtn.addEventListener("click", function(e) {
             e.stopPropagation();
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         });
- 
+
         // ▼ 画面のどこかをクリックしたら閉じる
         document.addEventListener("click", function() {
             if (menu.style.display === "flex") {
                 menu.style.display = "none";
             }
         });
- 
+
     });
 </script>
- 
+
     {% endblock %}
 </body>
 </html>
