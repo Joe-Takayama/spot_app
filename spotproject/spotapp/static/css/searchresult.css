@@ -1,61 +1,76 @@
-/* 検索バー */
-.search-bar {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.search-bar input {
-    width: 70%;
-    padding: 10px;
-    font-size: 16px;
-}
-
-/* 一覧全体 */
+/* 全体 */
 .spot-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 30px;
     align-items: center;
+    margin: 30px 0;
 }
 
 /* カード */
 .spot-card {
+    width: 60%;
+    border: 2px solid #333;
+    border-radius: 30px;
+    padding: 25px;
     display: flex;
-    width: 80%;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 20px;
+    gap: 30px;
+    box-sizing: border-box;
 }
-
+/* 左*/
+.spot-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+}
+/* 観光地名 */
+.spot-name {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
 /* 写真 */
 .spot-image {
-    width: 150px;
-    height: 150px;
-    border: 1px solid #aaa;
-    border-radius: 10px;
+    width: 200px;
+    height: 180px;
+    border: 2px solid #333;
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-right: 20px;
+    background-color: #f8f8f8;
 }
 
-/* 情報 */
+/* 右 */
 .spot-info {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    justify-content: center;
+    position: relative;
 }
 
-.spot-name {
-    font-size: 20px;
-    font-weight: bold;
-}
 
+/* 営業時間 */
+.spot-hours {
+    font-size: 30px;
+    margin-left: 80px; 
+    margin-bottom: 20px;
+}
+/* ★ */
 .spot-rating {
-    font-size: 20px;
+    font-size: 30px;
+    margin-left: 80px; 
+    letter-spacing: 3px;
+    margin-bottom: 20px;
 }
-
-.spot-actions button {
-    margin-right: 10px;
+/* 右下 */
+.spot-actions {
+    display: flex;
+    gap: 15px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
 }
