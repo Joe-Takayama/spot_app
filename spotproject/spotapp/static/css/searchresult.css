@@ -1,0 +1,61 @@
+/* 検索バー */
+.search-bar {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.search-bar input {
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* 一覧全体 */
+.spot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+/* カード */
+.spot-card {
+    display: flex;
+    width: 80%;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+/* 写真 */
+.spot-image {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+/* 情報 */
+.spot-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.spot-name {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.spot-rating {
+    font-size: 20px;
+}
+
+.spot-actions button {
+    margin-right: 10px;
+}

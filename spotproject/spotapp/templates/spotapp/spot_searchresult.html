@@ -1,8 +1,13 @@
 {%extends "base/base.html" %} 
-{% block title %} 観光地検索 {% endblock %}
+{% load static %}
+
+{% block title %} 観光地検索結果 {% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/searchresult.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block body%}
-
 <!-- 検索結果一覧 -->
 <div class="spot-list">
     {% for spot in spots %}
