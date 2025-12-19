@@ -95,21 +95,17 @@ class Favorite(models.Model):
  
 # レビュー
 class Review(models.Model):
-    # レビューid
-    review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # ユーザーid
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # 観光地id
-    spot = models.ForeignKey('Spot', on_delete=models.CASCADE)
-    # 評価（1〜5）
-    rating = models.IntegerField(choices=RATING_CHOICES)
-    # コメント
+    spot = models.ForeignKey(
+        Spot,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+    rating = models.IntegerField()
     comment = models.TextField()
-    # 投稿日
-    posted_at = models.DateTimeField(auto_now_add=True)
- 
+    created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
-        return f"{self.spot} - {self.rating}点"
+        return f"{self.spot.spot_name} - ★{self.rating}"
+
     
 
 class Events(models.Model):

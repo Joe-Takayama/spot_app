@@ -141,20 +141,44 @@ class SpotSearchResultView(View):
 # 観光地詳細ビュー
 # ------------------------
 class SpotDetailView(View):
+    
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/spot_detail.html', {
             'spot': spot
         })
 
+    def post(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+
+        Review.objects.create(
+            spot=spot,
+            rating=request.POST.get('rating'),
+            comment=request.POST.get('comment')
+        )
+
+        return redirect('spot_detail', spot_id=spot.spot_id)
 
 # ------------------------
 # レビュー投稿・完了ビュー
 # ------------------------
 class ReviewCreateView(View):
-    def get(self, request):
-        return render(request, "spotapp/review_create.html")
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+        return render(request, 'spotapp/review_create.html', {
+            'spot': spot
+        })
 
+    def post(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+
+        Review.objects.create(
+            spot=spot,
+            rating=request.POST.get('rating'),
+            comment=request.POST.get('comment')
+        )
+
+        return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
 
 class ReviewCompleteView(View):
     def get(self, request):
