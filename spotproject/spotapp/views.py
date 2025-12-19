@@ -120,8 +120,8 @@ class PasswordChangeView(LoginRequiredMixin, View):
 class PasswordChangeCompleteView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "spotapp/password_change_complete.html")
-
-
+    
+    
 # ------------------------
 # 観光地検索結果ビュー
 # ------------------------
@@ -141,8 +141,11 @@ class SpotSearchResultView(View):
 # 観光地詳細ビュー
 # ------------------------
 class SpotDetailView(View):
-    def get(self, request):
-        return render(request, 'spotapp/spot_detail.html')
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+        return render(request, 'spotapp/spot_detail.html', {
+            'spot': spot
+        })
 
 
 # ------------------------

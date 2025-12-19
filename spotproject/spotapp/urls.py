@@ -20,7 +20,7 @@ urlpatterns = [
     path('spot/searchresult/', views.spot_searchresult, name="spot_searchresult"),
 
     # 観光地詳細画面
-    path('spot/detail/', views.spot_detail, name="spot_detail"),
+    path('spot/<uuid:spot_id>/',views.spot_detail, name='spot_detail'),
 
     # レビュー投稿画面
     path('review/create/', views.review_create, name="review_create"),
