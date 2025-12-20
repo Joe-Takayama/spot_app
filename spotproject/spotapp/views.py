@@ -19,7 +19,6 @@ from .forms import (
 from .models import Events,Spot,Review
 
 from spotapp_admin.models import Events,Spot
-
 # ------------------------
 # インデックス
 # ------------------------
