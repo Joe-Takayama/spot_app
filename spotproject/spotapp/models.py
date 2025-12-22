@@ -14,22 +14,6 @@ RATING_CHOICES = [
     (5, '★5'),
 ]
  
-# 利用者テーブル
-class User(models.Model):
-    # ユーザーid
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # 名前
-    user_name = models.CharField(max_length=100, verbose_name="氏名")
-    # メールアドレス
-    email = models.EmailField(max_length=255, verbose_name="メールアドレス")
-    # パスワード
-    password = models.CharField(max_length=128, verbose_name="パスワード")
-    # 登録日
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日")
- 
-    def __str__(self):
-        return self.user_name
- 
  
 # 地区別テーブル
 class District(models.Model):
@@ -83,7 +67,7 @@ class Favorite(models.Model):
     # お気に入りid
     favorite_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # ユーザーid（ForeignKeyでUserに紐づけ）
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # 観光地id（Spot は文字列で参照）
     spot = models.ForeignKey('Spot', on_delete=models.CASCADE)
     # 登録日
@@ -95,17 +79,21 @@ class Favorite(models.Model):
  
 # レビュー
 class Review(models.Model):
-    spot = models.ForeignKey(
-        Spot,
-        on_delete=models.CASCADE,
-        related_name='reviews'
-        )
-    rating = models.IntegerField()
+    # レビューid
+    review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    # ユーザーid
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # 観光地id
+    spot = models.ForeignKey('Spot', on_delete=models.CASCADE)
+    # 評価（1〜5）
+    rating = models.IntegerField(choices=RATING_CHOICES)
+    # コメント
     comment = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
+    # 投稿日
+    posted_at = models.DateTimeField(auto_now_add=True)
+ 
     def __str__(self):
-        return f"{self.spot.spot_name} - ★{self.rating}"
-
+        return f"{self.spot} - {self.rating}点"
     
 
 class Events(models.Model):

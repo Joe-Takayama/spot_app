@@ -20,6 +20,10 @@ from .forms import (
 from .models import Events, Review, Spot as UserSpot
 from spotapp_admin.models import Events, Spot
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+
 
 # ------------------------
 # インデックス
