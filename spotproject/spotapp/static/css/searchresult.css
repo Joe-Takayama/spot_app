@@ -1,0 +1,139 @@
+/* =========================
+   検索結果 全体
+========================= */
+.spot-list {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+    margin: 30px 0;
+}
+
+/* =========================
+   カード
+========================= */
+.spot-card {
+    width: 60%;
+    border: 2px solid #333;
+    border-radius: 30px;
+    padding: 25px;
+    display: flex;
+    gap: 30px;
+    box-sizing: border-box;
+
+    position: relative;
+    cursor: pointer;
+    background-color: #fff;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
+}
+
+/* hover：浮く */
+.spot-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 35px rgba(0,0,0,0.2);
+    background-color: #fafafa;
+}
+
+/* active：押した瞬間 */
+.spot-card:active {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* 押した瞬間に暗くなる（視覚的に超重要） */
+.spot-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 30px;
+    pointer-events: none;
+}
+
+.spot-card:active::after {
+    background-color: rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   左側
+========================= */
+.spot-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 180px;
+}
+
+.spot-name {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.spot-image {
+    width: 200px;
+    height: 180px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f8f8;
+    transition: transform 0.3s ease;
+}
+
+.spot-card:hover .spot-image {
+    transform: scale(1.05);
+}
+
+/* =========================
+   右側
+========================= */
+.spot-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.spot-hours,
+.spot-rating {
+    font-size: 30px;
+    margin-left: 80px;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   アクション
+========================= */
+.spot-actions {
+    display: flex;
+    gap: 15px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/* ボタン */
+.spot-actions button,
+.spot-actions .btn {
+    padding: 8px 16px;
+    border: 1px solid #333;
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+
+.spot-actions button:hover,
+.spot-actions .btn:hover {
+    background-color: #333;
+    color: #fff;
+}

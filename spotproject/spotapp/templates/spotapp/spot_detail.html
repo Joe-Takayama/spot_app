@@ -1,25 +1,37 @@
-<head>
-    {% load static %}
-    <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
-</head>
-<div class="page">
-    <header class="page-header">
-        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+    <head>
+        {% load static %}
+        <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+    </head>
+    <div class="page">
+        <header class="page-header">
+            <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
 
-        <div class="user-info">
-            <div class="user-icon">
-                {% if request.user.profile.icon %}
-                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                {% else %}
-                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                {% endif %}
+            <div class="user-info">
+                <div class="user-icon">
+                    {% if request.user.profile.icon %}
+                        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                    {% else %}
+                        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                    {% endif %}
+                </div>
+                <div class="user-name-text">
+                    {{ request.user.username }} さん
+                </div>
             </div>
-            <div class="user-name-text">
-                {{ request.user.username }} さん
-            </div>
+
+
+    {% block body %}
+            <h2>{{ spot.spot_name }}</h2>
+
+    <h3>レビュー</h3>
+    {% for review in spot.reviews.all %}
+        <div class="review">
+            <strong>★{{ review.rating }}</strong><br>
+            {{ review.comment }}<br>
+            <small>{{ review.created_at|date:"Y/m/d" }}</small>
         </div>
+    {% empty %}
+        <p>まだレビューはありません</p>
+    {% endfor %}
 
-
-{% block body %}
-
-{% endblock %}
+    {% endblock %}

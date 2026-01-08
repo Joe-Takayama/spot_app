@@ -1,6 +1,47 @@
 {%extends "base/base.html" %} 
-{% block title %} 観光地検索 {% endblock %}
+{% load static %}
+
+{% block title %} 観光地検索結果 {% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/searchresult.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block body%}
+<!-- 検索結果一覧 -->
+<div class="spot-list">
+    {% for spot in spots %}
+    <div class="spot-card"
+    onclick="location.href='{% url 'spotapp:spot_detail' spot.spot_id %}'">
+
+    <div class="spot-left">
+        <h3 class="spot-name">{{ spot.spot_name }}</h3>
+        <div class="spot-image">写真</div>
+    </div>
+
+    <div class="spot-info">
+        <div class="spot-hours">
+            営業時間 {{ spot.business_hours }}
+        </div>
+
+        <div class="spot-rating">
+            {{ review.rating }} ★
+        </div>
+
+        <div class="spot-actions" onclick="event.stopPropagation()">
+            <button>お気に入り登録</button>
+        <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
+        評価する
+        </a>
+
+        </div>
+    </div>
+</div>
+
+    {% empty %}
+        <p>検索結果がありません</p>
+    {% endfor %}
+
+</div>
 
 {% endblock %}
