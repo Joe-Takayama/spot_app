@@ -258,7 +258,7 @@ class ContactView(View):
 
             self.send_mail_from_account(
                 subject=f"お問い合わせ: {name}",
-                body=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}"
+                body=f"このメールは観光地検索システムから送信されたお問い合わせメールです\n\n送信者: {name}\nメール: {email}\n\n内容:\n{message}"
             )
 
             return redirect("spotapp:contact_complete")
