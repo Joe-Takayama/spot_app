@@ -17,12 +17,12 @@ from .forms import (
 )
 
 from .models import Events, Review, Spot as UserSpot,Profile, Favorite
-from spotapp_admin.models import Events, Spot
+from spotapp_admin.models import Events, Spot,Photo
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from django.db.models import Avg
+from django.db.models import Avg,Prefetch
 
 
 # ------------------------
@@ -139,8 +139,12 @@ class SpotSearchResultView(View):
         keyword = request.GET.get('q')
         spots = Spot.objects.annotate(
     avg_rating=Avg('review__rating')
+).prefetch_related(
+            Prefetch(
+                'spot_photos',
+                queryset=Photo.objects.order_by('uploaded_at')
+            )
 )
-
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
 
@@ -163,6 +167,7 @@ class SpotDetailView(View):
 
         Review.objects.create(
             spot=spot,
+            user = request.user,
             rating=request.POST.get('rating'),
             comment=request.POST.get('comment')
         )
@@ -173,7 +178,7 @@ class SpotDetailView(View):
 # ------------------------
 # レビュー投稿
 # ------------------------
-class ReviewCreateView(View):
+class ReviewCreateView(LoginRequiredMixin,View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/review_create.html', {'spot': spot})
@@ -182,6 +187,7 @@ class ReviewCreateView(View):
         spot = get_object_or_404(Spot, spot_id=spot_id)
 
         Review.objects.create(
+            user=request.user,
             spot=spot,
             rating=request.POST.get('rating'),
             comment=request.POST.get('comment')
@@ -190,10 +196,13 @@ class ReviewCreateView(View):
         return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
 
 
-class ReviewCompleteView(View):
+class ReviewCompleteView(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, "spotapp/review_complete.html")
 
+class ReviewDetailView(View):
+    def get(self, request):
+        return render(request, "spotapp/review_detail.html")
 
 # ------------------------
 # お気に入り一覧
@@ -339,6 +348,7 @@ spot_detail = SpotDetailView.as_view()
 
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
+review_detail= ReviewDetailView.as_view()
 
 favorite_list = FavoriteListView.as_view()
 
