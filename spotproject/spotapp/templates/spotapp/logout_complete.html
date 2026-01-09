@@ -1,0 +1,16 @@
+{% extends "base/base.html" %}
+
+{% block title %}ログアウト完了{% endblock %}
+
+{% block body %}
+<h2 class="page-title">ログアウトしました</h2>
+
+<div class="form-card" style="text-align:center;">
+  <p>ご利用ありがとうございました。</p>
+</div>
+
+<div style="text-align:center; margin-top:24px;">
+  <a href="{% url 'spotapp:index' %}" class="user-btn">ホームへ戻る</a>
+  <a href="{% url 'spotapp:login' %}" class="user-btn">ログインする</a>
+</div>
+{% endblock %}

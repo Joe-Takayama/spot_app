@@ -301,15 +301,19 @@ class LoginView(View):
             return render(request, 'spotapp/login.html', {'form': form})
 
         login(request, user)
+        Profile.objects.get_or_create(user=user)
         return redirect('spotapp:index')
 
 
 class LogoutView(View):
     def post(self, request):
-        request.session.flush()
-        return redirect('spotapp:index')
+        logout(request)
+        return redirect("spotapp:logout_complete")
 
 
+class LogoutCompleteView(View):
+    def get(self, request):
+        return render(request, "spotapp/logout_complete.html")
 
         # ------------------------
  # as_view() の定義
@@ -318,6 +322,11 @@ index = IndexView.as_view()
 
 signup = SignupView.as_view()
 signup_complete = SignupCompleteView.as_view()
+
+login_view = LoginView.as_view()
+logout_view = LogoutView.as_view()
+logout_complete = LogoutCompleteView.as_view()
+
 
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()

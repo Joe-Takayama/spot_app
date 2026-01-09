@@ -45,4 +45,5 @@ urlpatterns = [
 
     # ログアウト画面
     path('logout/', views.LogoutView.as_view(), name="logout"),
+    path("logout/complete/", views.logout_complete, name="logout_complete"),
 ]
