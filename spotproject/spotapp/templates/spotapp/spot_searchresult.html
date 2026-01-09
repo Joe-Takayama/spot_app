@@ -25,15 +25,8 @@
         </div>
 
         <div class="spot-rating">
-            評価
-            {% if spot.avg_rating %}
-            ★ {{ spot.avg_rating|floatformat:1 }}
-            {% else %}
-            
-            {% endif %}
-</div>
-
-        
+            {{ review.rating }} ★
+        </div>
 
         <div class="spot-actions" onclick="event.stopPropagation()">
             <button>お気に入り登録</button>

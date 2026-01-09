@@ -1,13 +1,26 @@
 {% extends "base2/base2.html" %}
 {% block body %}
 
-<h2>観光地登録</h2>
+<div class="spot_registration">
+  <form class="spot_form">
 
-<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:spot_registration' %}">
-    {% csrf_token %}
-    {{ spot_form.as_p }}
-    {{ photo_form.as_p }}
-    <button type="submit">登録</button>
-</form>
+    <div class="input-box">観光地名称を登録してください</div>
+    <div class="input-box">住所を登録してください</div>
+    <div class="input-box">営業時間を登録してください</div>
+
+    <div class="textarea-box">詳細情報を登録してください</div>
+
+    <p class="upload-text">写真をアップロードしてください</p>
+
+    <label class="file-btn">
+      ファイルを選択
+      <input type="file" hidden>
+    </label>
+
+    <button class="submit-btn">登録</button>
+
+  </form>
+</div>
+
 
 {% endblock %}

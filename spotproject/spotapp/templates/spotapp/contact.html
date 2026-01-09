@@ -1,18 +1,12 @@
 <!-- お問い合わせ画面 -->
 {% extends "base/base.html" %}
-{% load static %}
 {% block title %} お問い合わせ {% endblock %}
-{% block extra_css %}
-<link href="{% static 'css/contact.css' %}" rel="stylesheet">
-{% endblock %}
 
 {% block body %}
 <h2>お問い合わせ</h2>
-<div id="contact">
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <button type="submit">送信</button>
 </form>
-</div>
 {% endblock %}

@@ -20,10 +20,6 @@ from .forms import (
 from .models import Events, Review,Spot
 
 
-from django.contrib.auth import get_user_model
-User = get_user_model()
-
-from django.db.models import Avg
 
 # ------------------------
 # インデックス
@@ -134,9 +130,7 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q')
-        spots = Spot.objects.annotate(
-    avg_rating=Avg('review__rating')
-)
+        spots = Spot.objects.all()
 
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
@@ -264,7 +258,7 @@ class ContactView(View):
 
             self.send_mail_from_account(
                 subject=f"お問い合わせ: {name}",
-                body=f"このメールは観光地検索システムから送信されたお問い合わせメールです\n\n送信者: {name}\nメール: {email}\n\n内容:\n{message}"
+                body=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}"
             )
 
             return redirect("spotapp:contact_complete")

@@ -1,35 +1,18 @@
 {% extends "base2/base2.html" %}
-{% load static %}
 {% block body %}
 
 
-<!-- ココのコピペ 　https://tagnote.net/js-parts/slideshow/-->
-    <!-- スライドの外枠 -->
-    <div class="slide-wrapper">
-    <!-- スライド（コンテンツ） -->
-    <div id="slide" class="slide">
-        <div><p>スライド１</p></div>
-        <div><p>スライド２</p></div>
-        <div><p>スライド３</p></div>
-    </div>
+<!-- 写真 -->
+<div>
+    ← 写真 →
+</div>
 
-    <!-- 左右のボタン -->
-    <span id="prev" class="prev"></span>
-    <span id="next" class="next"></span>
-    <!-- インジケーター -->
-    <ul class="indicator" id="indicator">
-        <li class="list"></li>
-        <li class="list"></li>
-        <li class="list"></li>
-    </ul>
-    </div>
+<br>
 
-    <div class="event_bar">
-        <p><a href="{% url 'spotapp:event_chart' %}">イベント一覧</a></p>
-    </div>
-{% endblock %}
+<!-- イベント -->
+<div>
+    <h3>イベント</h3>
+</div>
 
-{% block script %}
-    {{ block.super }}
-    <script src="{% static 'js/admin.js' %}"></script>
+<br><br>
 {% endblock %}
