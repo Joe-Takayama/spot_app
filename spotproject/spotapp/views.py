@@ -23,7 +23,7 @@ from spotapp_admin.models import Events, Spot
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-
+from django.db.models import Avg
 
 # ------------------------
 # インデックス
@@ -134,7 +134,9 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q')
-        spots = Spot.objects.all()
+        spots = Spot.objects.annotate(
+    avg_rating=Avg('review__rating')
+)
 
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
