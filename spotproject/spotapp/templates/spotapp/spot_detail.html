@@ -24,7 +24,7 @@
             <h2>{{ spot.spot_name }}</h2>
 
     <h3>レビュー</h3>
-    {% for review in spot.reviews.all %}
+    {% for review in spot.review_set.all %}
         <div class="review">
             <strong>★{{ review.rating }}</strong><br>
             {{ review.comment }}<br>

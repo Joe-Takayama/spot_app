@@ -17,8 +17,8 @@ from .forms import (
     LoginForm
 )
 
-from .models import Events, Review, Spot as UserSpot
-from spotapp_admin.models import Events, Spot
+from .models import Events, Review,Spot
+
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -153,19 +153,22 @@ class SpotSearchResultView(View):
 class SpotDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
-        return render(request, 'spotapp/spot_detail.html', {'spot': spot})
 
-    def post(self, request, spot_id):
-        spot = get_object_or_404(Spot, spot_id=spot_id)
+        reviews = Review.objects.filter(spot=spot).select_related('user')
 
-        Review.objects.create(
-            spot=spot,
-            rating=request.POST.get('rating'),
-            comment=request.POST.get('comment')
+        avg_rating = reviews.aggregate(
+            Avg('rating')
+        )['rating__avg']
+
+        return render(
+            request,
+            'spotapp/spot_detail.html',
+            {
+                'spot': spot,
+                'reviews': reviews,
+                'avg_rating': avg_rating,
+            }
         )
-
-        return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
-
 
 # ------------------------
 # レビュー投稿
@@ -179,6 +182,7 @@ class ReviewCreateView(View):
         spot = get_object_or_404(Spot, spot_id=spot_id)
 
         Review.objects.create(
+            user=request.user,
             spot=spot,
             rating=request.POST.get('rating'),
             comment=request.POST.get('comment')
