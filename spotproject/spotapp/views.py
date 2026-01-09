@@ -17,12 +17,12 @@ from .forms import (
 )
 
 from .models import Events, Review, Spot as UserSpot,Profile, Favorite
-from spotapp_admin.models import Events, Spot
+from spotapp_admin.models import Events, Spot,Photo
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from django.db.models import Avg
+from django.db.models import Avg,Prefetch
 
 
 # ------------------------
@@ -139,8 +139,12 @@ class SpotSearchResultView(View):
         keyword = request.GET.get('q')
         spots = Spot.objects.annotate(
     avg_rating=Avg('review__rating')
+).prefetch_related(
+            Prefetch(
+                'spot_photos',
+                queryset=Photo.objects.order_by('uploaded_at')
+            )
 )
-
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
 
