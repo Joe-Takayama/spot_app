@@ -1,159 +1,96 @@
-/* ------------------------------
-   全体レイアウト
------------------------------- */
-.page {
-    width: 90%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
+/* =========================
+   プロフィール共通
+========================= */
+
+.page-title {
+    font-size: 26px;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: center;
 }
 
-/* ------------------------------
-   ヘッダー（共通）
------------------------------- */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+/* カード枠 */
+.form-card {
+    max-width: 420px;
+    margin: 0 auto 24px auto;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    text-align: center;
 }
 
-.btn-home {
-    background: #0077cc;
-    padding: 10px 15px;
-    color: #fff;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 14px;
-}
+/* =========================
+   ユーザーアイコン
+========================= */
 
-.btn-home:hover {
-    background: #005fa3;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.user-icon-placeholder {
-    width: 55px;
-    height: 55px;
-    background: #e0e0e0;
-    border-radius: 50%;
-    font-size: 12px;
+.user-icon {
     display: flex;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    margin-bottom: 16px;
 }
 
 .user-icon img {
-    width: 56px;
-    height: 56px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+    border: 3px solid #f2f2f2;
+    background-color: #fafafa;
 }
 
-.user-name-text {
-    font-size: 14px;
-    font-weight: bold;
-}
+/* =========================
+   ユーザー情報
+========================= */
 
-/* ------------------------------
-   メイン部分
------------------------------- */
-.page-main {
-    padding: 10px;
-}
-
-.page-title {
-    font-size: 22px;
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: bold;
-}
-
-/* ------------------------------
-   フォーム共通
------------------------------- */
-.form-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-}
-
-/* エラー表示 */
-.error-text {
-    color: #d00;
-    margin-bottom: 15px;
-    font-weight: bold;
-}
-
-/* ------------------------------
-   ボタン系
------------------------------- */
-.btn-primary {
-    width: 100%;
-    background: #0077cc;
-    color: #fff;
-    padding: 12px;
-    border-radius: 6px;
-    border: none;
+.form-card p {
+    margin: 10px 0;
     font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
+    color: #333;
 }
 
-.btn-primary:hover {
-    background: #005fa3;
+.form-card b {
+    color: #555;
 }
 
-.btn-primary-outline {
+/* =========================
+   ボタン
+========================= */
+
+.user-btn {
     display: block;
+    width: 240px;
+    margin: 0 auto;
+    padding: 12px 0;
+    background-color: #4a90e2;
+    color: #fff;
     text-align: center;
-    padding: 12px;
-    border-radius: 6px;
-    border: 2px solid #0077cc;
-    color: #0077cc;
-    font-weight: bold;
+    border-radius: 24px;
     text-decoration: none;
-    margin-top: 20px;
-}
-
-.btn-primary-outline:hover {
-    background: #e8f3ff;
-}
-
-.link-back {
-    display: block;
-    text-decoration: none;
-    margin-top: 15px;
-    color: #0077cc;
+    font-size: 16px;
     font-weight: bold;
+    transition: background-color 0.2s ease, transform 0.15s ease;
 }
 
-.page-title {
-    margin-bottom: 15px;
+.user-btn:hover {
+    background-color: #357abd;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   レスポンシブ
+========================= */
+
+@media screen and (max-width: 480px) {
+    .form-card {
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .user-btn {
+        width: 100%;
+    }
 }

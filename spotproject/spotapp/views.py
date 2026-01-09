@@ -1,27 +1,27 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import (
-    update_session_auth_hash, authenticate, login
-)
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
-from django.contrib.auth.hashers import check_password
 from django.contrib import messages
-from django.contrib.auth.models import User
+
 
 from .forms import (
     ProfileEditForm,
     PasswordChangeOnlyForm,
     SignupForm,
     ContactForm,
-    LoginForm
+    LoginForm,
+
 )
 
-from .models import Events, Review, Spot as UserSpot
+from .models import Events, Review, Spot as UserSpot,Profile, Favorite
 from spotapp_admin.models import Events, Spot
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
 
 
 
@@ -56,6 +56,12 @@ class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
 
+# ------------------------
+# プロフィール表示ビュー
+# ------------------------
+@login_required
+def profile_view(request):
+    return render(request, "spotapp/profile.html")
 
 # ------------------------
 # プロフィール編集ビュー
@@ -69,23 +75,20 @@ class ProfileEditView(LoginRequiredMixin, View):
         user = request.user
         form = ProfileEditForm(request.POST, instance=user)
 
-        if form.is_valid():
-            form.save()
+        if not form.is_valid():
+            return render(request, "spotapp/profile_edit.html", {"form": form})
+        form.save()
 
-            icon_file = request.FILES.get('icon')
-            try:
-                profile = user.profile
-            except Exception:
-                from .models import Profile
-                profile, created = Profile.objects.get_or_create(user=user)
+        icon_file = request.FILES.get('icon')
+        # profile が無い場合も作る（保険）
+        profile, _ = Profile.objects.get_or_create(user=user)
 
-            if icon_file:
-                profile.icon = icon_file
-                profile.save()
+        if icon_file:
+            profile.icon = icon_file
+            profile.save()
 
-            return redirect("spotapp:profile_edit_complete")
+        return redirect("spotapp:profile_edit_complete")
 
-        return render(request, "spotapp/profile_edit.html", {"form": form})
 
 
 class ProfileEditCompleteView(LoginRequiredMixin, View):
@@ -307,21 +310,28 @@ class LogoutView(View):
 
 
         # ------------------------
-        # as_view() の定義
+ # as_view() の定義
         # ------------------------
 index = IndexView.as_view()
 
 signup = SignupView.as_view()
 signup_complete = SignupCompleteView.as_view()
+
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()
+
 password_change = PasswordChangeView.as_view()
 password_change_complete = PasswordChangeCompleteView.as_view()
+
 spot_searchresult = SpotSearchResultView.as_view()
 spot_detail = SpotDetailView.as_view()
+
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
+
 favorite_list = FavoriteListView.as_view()
+
 event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()
+
 contact_complete = ContactCompleteView.as_view()
