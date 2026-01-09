@@ -196,6 +196,9 @@ class ReviewCompleteView(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, "spotapp/review_complete.html")
 
+class ReviewDetailView(View):
+    def get(self, request):
+        return render(request, "spotapp/review_detail.html")
 
 # ------------------------
 # お気に入り一覧
@@ -332,6 +335,7 @@ spot_detail = SpotDetailView.as_view()
 
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
+review_detail= ReviewDetailView.as_view()
 
 favorite_list = FavoriteListView.as_view()
 
