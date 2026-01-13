@@ -39,7 +39,6 @@
             <div class="Nav-block" id="categoryMenu_btn">
                 <button class="Menu_btn">カテゴリ ▼</button>
             </div>
-
             <ul class="menu_down" id="categoryMenu_down">
                 <li><a href="#">観光</a></li>
                 <li><a href="#">グルメ</a></li>
@@ -47,7 +46,21 @@
                 <li><a href="#">ショッピング</a></li>
             </ul>
 
-            <button class="news">お知らせ通知</button>
+<!-- ここにお知らせ表示を置きたい -->
+            <div class="Nav-block" id="categoryMenu_btn">
+                <button class="Menu_btn">お知らせ ▼</button>
+            </div>
+            <ul class="menu_down">
+                {% for o in osirase_list %}
+                    <li>
+                        <strong>{{ o.title }}</strong>
+                        <!-- <time style="color:#666;">{{ o.created_at|date:"Y年n月j日 H:i" }}</time> -->
+                        <div>{{ o.body|linebreaksbr }}</div>
+                    </li>
+                {% empty %}
+                    <p>表示できるお知らせがありません。</p>
+                {% endfor %}
+            </ul>
 
             {% if request.session.staff_id %}
             <!-- 管理者プルダウン -->

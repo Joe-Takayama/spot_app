@@ -10,16 +10,18 @@
 /* ホームボタン（左側） */
 .btn-home {
     text-decoration: none;
-    background: #333;
     color: #fff;
     padding: 6px 12px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    background: #667eea;
 }
 
 /* ユーザー情報（右側） */
 .user-info {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
 }
@@ -36,4 +38,41 @@
 .user-name-text {
     font-size: 14px;
     color: #333;
+}
+
+.spot-info{
+    max-width: 800px;        
+    margin: 40px auto;  
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.spot-name{
+    text-align: left;
+    padding: 10;
+}
+.spot-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* 右寄せ */
+    padding: 20;
+}
+
+
+.spot-address,
+.spot-hours {
+    text-align: center;
+    padding: 20;
+}
+
+.spot-image {
+    display: flex;
+    justify-content: center;
+    padding: 20;
+}
+
+.btn {
+    display: block;
+    width: fit-content;   /* 中身サイズにする */
+    margin: 30px auto;    /* 左右autoで中央 */
 }

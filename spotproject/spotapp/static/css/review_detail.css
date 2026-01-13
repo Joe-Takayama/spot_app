@@ -1,0 +1,28 @@
+.review-list {
+    max-width: 800px;        
+    margin: 40px auto;  
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 子要素を中央寄せ */
+}
+
+.review {
+    width: 100%;           /* 親幅に合わせる */
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 10px;
+    background: #f9f9f9;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    text-align: left;       /* テキストは左寄せのまま */
+}
+
+.review-list button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    align-self: center;  /* ボタンも中央に */
+}

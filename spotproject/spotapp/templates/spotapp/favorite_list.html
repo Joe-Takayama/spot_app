@@ -30,9 +30,18 @@
         <div class="favorite-list">
             {% if favorites %}
                 {% for fav in favorites %}
-                    <div class="favorite-item">
-                        <!-- 詳細ページに飛ばしたいなら url に spot のidを渡す -->
-                        <span class="favorite-name">{{ fav.spot.name }}</span>
+                    <div class="favorite-item" data-item-id="{{ fav.id }}">
+                        <!-- ✅ spot名：name じゃなく spot_name の可能性が高い -->
+                        <span class="favorite-name">{{ fav.spot.spot_name }}</span>
+
+                        <!-- ✅ 解除（画面遷移なし） -->
+                        <button
+                          type="button"
+                          class="fav-btn"
+                          data-spot-id="{{ fav.spot.id }}"
+                        >
+                          ★ 解除
+                        </button>
                     </div>
                 {% endfor %}
             {% else %}
@@ -43,4 +52,61 @@
         <a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
     </main>
 </div>
+
+<!-- ✅ 画面遷移なしトグル用JS（このページだけでOK） -->
+<script>
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  document.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".fav-btn");
+    if (!btn) return;
+
+    const spotId = btn.dataset.spotId;
+    if (!spotId) return;
+
+    btn.disabled = true;
+
+    try {
+      // ★ ここ：URLが /favorite/... ならそのまま
+      // もし /spotapp/favorite/... の形なら、先頭に /spotapp を付けてね
+      const res = await fetch(`/favorite/toggle-ajax/${spotId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Accept": "application/json",
+        },
+      });
+
+      if (res.status === 403) {
+        alert("ログインが必要だよぺこ！");
+        return;
+      }
+
+      const data = await res.json();
+      if (!data.ok) throw new Error("toggle failed");
+
+      // この一覧画面で押されるのは基本「解除」だから、
+      // favorited が false になったら行ごと消す
+      if (data.favorited === false) {
+        const row = btn.closest(".favorite-item");
+        if (row) row.remove();
+      } else {
+        // もし何かの事情で追加になった場合
+        btn.textContent = "★ 解除";
+      }
+
+    } catch (err) {
+      console.error(err);
+      alert("お気に入りの更新に失敗したぺこ…");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+
 {% endblock %}

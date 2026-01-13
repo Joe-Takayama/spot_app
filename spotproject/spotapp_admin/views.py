@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
-from .models import Staff, Photo
+from .models import Staff, Photo, Osirase
 from spotapp.models import Spot, Events
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
@@ -220,3 +220,8 @@ class OsiraseView(StaffLoginRequiredMixin, View):
             else:
                 form = OsiraseForm()
                 return render(request, "spotapp_admin/osirase.html", {"form": form})
+            
+# お知らせ表示画面
+def osirase_list(request):
+    items = Osirase.objects.all()
+    return render(request, "osirase_list.html", {"osirase_list": items})
