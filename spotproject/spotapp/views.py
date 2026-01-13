@@ -5,7 +5,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
-
+from .models import Osirase
 
 from .forms import (
     ProfileEditForm,
@@ -257,7 +257,8 @@ class ContactView(View):
             subject=subject,
             body=body,
             from_email='igakouga2n2n@gmail.com',
-            to=['mit2471573@stu.o-hara.ac.jp'],
+            #↓ここにメールを増やせば受け取れる人が増える
+            to=['mit2471573@stu.o-hara.ac.jp'], 
             connection=connection,
         )
         email.send()
