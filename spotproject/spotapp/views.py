@@ -163,7 +163,18 @@ class SpotSearchResultView(View):
 class SpotDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
-        return render(request, 'spotapp/spot_detail.html', {'spot': spot})
+
+        is_favorited = False
+        if request.user.is_authenticated:
+            is_favorited = Favorite.objects.filter(
+                user=request.user,
+                spot=spot
+            ).exists()
+
+        return render(request, 'spotapp/spot_detail.html', {
+            'spot': spot,
+            'is_favorited': is_favorited,
+        })
 
     def post(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
