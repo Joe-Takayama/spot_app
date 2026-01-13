@@ -37,3 +37,20 @@
     font-size: 14px;
     color: #333;
 }
+
+.spot-info{
+    max-width: 800px;        
+    margin: 40px auto;  
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.spot-name,
+.spot-address,
+.spot-hours {
+    text-align: center;
+}
+.spot-image {
+    display: flex;
+    justify-content: center;
+}
