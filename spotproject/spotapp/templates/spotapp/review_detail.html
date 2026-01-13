@@ -4,14 +4,20 @@
 </head>
 
 {%block body%}
-<h3>レビュー</h3>
-    {% for review in spot.reviews.all %}
+<div class="review">
+<h1 class="spot-name">{{ spot.spot_name }}</h1>
+    {% for review in spot.review_set.all %}
         <div class="review">
             <strong>★{{ review.rating }}</strong><br>
             {{ review.comment }}<br>
-            <small>{{ review.created_at|date:"Y/m/d" }}</small>
+            <small>{{ review.posted_at|date:"Y/m/d" }}</small>
         </div>
     {% empty %}
         <p>まだレビューはありません</p>
     {% endfor %}
+    <button type="button" onclick="history.back()">
+    ← 戻る
+</button>
+
+</div>
 {%endblock%}

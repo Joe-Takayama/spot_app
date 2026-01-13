@@ -16,8 +16,8 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot as UserSpot,Profile, Favorite
-from spotapp_admin.models import Events, Spot,Photo
+from .models import Events, Review, Spot , Profile, Favorite
+from spotapp_admin.models import Photo
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -201,8 +201,13 @@ class ReviewCompleteView(LoginRequiredMixin,View):
         return render(request, "spotapp/review_complete.html")
 
 class ReviewDetailView(View):
-    def get(self, request):
-        return render(request, "spotapp/review_detail.html")
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+
+        return render(request, "spotapp/review_detail.html", {
+            "spot": spot,
+            "reviews": spot.review_set.all()
+        })
 
 # ------------------------
 # お気に入り一覧

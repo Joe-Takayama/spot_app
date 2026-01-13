@@ -58,10 +58,9 @@
     </div>
 
     <!-- レビュー -->
-    <a href="{% url 'spotapp:review_detail' %}" class="btn">
-        レビュー
-    </a>
-
+    <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
+    レビューを見る
+</a>
     {% endblock %}
 
 </div>
