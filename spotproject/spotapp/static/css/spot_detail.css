@@ -20,6 +20,7 @@
 /* ユーザー情報（右側） */
 .user-info {
     display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 10px;
 }
@@ -45,12 +46,32 @@
     flex-direction: column;
     align-items: stretch;
 }
-.spot-name,
+.spot-name{
+    text-align: left;
+    padding: 10;
+}
+.spot-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* 右寄せ */
+    padding: 20;
+}
+
+
 .spot-address,
 .spot-hours {
     text-align: center;
+    padding: 20;
 }
+
 .spot-image {
     display: flex;
     justify-content: center;
+    padding: 20;
+}
+
+.btn {
+    display: block;
+    width: fit-content;   /* 中身サイズにする */
+    margin: 30px auto;    /* 左右autoで中央 */
 }

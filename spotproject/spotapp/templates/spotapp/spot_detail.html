@@ -27,7 +27,7 @@
 
     <!-- 観光地情報 -->
     <div class="spot-info">
-        <h3 class="spot-name">{{ spot.spot_name }}</h3>
+        <h1 class="spot-name">{{ spot.spot_name }}</h1>
 
         <div class="spot-image">
             {% if spot.spot_photos.all %}
@@ -53,8 +53,8 @@
             <button>お気に入り登録</button>
         </div>
 
-        <h3 class="spot-address">{{ spot.address }}</h3>
-        <h3 class="spot-hours">{{ spot.business_hours }}</h3>
+        <h2 class="spot-address">{{ spot.address }}</h2>
+        <h2 class="spot-hours">{{ spot.business_hours }}</h2>
     </div>
 
     <!-- レビュー -->
