@@ -7,8 +7,9 @@
     <link href="{% static 'css/admin.css' %}" rel="stylesheet">
     <link href="{% static 'css/logout.css' %}" rel="stylesheet">
     <link href="{% static 'css/event_delete.css' %}" rel="stylesheet">
-    <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index2.css' %}" rel="stylesheet">
     <link href="{% static 'css/base2.css' %}" rel="stylesheet">
+    <link href="{% static 'css/search-result.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -66,15 +67,20 @@
 
     </nav>
 
-    <div style="text-align: center;">
-        <input type="text"  id="search" placeholder="検索バー（あいまい検索可能）">
+    <form class="search-form" action="{% url 'spotapp_admin:search-result' %}" method="get" style="text-align: center;">
+        <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
+        <div class="submit">
+            <button type="submit">検索</button>
+        </div>
+    </form>
+
+    <div class="main">
+        {% block body %}{% endblock %}
+   
     </div>
 
-    {% block body %}
-    {% endblock %}
-
     <footer class="footer">
-        
+        <span>E班</span>
     </footer>
 
     {% block script %}

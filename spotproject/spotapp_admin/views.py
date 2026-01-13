@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
-from .models import Staff
+from .models import Staff, Photo
 from spotapp.models import Spot, Events
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
+from django.db.models import Avg,Prefetch
 
 
 #ホーム画面
@@ -24,6 +25,27 @@ class RegistselectView(StaffLoginRequiredMixin, View):
 class UpdelView(StaffLoginRequiredMixin, View):
     def get(self,request):
         return render(request,'spotapp_admin/updatedelete.html')
+    
+# 観光地検索結果画面
+class SpotSearchView(StaffLoginRequiredMixin, View):
+    def get(self, request):
+        keyword = request.GET.get('q')
+        spots = Spot.objects.annotate(
+    avg_rating=Avg('review__rating')
+).prefetch_related(
+            Prefetch(
+                'spot_photos',
+                queryset=Photo.objects.order_by('uploaded_at')
+            )
+)
+        if keyword:
+            spots = spots.filter(spot_name__icontains=keyword)
+
+        return render(request, 'spotapp_admin/search-result.html', {
+            'keyword': keyword,
+            'spots': spots,
+        })
+
 
 
 # ログイン画面
