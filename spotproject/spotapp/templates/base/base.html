@@ -40,13 +40,11 @@
                 </ul>
             </div>
 
-    <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn">
-        お気に入り一覧
-    </a>
+            <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn">
+                お気に入り一覧
+            </a>
 
 
-            <button class="Menu_btn">お知らせ通知</button>
-        </div>
 
         <div class="nav-right">
             {% if user.is_authenticated %}
