@@ -1,21 +1,24 @@
-{%load static%}
-<link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+{% load static %}
+<link href="{% static 'css/review_detail.css' %}" rel="stylesheet">
 
-{%block body%}
-<div class="review-list">
-<h1 class="spot-name">{{ spot.spot_name }}</h1>
-    {% for review in spot.review_set.all %}
-        <div class="review">
-            <strong>★{{ review.rating }}</strong><br>
-            {{ review.comment }}<br>
-            <small>{{ review.posted_at|date:"Y/m/d" }}</small>
-        </div>
-    {% empty %}
-        <p>まだレビューはありません</p>
-    {% endfor %}
-    <button type="button" onclick="history.back()">
-    ← 戻る
-</button>
+<div class="page">
+    {% block body %}
+    <div class="review-list">
+        <h1 class="spot-name">{{ spot.spot_name }}</h1>
 
+        {% for review in spot.review_set.all %}
+            <div class="review">
+                <strong>★{{ review.rating }}</strong><br>
+                {{ review.comment }}<br>
+                <small>{{ review.posted_at|date:"Y/m/d" }}</small>
+            </div>
+        {% empty %}
+            <p>まだレビューはありません</p>
+        {% endfor %}
+
+        <button type="button" onclick="history.back()">
+            ← 戻る
+        </button>
+    </div>
+    {% endblock %}
 </div>
-{%endblock%}
