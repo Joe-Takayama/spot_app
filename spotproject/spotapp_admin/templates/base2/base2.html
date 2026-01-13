@@ -8,54 +8,62 @@
     <link href="{% static 'css/logout.css' %}" rel="stylesheet">
     <link href="{% static 'css/event_delete.css' %}" rel="stylesheet">
     <link href="{% static 'css/index.css' %}" rel="stylesheet">
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base2.css' %}" rel="stylesheet">
 </head>
 
 <body>
 
     <nav>
-        <div class="home-btn">
-            <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
-        </div>
-        <!-- 地域別（プルダウン） -->
-        <div class="Nav-block" id="areaMenu_btn">
-            <button class="Menu_btn">地区別 ▼</button>
-        </div>
-        <ul class="menu_down" id="areaMenu_down">
-            <li><a href="#">北地区</a></li>
-            <li><a href="#">南地区</a></li>
-            <li><a href="#">東地区</a></li>
-            <li><a href="#">西地区</a></li>
-        </ul>
-
-        <!-- カテゴリ（プルダウン） -->
-        <div class="Nav-block" id="categoryMenu_btn">
-            <button class="Menu_btn">カテゴリ ▼</button>
+        <!-- 左側 -->
+        <div class="left-nav">
+            <div class="home-btn">
+                <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+            </div>
         </div>
 
-        <ul class="menu_down" id="categoryMenu_down">
-            <li><a href="#">観光</a></li>
-            <li><a href="#">グルメ</a></li>
-            <li><a href="#">レジャー</a></li>
-            <li><a href="#">ショッピング</a></li>
-        </ul>
+        <!-- 右側 -->
+        <div class="right-nav">
+            <!-- 地域別（プルダウン） -->
+            <div class="Nav-block" id="areaMenu_btn">
+                <button class="Menu_btn">地区別 ▼</button>
+            </div>
+            <ul class="menu_down" id="areaMenu_down">
+                <li><a href="#">北地区</a></li>
+                <li><a href="#">南地区</a></li>
+                <li><a href="#">東地区</a></li>
+                <li><a href="#">西地区</a></li>
+            </ul>
 
-        <a href="#">お知らせ通知</a>
+            <!-- カテゴリ（プルダウン） -->
+            <div class="Nav-block" id="categoryMenu_btn">
+                <button class="Menu_btn">カテゴリ ▼</button>
+            </div>
 
-        {% if request.session.staff_id %}
+            <ul class="menu_down" id="categoryMenu_down">
+                <li><a href="#">観光</a></li>
+                <li><a href="#">グルメ</a></li>
+                <li><a href="#">レジャー</a></li>
+                <li><a href="#">ショッピング</a></li>
+            </ul>
+
+            <button class="news">お知らせ通知</button>
+
+            {% if request.session.staff_id %}
             <!-- 管理者プルダウン -->
             <div class="Nav-block" id="adminMenu_btn">
-                    <button class="Menu_btn">管理者 ▼</button>
+                <button class="Menu_btn">管理者 ▼</button>
             </div>
             <ul class="menu_down" id="adminMenu_down">
-                    <li><a href="{% url 'spotapp_admin:Registselect' %}">登録</a></li>
-                    <li><a href="{% url 'spotapp_admin:Updel' %}">更新・削除</a></li>
-                    <li><a href="{% url 'spotapp_admin:osirase_send'%}">お知らせ送信</a></li>
-                    <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
+                <li><a href="{% url 'spotapp_admin:Registselect' %}">登録</a></li>
+                <li><a href="{% url 'spotapp_admin:Updel' %}">更新・削除</a></li>
+                <li><a href="{% url 'spotapp_admin:osirase_send'%}">お知らせ送信</a></li>
+                <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
             </ul>
-        {% else %}
-            <a href="{% url 'spotapp_admin:login' %}">新規登録 / ログイン</a>
-        {% endif %}
+            {% else %}
+                <a href="{% url 'spotapp_admin:login' %}">新規登録 / ログイン</a>
+            {% endif %}
+        </div>
+
     </nav>
 
     <div style="text-align: center;">
@@ -66,8 +74,7 @@
     {% endblock %}
 
     <footer class="footer">
-        <span>E班</span>
-        <a href="#">お問い合わせ</a>
+        
     </footer>
 
     {% block script %}
