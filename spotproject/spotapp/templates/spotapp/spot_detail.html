@@ -50,7 +50,17 @@
         </div>
 
         <div class="spot-actions" onclick="event.stopPropagation()">
-            <button>お気に入り登録</button>
+            <button
+                    id="fav-btn"
+                    data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
+                    class="fav-btn"
+            >
+                    {% if is_favorited %}
+                        ★ 登録済み
+                    {% else %}
+                        ♡ お気に入り登録
+                    {% endif %}
+            </button>
         </div>
 
         <h2 class="spot-address">{{ spot.address }}</h2>
@@ -64,3 +74,39 @@
     {% endblock %}
 
 </div>
+
+<script>
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
+
+const btn = document.getElementById("fav-btn");
+
+if (btn) {
+  btn.addEventListener("click", async () => {
+    const url = btn.dataset.url;   // ← Djangoが作ったURL
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Accept": "application/json",
+        },
+      });
+
+      const data = await res.json();
+      btn.textContent = data.favorited ? "★ 登録済み" : "♡ お気に入り登録";
+
+    } catch (e) {
+      alert("失敗したぺこ…");
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+</script>
