@@ -1,26 +1,31 @@
 {% extends "base2/base2.html" %}
 {% block body %}
 
-<div class="spot_registration">
-  <form class="spot_form">
+{% if page.photos.all %}
+<div class="form-box">
 
-    <div class="input-box">観光地名称を登録してください</div>
-    <div class="input-box">住所を登録してください</div>
-    <div class="input-box">営業時間を登録してください</div>
+    {{ form.spot_name }}
+    {{ form.address }}
+    {{ form.business_hours }}
+    {{ form.explanation }}
 
-    <div class="textarea-box">詳細情報を登録してください</div>
+    <button type="button" class="category-toggle" onclick="toggleCategory()">
+        カテゴリーを選択してください
+        <span id="arrow">▼</span>
+    </button>
 
-    <p class="upload-text">写真をアップロードしてください</p>
+    <div id="category-list" class="category-list">
+        {% for radio in form.category %}
+            <label class="category-item">
+                {{ radio.tag }}
+                <span>{{ radio.choice_label }}</span>
+            </label>
+        {% endfor %}
+    </div>
 
-    <label class="file-btn">
-      ファイルを選択
-      <input type="file" hidden>
-    </label>
-
-    <button class="submit-btn">登録</button>
-
-  </form>
+    <button type="submit">更新</button>
 </div>
+
 
 
 {% endblock %}
