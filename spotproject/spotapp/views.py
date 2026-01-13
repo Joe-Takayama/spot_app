@@ -7,6 +7,9 @@ from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
 from .models import Osirase
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 from .forms import (
     ProfileEditForm,
     PasswordChangeOnlyForm,
@@ -207,13 +210,52 @@ class ReviewDetailView(View):
 # ------------------------
 # お気に入り一覧
 # ------------------------
-class FavoriteListView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(
-            request,
-            'spotapp/favorite_list.html',
-            {"favorites": []}
-        )
+@login_required
+def favorite_list(request):
+    favorites = (
+        Favorite.objects
+        .filter(user=request.user)
+        .select_related("spot")
+        .order_by("-created_at")
+    )
+    return render(request, "spotapp/favorite_list.html", {"favorites": favorites})
+
+# ------------------------
+# お気に入り追加・削除
+# ------------------------
+@login_required
+def favorite_toggle(request, spot_id):
+    if request.method != "POST":
+        # GETで叩かれたら安全に戻す（最小影響）
+        return redirect("spotapp:spot_detail", spot_id=spot_id)
+
+    spot = get_object_or_404(Spot, spot_id=spot_id)
+
+    fav, created = Favorite.objects.get_or_create(user=request.user, spot=spot)
+    if created:
+        messages.success(request, "お気に入りに追加したぺこ！")
+    else:
+        fav.delete()
+        messages.info(request, "お気に入りを解除したぺこ！")
+
+    return redirect(request.META.get("HTTP_REFERER") or "spotapp:spot_detail", spot_id=spot_id)
+
+# ------------------------
+# お気に入り追加・削除（画面遷移なし/Ajax）
+# ------------------------
+@login_required
+@require_POST
+def favorite_toggle_ajax(request, spot_id):
+    spot = get_object_or_404(Spot, spot_id=spot_id)
+
+    fav, created = Favorite.objects.get_or_create(user=request.user, spot=spot)
+    if created:
+        # 登録
+        return JsonResponse({"ok": True, "favorited": True})
+    else:
+        # 解除
+        fav.delete()
+        return JsonResponse({"ok": True, "favorited": False})
 
 
 # ------------------------

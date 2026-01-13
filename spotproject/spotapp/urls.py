@@ -30,8 +30,11 @@ urlpatterns = [
     path('review/complete/', views.review_complete, name="review_complete"),
 
     path('review/detail/', views.review_detail, name="review_detail"),
-
+    # お気に入り一覧画面
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
+    # お気に入り登録・解除機能
+    path('favorite/toggle/<uuid:spot_id>/', views.favorite_toggle, name="favorite_toggle"),
+    path('favorite/toggle-ajax/<uuid:spot_id>/', views.favorite_toggle_ajax, name="favorite_toggle_ajax"),
 
     path('event/chart/', views.event_chart, name='event_chart'),  # イベント一覧（OK）
 
