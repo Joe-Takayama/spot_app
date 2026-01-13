@@ -393,7 +393,7 @@ review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
 review_detail= ReviewDetailView.as_view()
 
-favorite_list = FavoriteListView.as_view()
+
 
 event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()
