@@ -1,8 +1,12 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from django import forms
 from django.contrib.auth.models import User
+from .models import Profile
 
 from django.contrib.auth.hashers import check_password
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 
 # ------------------------
 # 新規登録フォーム
@@ -36,6 +40,17 @@ class SignupForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+# プロフィール作成・更新用フォーム
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["icon"]
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["username", "email"] 
 
 #プロフィール編集用フォーム
 class ProfileEditForm(forms.ModelForm):

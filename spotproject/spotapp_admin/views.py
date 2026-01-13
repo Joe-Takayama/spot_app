@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
-from .models import Staff, Events,Spot
+from .models import Staff
+from spotapp.models import Spot, Events
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin

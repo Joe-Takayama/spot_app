@@ -16,7 +16,25 @@
 
     <div class="spot-left">
         <h3 class="spot-name">{{ spot.spot_name }}</h3>
-        <div class="spot-image">写真</div>
+        <div class="spot-image">
+        {% if spot.spot_photos.all %}
+            <div class="photo has-image">
+                <img
+                    src="{{ spot.spot_photos.first.image.url }}"
+                    alt="{{ spot.spot_name }}"
+                    class="spot-img"
+                >
+            </div>
+        {% else %}
+            <div class="photo no-image">
+                <img
+                    src="{% static 'img/no-image.png' %}"
+                    alt="no image"
+                    class="spot-img"
+                >
+            </div>
+        {% endif %}
+        </div>
     </div>
 
     <div class="spot-info">
@@ -25,8 +43,15 @@
         </div>
 
         <div class="spot-rating">
-            {{ review.rating }} ★
-        </div>
+            評価
+            {% if spot.avg_rating %}
+            ★ {{ spot.avg_rating|floatformat:1 }}
+            {% else %}
+            
+            {% endif %}
+</div>
+
+        
 
         <div class="spot-actions" onclick="event.stopPropagation()">
             <button>お気に入り登録</button>

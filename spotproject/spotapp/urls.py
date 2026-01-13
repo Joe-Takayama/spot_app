@@ -10,6 +10,7 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('signup/complete/', views.signup_complete, name="signup_complete"),
 
+    path("profile/", views.profile_view, name="profile"),
     path('profile_edit/', views.profile_edit, name='profile_edit'),
     path('profile_edit/complete/', views.profile_edit_complete, name='profile_edit_complete'),
 
@@ -28,6 +29,8 @@ urlpatterns = [
     # レビュー投稿完了画面
     path('review/complete/', views.review_complete, name="review_complete"),
 
+    path('review/detail/', views.review_detail, name="review_detail"),
+
     path('favorite/list/', views.FavoriteListView.as_view(), name="favorite_list"),
 
     path('event/chart/', views.event_chart, name='event_chart'),  # イベント一覧（OK）
@@ -44,4 +47,5 @@ urlpatterns = [
 
     # ログアウト画面
     path('logout/', views.LogoutView.as_view(), name="logout"),
+    path("logout/complete/", views.logout_complete, name="logout_complete"),
 ]

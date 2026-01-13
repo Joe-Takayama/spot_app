@@ -74,18 +74,18 @@ class SpotCreateForm(ModelForm):
 
         }
 
+#お知らせフォーム
 class OsiraseForm(forms.ModelForm):
     class Meta:
         model = Osirase
-        fields = ["type", "title", "body"]
+        fields = ["title", "body"]
 
         widgets = {
-            "type": forms.RadioSelect,
             "title": forms.TextInput(attrs={
                 "placeholder": "題名を入力",
             }),
             "body": forms.Textarea(attrs={
-                "placeholder": "本文を入力してください",
+                "placeholder": "お知らせする内容を入力してください",
             })
         }
 #観光地更新フォーム

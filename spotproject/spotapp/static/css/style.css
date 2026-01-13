@@ -19,6 +19,7 @@ body {
    =============================== */
 nav {
     width: 100%;
+    min-height: 80px;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e5e9;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -78,12 +79,13 @@ nav {
 .user-btn {
     background: #667eea;
     color: #ffffff;
-    padding: 10px 16px;
+    padding: 12px 20px;
     border-radius: 6px;
     text-decoration: none;
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 700;
 }
 
 .btn-home:hover,
@@ -151,14 +153,14 @@ nav {
 }
 
 .user-icon img {
-    width: 56px;
-    height: 56px;
+    width: 72px;
+    height: 72px;
     border-radius: 50%;
     object-fit: cover;
 }
 
 .user-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
 }
 
@@ -193,6 +195,45 @@ nav {
     color: #667eea;
 }
 
+.user-menu-btn{
+  background:none;
+  border:none;
+  padding:0;
+  margin:0;
+  font:inherit;
+  color:inherit;
+  cursor:pointer;
+  width:100%;
+  text-align:left;
+}
+
+/* ✅ ログアウト(button)をプロフィール(a)と同じ見た目にする（現状崩さない） */
+.user-menu li form {
+    margin: 0;               /* formの余白でズレるの防止 */
+}
+
+.user-menu li .user-menu-btn {
+    display: block;
+    padding: 12px 18px;      /* ← .user-menu li a と同じ */
+    width: 100%;
+    text-decoration: none;
+    color: #333;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+/* hoverもaと同じ */
+.user-menu li .user-menu-btn:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+.user-menu li .user-menu-btn.logout { color: #d33; }
+.user-menu li .user-menu-btn.logout:hover { background: #fff1f1; color:#d33; }
+
+
 /* ===============================
    フッター（最下部）
    =============================== */
@@ -210,3 +251,4 @@ nav {
     color: #4a60d3;
     text-decoration: none;
 }
+

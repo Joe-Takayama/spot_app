@@ -1,24 +1,28 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import (
-    update_session_auth_hash, authenticate, login
-)
+from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
-from django.contrib.auth.hashers import check_password
 from django.contrib import messages
-from django.contrib.auth.models import User
+
 
 from .forms import (
     ProfileEditForm,
     PasswordChangeOnlyForm,
     SignupForm,
     ContactForm,
-    LoginForm
+    LoginForm,
+
 )
 
-from .models import Events, Review,Spot
+from .models import Events, Review, Spot as UserSpot,Profile, Favorite
+from spotapp_admin.models import Events, Spot,Photo
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from django.db.models import Avg,Prefetch
 
 
 # ------------------------
@@ -52,6 +56,12 @@ class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
 
+# ------------------------
+# プロフィール表示ビュー
+# ------------------------
+@login_required
+def profile_view(request):
+    return render(request, "spotapp/profile.html")
 
 # ------------------------
 # プロフィール編集ビュー
@@ -65,23 +75,20 @@ class ProfileEditView(LoginRequiredMixin, View):
         user = request.user
         form = ProfileEditForm(request.POST, instance=user)
 
-        if form.is_valid():
-            form.save()
+        if not form.is_valid():
+            return render(request, "spotapp/profile_edit.html", {"form": form})
+        form.save()
 
-            icon_file = request.FILES.get('icon')
-            try:
-                profile = user.profile
-            except Exception:
-                from .models import Profile
-                profile, created = Profile.objects.get_or_create(user=user)
+        icon_file = request.FILES.get('icon')
+        # profile が無い場合も作る（保険）
+        profile, _ = Profile.objects.get_or_create(user=user)
 
-            if icon_file:
-                profile.icon = icon_file
-                profile.save()
+        if icon_file:
+            profile.icon = icon_file
+            profile.save()
 
-            return redirect("spotapp:profile_edit_complete")
+        return redirect("spotapp:profile_edit_complete")
 
-        return render(request, "spotapp/profile_edit.html", {"form": form})
 
 
 class ProfileEditCompleteView(LoginRequiredMixin, View):
@@ -130,8 +137,14 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q')
-        spots = Spot.objects.all()
-
+        spots = Spot.objects.annotate(
+    avg_rating=Avg('review__rating')
+).prefetch_related(
+            Prefetch(
+                'spot_photos',
+                queryset=Photo.objects.order_by('uploaded_at')
+            )
+)
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
 
@@ -147,27 +160,25 @@ class SpotSearchResultView(View):
 class SpotDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
+        return render(request, 'spotapp/spot_detail.html', {'spot': spot})
 
-        reviews = Review.objects.filter(spot=spot).select_related('user')
+    def post(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
 
-        avg_rating = reviews.aggregate(
-            Avg('rating')
-        )['rating__avg']
-
-        return render(
-            request,
-            'spotapp/spot_detail.html',
-            {
-                'spot': spot,
-                'reviews': reviews,
-                'avg_rating': avg_rating,
-            }
+        Review.objects.create(
+            spot=spot,
+            user = request.user,
+            rating=request.POST.get('rating'),
+            comment=request.POST.get('comment')
         )
+
+        return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
+
 
 # ------------------------
 # レビュー投稿
 # ------------------------
-class ReviewCreateView(View):
+class ReviewCreateView(LoginRequiredMixin,View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/review_create.html', {'spot': spot})
@@ -185,10 +196,13 @@ class ReviewCreateView(View):
         return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
 
 
-class ReviewCompleteView(View):
+class ReviewCompleteView(LoginRequiredMixin,View):
     def get(self, request):
         return render(request, "spotapp/review_complete.html")
 
+class ReviewDetailView(View):
+    def get(self, request):
+        return render(request, "spotapp/review_detail.html")
 
 # ------------------------
 # お気に入り一覧
@@ -258,7 +272,7 @@ class ContactView(View):
 
             self.send_mail_from_account(
                 subject=f"お問い合わせ: {name}",
-                body=f"送信者: {name}\nメール: {email}\n\n内容:\n{message}"
+                body=f"このメールは観光地検索システムから送信されたお問い合わせメールです\n\n送信者: {name}\nメール: {email}\n\n内容:\n{message}"
             )
 
             return redirect("spotapp:contact_complete")
@@ -296,32 +310,49 @@ class LoginView(View):
             return render(request, 'spotapp/login.html', {'form': form})
 
         login(request, user)
+        Profile.objects.get_or_create(user=user)
         return redirect('spotapp:index')
 
 
 class LogoutView(View):
     def post(self, request):
-        request.session.flush()
-        return redirect('spotapp:index')
+        logout(request)
+        return redirect("spotapp:logout_complete")
 
 
+class LogoutCompleteView(View):
+    def get(self, request):
+        return render(request, "spotapp/logout_complete.html")
 
         # ------------------------
-        # as_view() の定義
+ # as_view() の定義
         # ------------------------
 index = IndexView.as_view()
 
 signup = SignupView.as_view()
 signup_complete = SignupCompleteView.as_view()
+
+login_view = LoginView.as_view()
+logout_view = LogoutView.as_view()
+logout_complete = LogoutCompleteView.as_view()
+
+
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()
+
 password_change = PasswordChangeView.as_view()
 password_change_complete = PasswordChangeCompleteView.as_view()
+
 spot_searchresult = SpotSearchResultView.as_view()
 spot_detail = SpotDetailView.as_view()
+
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
+review_detail= ReviewDetailView.as_view()
+
 favorite_list = FavoriteListView.as_view()
+
 event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()
+
 contact_complete = ContactCompleteView.as_view()
