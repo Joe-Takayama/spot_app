@@ -21,6 +21,8 @@ li {
   display: flex;
   transition: all 0.3s;
 }
+
+
 .slide div { /* スライド */
   width: 33.33%;
   height: 100%;
