@@ -1,5 +1,5 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
-from .models import Staff, Events, Photo, Spot,Osirase
+from .models import Staff, Events, Photo, Spot,Osirase,Category
 from django import forms
 
 #職員ログインフォーム
@@ -48,9 +48,16 @@ class PhotoForm(ModelForm):
 
 # 観光地登録フォーム
 class SpotCreateForm(ModelForm):
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(),
+        widget=forms.RadioSelect,
+        empty_label=None,
+        label="カテゴリ"
+    )
+
     class Meta:
         model = Spot
-        fields = ['spot_name', 'address', 'business_hours',  'explanation']
+        fields = ['spot_name', 'address', 'business_hours',  'explanation','category',]
         widgets = {
             'spot_name': TextInput(attrs={
                 'placeholder': '観光地名称を入力してください'
@@ -64,6 +71,7 @@ class SpotCreateForm(ModelForm):
             'explanation': TextInput(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
+
         }
 
 #お知らせフォーム
@@ -79,4 +87,25 @@ class OsiraseForm(forms.ModelForm):
             "body": forms.Textarea(attrs={
                 "placeholder": "お知らせする内容を入力してください",
             })
+        }
+#観光地更新フォーム
+class SpotCreateForm(ModelForm):
+
+    class Meta:
+        model = Spot
+        fields = ['spot_name', 'address', 'business_hours',  'explanation',]
+        widgets = {
+            'spot_name': TextInput(attrs={
+                'placeholder': '観光地名称を入力してください'
+            }),
+            'address': TextInput(attrs={
+                'placeholder': '住所を入力してください'
+            }),
+            'business_hours': TextInput(attrs={
+                'placeholder': '営業時間を入力してください'
+            }),
+            'explanation': TextInput(attrs={
+                'placeholder': '詳細情報を入力してください'
+            }),
+
         }

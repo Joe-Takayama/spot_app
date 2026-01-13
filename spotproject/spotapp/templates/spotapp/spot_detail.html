@@ -1,30 +1,67 @@
-    <head>
-        {% load static %}
-        <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
-    </head>
-    <div class="page">
-        <header class="page-header">
-            <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+{% load static %}
 
-            <div class="user-info">
-                <div class="user-icon">
-                    {% if request.user.profile.icon %}
-                        <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                    {% else %}
-                        <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                    {% endif %}
-                </div>
-                <div class="user-name-text">
-                    {{ request.user.username }} さん
-                </div>
+<link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+
+<div class="page">
+
+    <!-- ヘッダー -->
+    <header class="page-header">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+        <div class="user-info">
+            <div class="user-icon">
+                {% if request.user.profile.icon %}
+                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                {% else %}
+                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                {% endif %}
             </div>
 
+            <div class="user-name-text">
+                {{ request.user.username }} さん
+            </div>
+        </div>
+    </header>
 
     {% block body %}
-            <h2>{{ spot.spot_name }}</h2>
 
+    <!-- 観光地情報 -->
+    <div class="spot-info">
+        <h3 class="spot-name">{{ spot.spot_name }}</h3>
+
+        <div class="spot-image">
+            {% if spot.spot_photos.all %}
+                <div class="photo has-image">
+                    <img
+                        src="{{ spot.spot_photos.first.image.url }}"
+                        alt="{{ spot.spot_name }}"
+                        class="spot-img"
+                    >
+                </div>
+            {% else %}
+                <div class="photo no-image">
+                    <img
+                        src="{% static 'img/no-image.png' %}"
+                        alt="no image"
+                        class="spot-img"
+                    >
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="spot-actions" onclick="event.stopPropagation()">
+            <button>お気に入り登録</button>
+        </div>
+
+        <h3 class="spot-address">{{ spot.address }}</h3>
+        <h3 class="spot-hours">{{ spot.business_hours }}</h3>
+    </div>
+
+    <!-- レビュー -->
     <a href="{% url 'spotapp:review_detail' %}" class="btn">
         レビュー
     </a>
 
     {% endblock %}
+
+</div>

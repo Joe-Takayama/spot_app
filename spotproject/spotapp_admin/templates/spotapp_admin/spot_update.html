@@ -3,19 +3,25 @@
 <h2>観光地更新</h2>
 
 {% if page.photos.all %}
-    <div>
-        <p>現在の写真</p>
-        {% for photo in page.photos.all %}
-            <img src="{{ photo.image.url }}" alt="Spot Photo" style="max-width:200px; max-height:200px;">
-        {% endfor %}
-    </div>
-    <br>
-{% endif %}
-<form method="POST" enctype="multipart/form-data", action="{% url 'spotapp_admin:spot_update' %}">
+   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ spot_form.as_p }}
-    {{ photo_form.as_p }}
-    <button type="submit">更新</button>
+
+    <div class="form-box">
+
+        {{ form.spot_name }}
+        {{ form.address }}
+        {{ form.business_hours }}
+        {{ form.explanation }}
+
+        {% if form.errors %}
+            <div class="form-error">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <button type="submit">更新</button>
+
+    </div>
 </form>
-<a href="{% url 'spotapp_admin:spot_list' %}">観光地一覧に戻る</a>
+
 {% endblock %}

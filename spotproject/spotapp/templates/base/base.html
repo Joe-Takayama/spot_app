@@ -70,7 +70,8 @@
                     <li>
                         <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
                             {% csrf_token %}
-                            <button type="submit" class="user-menu-btn">ログアウト</button>
+                            <button type="submit" class="user-menu-btn logout">ログアウト</button>
+
                         </form>
                     </li>
                 </ul>
