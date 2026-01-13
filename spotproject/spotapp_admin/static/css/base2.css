@@ -53,8 +53,10 @@ nav button {
     padding: 0 25px;
 }
 
-footer {
-    margin-top: auto;
+.footer {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding: 10px;
 }
 
 form button {
@@ -63,10 +65,31 @@ form button {
 
 .search-form {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: center;
     gap: 0; 
     margin-bottom: -20px;
+}
+
+#search {
+    text-align: left !important;
+    direction: ltr !important;
+    unicode-bidi: plaintext;
+}
+
+.search-form input {
+    border: 1px solid #ccc;
+}
+
+.search-form input[type="text"] {
+    width: 100%;
+    max-width: 750px;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.search-form input::placeholder {
+    text-align: left;
 }
 
 .search-form .submit {
