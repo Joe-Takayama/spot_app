@@ -1,10 +1,8 @@
-<head>
 {%load static%}
-
-</head>
+<link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
 
 {%block body%}
-<div class="review">
+<div class="review-list">
 <h1 class="spot-name">{{ spot.spot_name }}</h1>
     {% for review in spot.review_set.all %}
         <div class="review">
