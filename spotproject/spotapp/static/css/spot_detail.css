@@ -10,11 +10,12 @@
 /* ホームボタン（左側） */
 .btn-home {
     text-decoration: none;
-    background: #333;
     color: #fff;
     padding: 6px 12px;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    background: #667eea;
 }
 
 /* ユーザー情報（右側） */
