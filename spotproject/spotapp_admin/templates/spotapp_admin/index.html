@@ -6,27 +6,28 @@
 <!-- ココのコピペ 　https://tagnote.net/js-parts/slideshow/-->
     <!-- スライドの外枠 -->
     <div class="slide-wrapper">
-    <!-- スライド（コンテンツ） -->
-    <div id="slide" class="slide">
-        <div><p>スライド１</p></div>
-        <div><p>スライド２</p></div>
-        <div><p>スライド３</p></div>
+        <!-- スライド（コンテンツ） -->
+        <div id="slide" class="slide">
+            <div><p>スライド１</p></div>
+            <div><p>スライド２</p></div>
+            <div><p>スライド３</p></div>
+        </div>
+
+        <!-- 左右のボタン -->
+        <span id="prev" class="prev"></span>
+        <span id="next" class="next"></span>
+        <!-- インジケーター -->
+        <ul class="indicator" id="indicator">
+            <li class="list"></li>
+            <li class="list"></li>
+            <li class="list"></li>
+        </ul>
     </div>
 
-    <!-- 左右のボタン -->
-    <span id="prev" class="prev"></span>
-    <span id="next" class="next"></span>
-    <!-- インジケーター -->
-    <ul class="indicator" id="indicator">
-        <li class="list"></li>
-        <li class="list"></li>
-        <li class="list"></li>
-    </ul>
+    <div class="event-list">
+        <a href="{% url 'spotapp:event_chart' %}">イベント一覧</a>
     </div>
 
-    <div class="event_bar">
-        <p><a href="{% url 'spotapp:event_chart' %}">イベント一覧</a></p>
-    </div>
 {% endblock %}
 
 {% block script %}

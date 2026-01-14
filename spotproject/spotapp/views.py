@@ -7,6 +7,9 @@ from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
 from .models import Osirase
 
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
 from .forms import (
     ProfileEditForm,
     PasswordChangeOnlyForm,
@@ -16,8 +19,8 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot as UserSpot,Profile, Favorite
-from spotapp_admin.models import Events, Spot,Photo
+from .models import Events, Review, Spot , Profile, Favorite
+from spotapp_admin.models import Photo
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -160,7 +163,18 @@ class SpotSearchResultView(View):
 class SpotDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
-        return render(request, 'spotapp/spot_detail.html', {'spot': spot})
+
+        is_favorited = False
+        if request.user.is_authenticated:
+            is_favorited = Favorite.objects.filter(
+                user=request.user,
+                spot=spot
+            ).exists()
+
+        return render(request, 'spotapp/spot_detail.html', {
+            'spot': spot,
+            'is_favorited': is_favorited,
+        })
 
     def post(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
@@ -201,19 +215,63 @@ class ReviewCompleteView(LoginRequiredMixin,View):
         return render(request, "spotapp/review_complete.html")
 
 class ReviewDetailView(View):
-    def get(self, request):
-        return render(request, "spotapp/review_detail.html")
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+
+        return render(request, "spotapp/review_detail.html", {
+            "spot": spot,
+            "reviews": spot.review_set.all()
+        })
 
 # ------------------------
 # お気に入り一覧
 # ------------------------
-class FavoriteListView(LoginRequiredMixin, View):
-    def get(self, request):
-        return render(
-            request,
-            'spotapp/favorite_list.html',
-            {"favorites": []}
-        )
+@login_required
+def favorite_list(request):
+    favorites = (
+        Favorite.objects
+        .filter(user=request.user)
+        .select_related("spot")
+        .order_by("-created_at")
+    )
+    return render(request, "spotapp/favorite_list.html", {"favorites": favorites})
+
+# ------------------------
+# お気に入り追加・削除
+# ------------------------
+@login_required
+def favorite_toggle(request, spot_id):
+    if request.method != "POST":
+        # GETで叩かれたら安全に戻す（最小影響）
+        return redirect("spotapp:spot_detail", spot_id=spot_id)
+
+    spot = get_object_or_404(Spot, spot_id=spot_id)
+
+    fav, created = Favorite.objects.get_or_create(user=request.user, spot=spot)
+    if created:
+        messages.success(request, "お気に入りに追加したぺこ！")
+    else:
+        fav.delete()
+        messages.info(request, "お気に入りを解除したぺこ！")
+
+    return redirect(request.META.get("HTTP_REFERER") or "spotapp:spot_detail", spot_id=spot_id)
+
+# ------------------------
+# お気に入り追加・削除（画面遷移なし/Ajax）
+# ------------------------
+@login_required
+@require_POST
+def favorite_toggle_ajax(request, spot_id):
+    spot = get_object_or_404(Spot, spot_id=spot_id)
+
+    fav, created = Favorite.objects.get_or_create(user=request.user, spot=spot)
+    if created:
+        # 登録
+        return JsonResponse({"ok": True, "favorited": True})
+    else:
+        # 解除
+        fav.delete()
+        return JsonResponse({"ok": True, "favorited": False})
 
 
 # ------------------------
@@ -351,7 +409,7 @@ review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
 review_detail= ReviewDetailView.as_view()
 
-favorite_list = FavoriteListView.as_view()
+
 
 event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()

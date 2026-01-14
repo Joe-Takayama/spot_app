@@ -6,13 +6,13 @@ li {
   list-style: none;
 }
 /* ↓ スライドの外枠 */
-.slide-wrapper {
+.main .slide-wrapper {
   width: 100%;
   height: 300px;
-  margin-top: 80px !important;
+  margin-top: 30px;
+  margin-bottom: 42px;
   position: relative;
   overflow: hidden; /* はみ出したスライドを隠す */
-  z-index: 1;
 }
 /*  ↓ スライド（コンテンツ） */
 .slide { /*スライド全体 */
@@ -101,12 +101,16 @@ li {
   background-color: #000;
 }
 
-.event_bar{
-    text-align: center;
-    padding: 12px 5px;
-    margin-top: 30px;
-    margin-left: 20px;
-    margin-right: 20px;
-    background-color: #ffea00;
-    border:solid 3px #333;
+.main .event-list {
+  text-align: center;
+  padding: 12px 5px;
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  border:solid 3px #333;
+  background-color: #ffea00;
+}
+
+.event-list a {
+  text-decoration: none;
 }
