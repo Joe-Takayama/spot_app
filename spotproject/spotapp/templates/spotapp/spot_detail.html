@@ -65,12 +65,16 @@
 
         <h2 class="spot-address">{{ spot.address }}</h2>
         <h2 class="spot-hours">{{ spot.business_hours }}</h2>
-    </div>
 
-    <!-- レビュー -->
-    <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
-    レビューを見る
-</a>
+        
+        <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
+            レビューを見る
+        </a>
+
+        <button type="button" onclick="history.back()">
+            ← 戻る
+        </button>
+    </div>
     {% endblock %}
 
 </div>
