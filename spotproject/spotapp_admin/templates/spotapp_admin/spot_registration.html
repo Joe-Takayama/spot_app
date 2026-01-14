@@ -4,32 +4,19 @@
 <form method="POST" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_registration' %}">
     {% csrf_token %}
 
-    <div class="form-box">
+    {{ form.spot_name }}
+    {{ form.address }}
+    {{ form.business_hours }}
+    {{ form.explanation }}
 
-        {{ form.spot_name }}
-        {{ form.address }}
-        {{ form.business_hours }}
-        {{ form.explanation }}
+    <p>カテゴリーを選択してください</p>
+    {{ form.category }}
 
-        <button type="button" class="category-toggle" onclick="toggleCategory()">
-            カテゴリーを選択してください
-            <span id="arrow">▼</span>
-        </button>
+    <p>写真を登録してください</p>
+    {{ photo_form.image }}
 
-        <div id="category-list" class="category-list">
-            {% for radio in form.category %}
-                <label class="category-item">
-                    {{ radio.tag }}
-                    <span>{{ radio.choice_label }}</span>
-                </label>
-            {% endfor %}
-        </div>
-
-        {{ photo_form.as_p }}
-
-        <button type="submit">登録</button>
-
-    </div>
+    <button type="submit">登録</button>
 </form>
+
 
 {% endblock %}
