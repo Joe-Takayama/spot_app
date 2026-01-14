@@ -44,23 +44,24 @@
             </a>
        
 
-<!-- お知らせ表示 中身は継承しているのに表示だけせれない -->
-             <div class="Nav-block" id="categoryMenu_btn">
+            <!-- お知らせ表示 中身は継承しているのに表示だけせれない -->
+            <div class="Nav-block" id="categoryMenu_btn">
                 <button class="Menu_btn">お知らせ ▼</button>
             
-            <ul class="menu_down">
-            {% for o in osirase_list %}
-                <li>
-                    <strong>{{ o.title }}</strong>
-                    <div>{{ o.body|linebreaksbr }}</div>
-                </li>
-            {% empty %}
-                <li>表示できるお知らせがありません。</li>
-            {% endfor %}
-            </ul>
+                <ul class="menu_down">
+                    {% for o in osirase_list %}
+                    <li>
+                        <strong>{{ o.title }}</strong>
+                        <div>{{ o.body|linebreaksbr }}</div>
+                    </li>
+                    {% empty %}
+                    <li>表示できるお知らせがありません。</li>
+                    {% endfor %}
+                </ul>
             </div>
+        </div>
 
-            <div class="nav-right">
+        <div class="nav-right">
             {% if user.is_authenticated %}
             <div class="user-menu-wrapper">
 
