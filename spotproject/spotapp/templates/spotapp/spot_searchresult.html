@@ -63,44 +63,6 @@
         </div>
 
     </div>
-
-    <div class="spot-info">
-        <div class="spot-hours">
-            営業時間 {{ spot.business_hours }}
-        </div>
-
-        <div class="spot-rating">
-            評価
-            {% if spot.avg_rating %}
-            ★ {{ spot.avg_rating|floatformat:1 }}
-            {% else %}
-            
-            {% endif %}
-</div>
-
-        
-
-        <div class="spot-actions" onclick="event.stopPropagation()">
-            <button
-                type="button"
-                class="fav-btn"
-                data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
-            >
-                {% if spot.is_favorited %}
-                    ★ 登録済み
-                {% else %}
-                    ♡ お気に入り登録
-                {% endif %}
-            </button>
-
-            <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
-                評価する
-            </a>
-        </div>
-
-    </div>
-</div>
-
     {% empty %}
         <p>検索結果がありません</p>
     {% endfor %}
