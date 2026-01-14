@@ -7,7 +7,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
-from .models import Osirase
+from spotapp_admin.models import Osirase
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -406,7 +406,14 @@ class LogoutCompleteView(View):
         return render(request, "spotapp/logout_complete.html")
 
 # ------------------------
-# as_view() の定義
+# お知らせ表示画面
+def osirase_list(request):
+    items = Osirase.objects.all()
+    return render(request, "osirase_list.html", {"osirase_list": items})
+
+
+        # ------------------------
+ # as_view() の定義
 # ------------------------
 index = IndexView.as_view()
 
