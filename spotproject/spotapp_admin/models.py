@@ -14,14 +14,14 @@ class Staff(models.Model):
 
 
 # 地区別テーブル
-# class District(models.Model):
-    # 地区ID
-    # district_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # 地区名称
-    # district_name = models.CharField(max_length=100, verbose_name="地区名称")
+class District(models.Model):
+    #地区ID
+    district_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #地区名称
+    district_name = models.CharField(max_length=100, verbose_name="地区名称")
 
-    # def __str__(self):
-        # return self.district_name
+    def __str__(self):
+         return self.district_name
 
 
 # カテゴリテーブル
