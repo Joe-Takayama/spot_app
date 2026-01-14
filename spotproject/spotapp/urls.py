@@ -31,7 +31,7 @@ urlpatterns = [
     path('review/detail/<uuid:spot_id>/', views.review_detail, name="review_detail"),
     path('review/detail/', views.review_detail, name="review_detail"),
     # お気に入り一覧画面
-   path('favorite/list/', views.favorite_list, name="favorite_list"),
+    path('favorite/list/', views.favorite_list, name="favorite_list"),
 
     # お気に入り登録・解除機能
     path('favorite/toggle/<uuid:spot_id>/', views.favorite_toggle, name="favorite_toggle"),
