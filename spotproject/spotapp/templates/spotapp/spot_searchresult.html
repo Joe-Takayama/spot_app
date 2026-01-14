@@ -1,4 +1,4 @@
-{%extends "base/base.html" %} 
+{% extends "base/base.html" %}
 {% load static %}
 
 {% block title %} 観光地検索結果 {% endblock %}
@@ -7,34 +7,61 @@
 <link href="{% static 'css/searchresult.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block body%}
-<!-- 検索結果一覧 -->
+{% block body %}
+
+{% if not keyword %}
+    <p class="search-guide">
+        観光地名を入力してください
+    </p>
+{% else %}
 <div class="spot-list">
+
     {% for spot in spots %}
     <div class="spot-card"
-    onclick="location.href='{% url 'spotapp:spot_detail' spot.spot_id %}'">
+        onclick="location.href='{% url 'spotapp:spot_detail' spot.spot_id %}'">
 
-    <div class="spot-left">
-        <h3 class="spot-name">{{ spot.spot_name }}</h3>
-        <div class="spot-image">
-        {% if spot.spot_photos.all %}
-            <div class="photo has-image">
-                <img
-                    src="{{ spot.spot_photos.first.image.url }}"
-                    alt="{{ spot.spot_name }}"
-                    class="spot-img"
-                >
+        <div class="spot-left">
+            <h3 class="spot-name">{{ spot.spot_name }}</h3>
+
+            <div class="spot-image">
+                {% if spot.spot_photos.first %}
+                    <img
+                        src="{{ spot.spot_photos.first.image.url }}"
+                        alt="{{ spot.spot_name }}"
+                        class="spot-img"
+                    >
+                {% else %}
+                    <img
+                        src="{% static 'img/no-image.png' %}"
+                        alt="no image"
+                        class="spot-img"
+                    >
+                {% endif %}
             </div>
-        {% else %}
-            <div class="photo no-image">
-                <img
-                    src="{% static 'img/no-image.png' %}"
-                    alt="no image"
-                    class="spot-img"
-                >
-            </div>
-        {% endif %}
         </div>
+
+        <div class="spot-info">
+            <div class="spot-hours">
+                営業時間 {{ spot.business_hours }}
+            </div>
+
+            <div class="spot-rating">
+                評価
+                {% if spot.avg_rating %}
+                    ★ {{ spot.avg_rating|floatformat:1 }}
+                {% else %}
+                    未評価
+                {% endif %}
+            </div>
+
+            <div class="spot-actions" onclick="event.stopPropagation()">
+                <button>お気に入り登録</button>
+                <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
+                    評価する
+                </a>
+            </div>
+        </div>
+
     </div>
 
     <div class="spot-info">
@@ -79,6 +106,7 @@
     {% endfor %}
 
 </div>
+{% endif %}
 
 <script>
 function getCookie(name) {
