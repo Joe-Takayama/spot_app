@@ -1,3 +1,5 @@
+from django.db.models import Avg, Prefetch, Exists, OuterRef
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -25,9 +27,8 @@ from spotapp_admin.models import Photo
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from django.db.models import Avg,Prefetch
-from django.urls import reverse
 
+from django.urls import reverse
 
 # ------------------------
 # インデックス
@@ -142,13 +143,25 @@ class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q')
         spots = Spot.objects.annotate(
-    avg_rating=Avg('review__rating')
-).prefetch_related(
+            avg_rating=Avg('review__rating')
+        ).prefetch_related(
             Prefetch(
                 'spot_photos',
                 queryset=Photo.objects.order_by('uploaded_at')
             )
-)
+        )
+        
+        if request.user.is_authenticated:
+            favorites_subquery = Favorite.objects.filter(
+                user=request.user,
+                spot=OuterRef('pk')
+            )
+            spots = spots.annotate(
+                is_favorited=Exists(favorites_subquery)
+            )
+        else:
+            spots = spots.annotate(is_favorited=Exists(Favorite.objects.none()))
+
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
 
@@ -392,9 +405,9 @@ class LogoutCompleteView(View):
     def get(self, request):
         return render(request, "spotapp/logout_complete.html")
 
-        # ------------------------
- # as_view() の定義
-        # ------------------------
+# ------------------------
+# as_view() の定義
+# ------------------------
 index = IndexView.as_view()
 
 signup = SignupView.as_view()

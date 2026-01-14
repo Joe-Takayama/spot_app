@@ -63,11 +63,99 @@
         </div>
 
     </div>
+
+    <div class="spot-info">
+        <div class="spot-hours">
+            営業時間 {{ spot.business_hours }}
+        </div>
+
+        <div class="spot-rating">
+            評価
+            {% if spot.avg_rating %}
+            ★ {{ spot.avg_rating|floatformat:1 }}
+            {% else %}
+            
+            {% endif %}
+</div>
+
+        
+
+        <div class="spot-actions" onclick="event.stopPropagation()">
+            <button
+                type="button"
+                class="fav-btn"
+                data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
+            >
+                {% if spot.is_favorited %}
+                    ★ 登録済み
+                {% else %}
+                    ♡ お気に入り登録
+                {% endif %}
+            </button>
+
+            <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
+                評価する
+            </a>
+        </div>
+
+    </div>
+</div>
+
     {% empty %}
         <p>検索結果がありません</p>
     {% endfor %}
 
 </div>
 {% endif %}
+
+<script>
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  // ★ここが超重要：親の onclick より先に止める
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+
+  btn.disabled = true;
+
+  try {
+    const url = btn.dataset.url;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Accept": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.log("toggle failed:", res.status, text);
+      alert(`失敗: ${res.status}`);
+      return;
+    }
+
+    const data = await res.json();
+    btn.textContent = data.favorited ? "★ 登録済み" : "♡ お気に入り登録";
+
+  } catch (err) {
+    console.error(err);
+    alert("お気に入りの更新に失敗したぺこ…");
+  } finally {
+    btn.disabled = false;
+  }
+}, true); // ← ★これが本命（キャプチャで先に動く）
+</script>
+
+
 
 {% endblock %}

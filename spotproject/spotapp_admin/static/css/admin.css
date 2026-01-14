@@ -50,55 +50,47 @@ nav {
     background: #5a6fd8;
 }
 
-/* nav直下の menu_down を nav 幅で表示 */
+/* ドロップダウンメニュー本体 */
 .menu_down {
-    position: absolute;      /* nav が基準 */
-    top: 100%;               /* nav の真下 */
+    display: none;           /* 最初は非表示 */
+    position: absolute;
+    top: 100%;               /* ボタンのすぐ下 */
     left: 0;
-    width: 100%;             /* nav の幅いっぱい */
-
-    display: flex;
-    justify-content: space-around;
+    min-width: 180px;        /* 必要に応じて調整 */
     background: white;
     border: 1px solid #e1e5e9;
     border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-    padding: 0;
-    margin: 0;
-    list-style: none;
-
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     z-index: 1000;
+    padding: 8px 0;
+    margin: 4px 0 0 0;
+    list-style: none;
+}
+
+/* 表示状態 */
+.Nav-block.active .menu_down {
+    display: block;
 }
 
 .menu_down li {
-    flex: 1;
-    text-align: center;
+    padding: 0;
 }
 
-.menu_down a {
+.menu_down a,
+.menu_down div,
+.menu_down strong {
     display: block;
-    padding: 12px 0;
+    padding: 10px 16px;
     color: #333;
     text-decoration: none;
 }
 
-.menu_down a:hover {
+.menu_down a:hover,
+.menu_down div:hover {
     background: #f8f9fa;
     color: #667eea;
 }
 
-/* hover で menu_down を表示 */
-.Nav-block:hover + .menu_down,
-.menu_down:hover {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
 
 footer {
     margin-top: 20px;
