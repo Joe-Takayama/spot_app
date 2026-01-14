@@ -47,7 +47,7 @@
 <!-- お知らせ表示 中身は継承しているのに表示だけせれない -->
              <div class="Nav-block" id="categoryMenu_btn">
                 <button class="Menu_btn">お知らせ ▼</button>
-            </div>
+            
             <ul class="menu_down">
             {% for o in osirase_list %}
                 <li>
@@ -58,7 +58,7 @@
                 <li>表示できるお知らせがありません。</li>
             {% endfor %}
             </ul>
-
+            </div>
 
             <div class="nav-right">
             {% if user.is_authenticated %}
