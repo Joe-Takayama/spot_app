@@ -19,24 +19,48 @@
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     text-align: center;
 }
-
 /* =========================
-   ユーザーアイコン
+   ヘッダー用（ミニナビ）
 ========================= */
-
-.user-icon {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 16px;
+.profile-mini-nav {
+  width: min(1100px, 95vw);
+  margin: 16px auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.user-icon img {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #f2f2f2;
-    background-color: #fafafa;
+.profile-mini-nav .user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ヘッダーのアイコンは小さく */
+.profile-mini-nav .user-icon img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* =========================
+   カード内アイコン（プロフィール用）
+========================= */
+
+.profile-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.profile-icon img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f2f2f2;
+  background-color: #fafafa;
 }
 
 /* =========================
