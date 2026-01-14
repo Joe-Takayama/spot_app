@@ -413,7 +413,7 @@ def osirase_list(request):
 
 
         # ------------------------
- # as_view() の定義
+# as_view() の定義
 # ------------------------
 index = IndexView.as_view()
 
