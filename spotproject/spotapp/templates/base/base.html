@@ -13,6 +13,7 @@
 
 
             <!-- ナビ -->
+    {% block nav %}
     <nav>
         <div class="nav-left">
             <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
@@ -95,30 +96,35 @@
             {% endif %}
         </div>
     </nav>
+    {% endblock %}
 
 
 
 
-            <!-- 検索バー -->
-            <form action="{% url 'spotapp:spot_searchresult' %}" method="get" style="text-align: center;">
-                <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
-                <button type="submit">検索</button>
-            </form>
+    <!-- 検索バー -->
+    {% block searchbar %}
+    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" style="text-align: center;">
+        <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
+        <button type="submit">検索</button>
+    </form>
+    {% endblock %}
 
-                <!-- ★ 中央幅の基準 -->
-            <div class="page-container">
-            {% block body %}
-            {% endblock %}
-            </div>
+    <!-- ★ 中央幅の基準 -->
+    <div class="page-container">
+        {% block body %}
+        {% endblock %}
+    </div>
 
 
-            <!-- フッター -->
-        <footer class="footer">
-            <span>E班</span>
-            <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
-        </footer>
+        <!-- フッター -->
+    {% block footer %}
+    <footer class="footer">
+        <span>E班</span>
+        <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
+    </footer>
+    {% endblock %}
 
-        {% block script %}
+    {% block script %}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
 

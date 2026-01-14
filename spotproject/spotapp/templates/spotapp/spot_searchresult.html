@@ -55,7 +55,13 @@
             </div>
 
             <div class="spot-actions" onclick="event.stopPropagation()">
-                <button>お気に入り登録</button>
+                <button
+                    type="button"
+                    class="fav-btn"
+                    data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
+                >
+                    お気に入り登録
+                </button>
                 <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
                     評価する
                 </a>
@@ -107,7 +113,7 @@ document.addEventListener("click", async (e) => {
     }
 
     const data = await res.json();
-    btn.textContent = data.favorited ? "★ 登録済み" : "♡ お気に入り登録";
+    btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
 
   } catch (err) {
     console.error(err);
