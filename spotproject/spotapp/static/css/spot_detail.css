@@ -76,3 +76,13 @@
     width: fit-content;   /* 中身サイズにする */
     margin: 30px auto;    /* 左右autoで中央 */
 }
+.spot-info button{
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    align-self:first baseline  /* ボタンも中央に */
+}
