@@ -27,8 +27,7 @@ urlpatterns = [
     path('review/create/<uuid:spot_id>/',views.review_create,name="review_create"),
 
     # レビュー投稿完了画面
-    path('review/complete/', views.review_complete, name="review_complete"),
-
+    path('review/complete/<uuid:spot_id>/',views.review_complete,name="review_complete"),
     path('review/detail/<uuid:spot_id>/', views.review_detail, name="review_detail"),
     path('review/detail/', views.review_detail, name="review_detail"),
     # お気に入り一覧画面

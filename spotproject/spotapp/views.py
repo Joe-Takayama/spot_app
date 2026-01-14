@@ -26,6 +26,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 from django.db.models import Avg,Prefetch
+from django.urls import reverse
 
 
 # ------------------------
@@ -207,12 +208,20 @@ class ReviewCreateView(LoginRequiredMixin,View):
             comment=request.POST.get('comment')
         )
 
-        return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
+        return redirect(
+            reverse('spotapp:review_complete', kwargs={'spot_id': spot.spot_id})
+        )
 
 
-class ReviewCompleteView(LoginRequiredMixin,View):
-    def get(self, request):
-        return render(request, "spotapp/review_complete.html")
+class ReviewCompleteView(LoginRequiredMixin, View):
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+        return render(
+            request,
+            "spotapp/review_complete.html",
+            {"spot": spot}
+        )
+
 
 class ReviewDetailView(View):
     def get(self, request, spot_id):
