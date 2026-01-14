@@ -1,25 +1,31 @@
 {% extends "base2/base2.html" %}
 {% block body %}
 
-<h2>イベント一覧</h2>
+<h2 class="page-title">イベント一覧</h2>
 
-<table border="1" cellpadding="8", cellspacing="5">
-    <tr>
-        <th>イベント名称</th>
-    </tr>
-
-    {% for events in event_list %}
-    <tr>
-        <td>{{ events.event_name }}</td>
-        <td>
-            {% if events.event_id %}
-                <a href="{% url 'spotapp_admin:event_update' events.event_id %}">更新</a>
-            {% else %}
-                <span style="color: red;">更新不可</span>
-            {% endif %}
-            <a href="{% url 'spotapp_admin:event_delete' events.event_id %}">削除</a>
-        </td>
-    </tr>
-    {% endfor %}
-</table>
+<div class="table-wrapper">
+    <table class="event-table">
+        <thead>
+            <tr>
+                <th>イベント名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for events in event_list %}
+                <tr>
+                    <td>{{ events.event_name }}</td>
+                    <td class="actions">
+                        {% if events.event_id %}
+                            <a href="{% url 'spotapp_admin:event_update' events.event_id %}" class="btn update">更新</a>
+                        {% else %}
+                            <span class="disabled">更新不可</span>
+                        {% endif %}
+                            <a href="{% url 'spotapp_admin:event_delete' events.event_id %}" class="btn delete">削除</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
