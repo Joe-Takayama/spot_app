@@ -4,14 +4,29 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: #ffffff;
+}
+
 nav {
     display: flex;
+    flex-shrink: 0;
+    height: 70px;
     align-items: center;
     justify-content: space-between;
     background: #f8f9fa;
     border-bottom: 1px solid #e1e5e9;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 10px;
+    margin-bottom: -40px;
 }
 
 nav .right-nav {
@@ -29,4 +44,54 @@ nav .news {
 
 nav button {
     margin: 10px 0 0 30px;
+}
+
+.main {
+    width: 100%;
+    max-width: 1300px;     /* ← 幅はここだけで決める */
+    margin: 0 auto;
+    padding: 0 25px;
+}
+
+.footer {
+    border-top: 1px solid #ccc;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+form button {
+    padding: 5px;
+}
+
+.search-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0; 
+    margin-bottom: -20px;
+}
+
+#search {
+    text-align: left !important;
+    direction: ltr !important;
+    unicode-bidi: plaintext;
+}
+
+.search-form input {
+    border: 1px solid #ccc;
+}
+
+.search-form input[type="text"] {
+    width: 100%;
+    max-width: 750px;
+    padding-left: 10px;
+    text-align: left;
+}
+
+.search-form input::placeholder {
+    text-align: left;
+}
+
+.search-form .submit {
+    margin-top: -40px;
 }
