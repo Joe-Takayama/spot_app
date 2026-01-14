@@ -56,7 +56,10 @@ nav {
     position: absolute;
     top: 100%;               /* ボタンのすぐ下 */
     left: 0;
-    min-width: 180px;        /* 必要に応じて調整 */
+    width: 320px;        /* 必要に応じて調整 */
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
     background: white;
     border: 1px solid #e1e5e9;
     border-radius: 6px;
@@ -74,6 +77,8 @@ nav {
 
 .menu_down li {
     padding: 0;
+    list-style: none;
+    margin-bottom: 10px;
 }
 
 .menu_down a,

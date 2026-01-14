@@ -66,10 +66,11 @@ form button {
 
 .search-form {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 0; 
-    margin-bottom: -20px;
+    gap: 10; 
+    margin-top: 10px;
+    margin-bottom: -25px;
 }
 
 #search {
@@ -93,6 +94,3 @@ form button {
     text-align: left;
 }
 
-.search-form .submit {
-    margin-top: -40px;
-}
