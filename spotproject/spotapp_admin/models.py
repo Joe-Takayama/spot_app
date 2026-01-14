@@ -101,7 +101,7 @@ class Photo(models.Model):
         return f"未紐づけ写真{self.photo_id}"
 
 class Osirase(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=50)
     body = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

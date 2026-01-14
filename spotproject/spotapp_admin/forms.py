@@ -88,13 +88,15 @@ class OsiraseForm(forms.ModelForm):
     class Meta:
         model = Osirase
         fields = ["title", "body"]
-
         widgets = {
             "title": forms.TextInput(attrs={
                 "placeholder": "題名を入力",
+                "maxlength": "50"
             }),
             "body": forms.Textarea(attrs={
                 "placeholder": "お知らせする内容を入力してください",
+                "maxlength": "200",  # ← これを追加
+                "rows": 5
             })
         }
 #観光地更新フォーム
