@@ -47,6 +47,23 @@ nav button {
     margin: 10px 0 0 30px;
 }
 
+.login-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 10px 0 0 30px;   /* nav button と同じ */
+    padding: 8px 16px;
+
+    background-color: #667eea;
+    color: #fff;
+    border-radius: 6px;
+
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
+}
+
 .main {
     width: 100%;
     max-width: 1300px;     /* ← 幅はここだけで決める */
