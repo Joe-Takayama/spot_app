@@ -1,3 +1,5 @@
+from django.db.models import Avg, Prefetch, Exists, OuterRef
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout, get_user_model, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
@@ -5,7 +7,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
-from .models import Osirase
+from spotapp_admin.models import Osirase
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -25,8 +27,8 @@ from spotapp_admin.models import Photo
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-from django.db.models import Avg,Prefetch
 
+from django.urls import reverse
 
 # ------------------------
 # インデックス
@@ -141,13 +143,25 @@ class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q')
         spots = Spot.objects.annotate(
-    avg_rating=Avg('review__rating')
-).prefetch_related(
+            avg_rating=Avg('review__rating')
+        ).prefetch_related(
             Prefetch(
                 'spot_photos',
                 queryset=Photo.objects.order_by('uploaded_at')
             )
-)
+        )
+        
+        if request.user.is_authenticated:
+            favorites_subquery = Favorite.objects.filter(
+                user=request.user,
+                spot=OuterRef('pk')
+            )
+            spots = spots.annotate(
+                is_favorited=Exists(favorites_subquery)
+            )
+        else:
+            spots = spots.annotate(is_favorited=Exists(Favorite.objects.none()))
+
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
 
@@ -207,12 +221,20 @@ class ReviewCreateView(LoginRequiredMixin,View):
             comment=request.POST.get('comment')
         )
 
-        return redirect('spotapp:spot_detail', spot_id=spot.spot_id)
+        return redirect(
+            reverse('spotapp:review_complete', kwargs={'spot_id': spot.spot_id})
+        )
 
 
-class ReviewCompleteView(LoginRequiredMixin,View):
-    def get(self, request):
-        return render(request, "spotapp/review_complete.html")
+class ReviewCompleteView(LoginRequiredMixin, View):
+    def get(self, request, spot_id):
+        spot = get_object_or_404(Spot, spot_id=spot_id)
+        return render(
+            request,
+            "spotapp/review_complete.html",
+            {"spot": spot}
+        )
+
 
 class ReviewDetailView(View):
     def get(self, request, spot_id):
@@ -275,16 +297,26 @@ def favorite_toggle_ajax(request, spot_id):
 
 
 # ------------------------
-# イベント
+# イベント用にういいいいいいいいい
 # ------------------------
 class EventListView(View):
     def get(self, request):
-        event_list = Events.objects.order_by('-event_date')
-        months = range(1, 13)
-        return render(request, 'spotapp/event_chart.html', {
-            'event_list': event_list,
-            'months': months,
-        })
+        month = request.GET.get("month")  # ← 追加
+
+        event_list = Events.objects.order_by("-event_date")
+
+        # 🔹 月指定があれば絞り込み
+        if month:
+            event_list = event_list.filter(event_date__month=month)
+
+        context = {
+            "event_list": event_list,
+            "months": range(1, 13),
+            "selected_month": month,  # ← 追加
+        }
+
+        return render(request, "spotapp/event_chart.html", context)
+
 
 
 class EventDetailView(View):
@@ -383,9 +415,16 @@ class LogoutCompleteView(View):
     def get(self, request):
         return render(request, "spotapp/logout_complete.html")
 
+# ------------------------
+# お知らせ表示画面
+def osirase_list(request):
+    items = Osirase.objects.all()
+    return render(request, "osirase_list.html", {"osirase_list": items})
+
+
         # ------------------------
- # as_view() の定義
-        # ------------------------
+# as_view() の定義
+# ------------------------
 index = IndexView.as_view()
 
 signup = SignupView.as_view()

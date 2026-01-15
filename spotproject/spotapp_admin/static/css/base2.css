@@ -31,6 +31,7 @@ nav {
 
 nav .right-nav {
    display: flex;
+   margin: 10px 20px 15px 5px;
 }
 
 nav .news {
@@ -44,6 +45,23 @@ nav .news {
 
 nav button {
     margin: 10px 0 0 30px;
+}
+
+.login-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 10px 0 0 30px;   /* nav button と同じ */
+    padding: 8px 16px;
+
+    background-color: #667eea;
+    color: #fff;
+    border-radius: 6px;
+
+    text-decoration: none;
+    font-size: 14px;
+    cursor: pointer;
 }
 
 .main {
@@ -65,10 +83,11 @@ form button {
 
 .search-form {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 0; 
-    margin-bottom: -20px;
+    gap: 10; 
+    margin-top: 10px;
+    margin-bottom: -25px;
 }
 
 #search {
@@ -92,6 +111,3 @@ form button {
     text-align: left;
 }
 
-.search-form .submit {
-    margin-top: -40px;
-}

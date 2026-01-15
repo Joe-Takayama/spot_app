@@ -1,4 +1,4 @@
-.update-delete-wrapper {
+.registration-wrapper {
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -7,23 +7,23 @@
     padding: 50px;
 }
 
-.spot-update-delete, .event-update-delete {
+.spot-insert, .event-insert {
     padding: 10px 15px;
     background-color: #ccc;
     border-radius: 8px;
     transition: all .5s ease;
 }
 
-.spot-update-delete:hover, .event-update-delete:hover {
+.spot-insert:hover, .event-insert:hover {
     background-color: #bbb;
 }
 
-.spot-update-delete a, .event-update-delete a{
+.spot-insert a, .event-insert a{
     text-decoration: none;
     color: black;
     transition: all .5s ease;
 }
 
-.spot-update-delete a:hover, .event-update-delete a:hover {
+.spot-insert a:hover, .event-insert a:hover {
     color: white;
 }

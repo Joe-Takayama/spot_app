@@ -138,12 +138,3 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
-
-# お知らせテーブル
-class Osirase(models.Model):
-    title = models.CharField(max_length=255)
-    body = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title

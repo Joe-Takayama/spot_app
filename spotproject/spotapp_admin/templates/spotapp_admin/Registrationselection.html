@@ -1,22 +1,12 @@
-
 {% extends "base2/base2.html" %}
-{% load static %}
-{% block head %}
-<link rel="stylesheet" href="{% static 'css/registselect.css' %}">
-{% endblock %}
 {% block body %}
 
-
-<!-- 観光地登録 -->
-<div>
-    <a href="{% url 'spotapp_admin:spot_registration' %}">観光地登録</a>
-</div>
-
-<br><br>
-
-<!-- イベント登録 -->
-<div>
-    <a href="{% url 'spotapp_admin:event_registration' %}">イベント登録</a>
+<div class="registration-wrapper">
+    <div class="spot-insert">
+        <a href="{% url 'spotapp_admin:spot_registration' %}">観光地登録</a>
+    </div>
+    <div class="event-insert">
+        <a href="{% url 'spotapp_admin:event_registration' %}">イベント登録</a>
+    </div>
 </div>
 {% endblock %}
-

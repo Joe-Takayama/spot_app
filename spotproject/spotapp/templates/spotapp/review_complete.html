@@ -6,5 +6,8 @@
 {% block body %}
 <div class="page-center">
     <h1>投稿が完了しました。</h1>
+    <a href="{% url 'spotapp:spot_detail' spot.spot_id %}" class="btn">
+        戻る               
+    </a>
 </div>
 {% endblock %}
