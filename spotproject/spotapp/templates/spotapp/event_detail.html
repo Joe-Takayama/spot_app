@@ -10,13 +10,7 @@
 
 <header class="detail-header">
     <a href="{% url 'spotapp:event_chart' %}" class="back-btn">← 一覧へ戻る</a>
-    <div class="user-info">
-        {% if user.is_authenticated %}
-            👤 {{ user.username }} さん
-        {% else %}
-            👤 ゲストさん
-        {% endif %}
-    </div>
+<!-- ココにユーザー名いらない説 -->
 </header>
 
 <main class="detail-container">

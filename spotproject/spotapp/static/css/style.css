@@ -249,6 +249,17 @@ nav {
 .user-menu li .user-menu-btn.logout { color: #d33; }
 .user-menu li .user-menu-btn.logout:hover { background: #fff1f1; color:#d33; }
 
+/* ===== ユーザーメニュー折り返し対策 ===== */
+.user-menu{
+    min-width: 160px;
+}
+
+.user-menu li a,
+.user-menu li .user-menu-btn{
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+}
 
 /* ===============================
    フッター（最下部）

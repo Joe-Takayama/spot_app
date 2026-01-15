@@ -25,40 +25,40 @@ class District(models.Model):
 
 
 # カテゴリテーブル
-# class Category(models.Model):
+class Category(models.Model):
     # カテゴリID
-    # category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    category_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # カテゴリ名称
-    # category_name = models.CharField(max_length=100, verbose_name="カテゴリ名称")
+    category_name = models.CharField(max_length=100, verbose_name="カテゴリ名称")
 
-    # def __str__(self):
-        # return self.category_name
+    def __str__(self):
+        return self.category_name
 
 
 # 観光地テーブル
-#class Spot(models.Model):
+class Spot(models.Model):
     # 観光地ID
-    # spot_id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
+    spot_id = models.UUIDField(primary_key=True,default=uuid.uuid4, editable=False)
     # 観光地名称
-    # spot_name = models.CharField(max_length=100, verbose_name="観光地名称")
+    spot_name = models.CharField(max_length=100, verbose_name="観光地名称")
     # 住所
-    # address = models.CharField(max_length=200, verbose_name="住所")
+    address = models.CharField(max_length=200, verbose_name="住所")
     # カテゴリ
-    # category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     # 説明
-    # explanation = models.TextField(max_length=2000, verbose_name="説明")
+    explanation = models.TextField(max_length=2000, verbose_name="説明")
     # 営業時間
-    # business_hours = models.CharField(max_length=100, verbose_name="営業時間")
+    business_hours = models.CharField(max_length=100, verbose_name="営業時間")
     # 定休日
-    # regular_holiday = models.CharField(max_length=100, verbose_name="定休日")
+    regular_holiday = models.CharField(max_length=100, verbose_name="定休日")
     # 登録日
-    # created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
     # 地区
-    # district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
-    # def __str__(self):
-        # return self.spot_name
+    def __str__(self):
+        return self.spot_name
     
 
 # class Events(models.Model):
