@@ -12,7 +12,8 @@
 <nav class="profile-mini-nav">
   <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
 
-  <div class="user-info">
+  <div class="user-info" id="userMenuBtn">
+
     <div class="user-icon">
       {% if request.user.profile.icon %}
         <img src="{{ request.user.profile.icon.url }}" alt="icon">
@@ -23,6 +24,16 @@
     <div class="user-name-text">
       {{ request.user.username }} さん
     </div>
+    <ul class="user-menu" id="userMenu">
+      <li><a href="{% url 'spotapp:profile' %}">プロフィール</a></li>
+      <li>
+            <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="user-menu-btn logout">ログアウト</button>
+
+            </form>
+        </li>
+    </ul>
   </div>
 </nav>
 {% endblock %}
@@ -107,5 +118,21 @@ document.addEventListener("click", async (e) => {
     btn.disabled = false;
   }
 });
+
+/* ===== ユーザーメニュー開閉（←ここが追加部分） ===== */
+const menuBtn = document.getElementById("userMenuBtn");
+const userMenu = document.getElementById("userMenu");
+
+if (menuBtn && userMenu) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    userMenu.classList.toggle("open");
+  });
+
+  // 画面のどこかを押したら閉じる
+  document.addEventListener("click", () => {
+    userMenu.classList.remove("open");
+  });
+}
 </script>
 {% endblock %}
