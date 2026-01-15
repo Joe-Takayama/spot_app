@@ -297,16 +297,26 @@ def favorite_toggle_ajax(request, spot_id):
 
 
 # ------------------------
-# イベント
+# イベント用にういいいいいいいいい
 # ------------------------
 class EventListView(View):
     def get(self, request):
-        event_list = Events.objects.order_by('-event_date')
-        months = range(1, 13)
-        return render(request, 'spotapp/event_chart.html', {
-            'event_list': event_list,
-            'months': months,
-        })
+        month = request.GET.get("month")  # ← 追加
+
+        event_list = Events.objects.order_by("-event_date")
+
+        # 🔹 月指定があれば絞り込み
+        if month:
+            event_list = event_list.filter(event_date__month=month)
+
+        context = {
+            "event_list": event_list,
+            "months": range(1, 13),
+            "selected_month": month,  # ← 追加
+        }
+
+        return render(request, "spotapp/event_chart.html", context)
+
 
 
 class EventDetailView(View):

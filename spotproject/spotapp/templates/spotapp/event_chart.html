@@ -11,45 +11,52 @@
 
   <h2 class="page-title">イベント一覧</h2>
 
-  <!-- 🔹月ボタン（そのままでOK） -->
+  <!-- 🔹 月ボタン -->
   <div class="month-select">
-  {% for m in months %}
-      <button>{{ m }}月</button>
-  {% endfor %}
-</div>
-
-
-<!-- ◆ イベント一覧ループ -->
-{% for event in event_list %}
-  <div class="event-card">
-    <h3>{{ event.event_name }}</h3>
-    <p>📅 {{ event.event_date }}</p>
-
-    <p>
-      📍
-      {% if event.spot_id %}
-        <a href="{% url 'spotapp:spot_detail' event.spot_id.spot_id %}"
-           class="event-spot-link">
-          {{ event.spot_id.spot_name }}
-        </a>
-      {% else %}
-        {{ event.venue }}
-      {% endif %}
-    </p>
-
-    <!-- 説明文 -->
-    <p class="description">
-      {{ event.details }}
-    </p>
-
-    <a href="{% url 'spotapp:event_detail' event.event_id %}" class="detail-link">
-      詳細を見る →
+    <a href="{% url 'spotapp:event_chart' %}"
+       class="month-btn {% if not selected_month %}active{% endif %}">
+      ALL
     </a>
-  </div>
-{% empty %}
-  <p>イベント情報はありません。</p>
-{% endfor %}
 
+    {% for m in months %}
+      <a href="?month={{ m }}"
+         class="month-btn {% if selected_month == m|stringformat:'s' %}active{% endif %}">
+        {{ m }}月
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- ◆ イベント一覧 -->
+  {% for event in event_list %}
+    <div class="event-card">
+      <h3>{{ event.event_name }}</h3>
+
+      <p>📅 {{ event.event_date|date:"Y年m月d日" }}</p>
+
+      <p>
+        📍
+        {% if event.spot_id %}
+          <a href="{% url 'spotapp:spot_detail' event.spot_id.spot_id %}"
+             class="event-spot-link">
+            {{ event.spot_id.spot_name }}
+          </a>
+        {% else %}
+          {{ event.venue }}
+        {% endif %}
+      </p>
+
+      <p class="description">
+        {{ event.details }}
+      </p>
+
+      <a href="{% url 'spotapp:event_detail' event.event_id %}"
+         class="detail-link">
+        詳細を見る →
+      </a>
+    </div>
+  {% empty %}
+    <p>この月のイベントはありません。</p>
+  {% endfor %}
 
 </div>
 {% endblock %}
