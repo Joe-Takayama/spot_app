@@ -1,94 +1,113 @@
 /* =========================
-    全体レイアウト
+   全体レイアウト
 ========================= */
 .admin-container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
 }
- 
-/* =========================
-    上部メニューバー
-========================= */
-.top-menu {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 25px;
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-}
- 
-.top-menu a {
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-}
- 
-.top-menu a:hover {
-    text-decoration: underline;
-}
- 
-/* =========================
-    ページタイトル
-========================= */
+
 .page-title {
-    text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  margin-bottom: 24px;
 }
- 
+
 /* =========================
-    月ボタン一覧
+   月セレクト
 ========================= */
 .month-select {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 32px;
 }
- 
-.month-select button {
-    background-color: #6f8df5;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
+
+.month-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  background: #f1f3f5;
+  color: #333;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
 }
- 
-.month-select button:hover {
-    background-color: #506ad4;
+
+.month-btn:hover {
+  background: #e7f1ff;
+  border-color: #5b8cff;
+  color: #1a4fff;
 }
- 
+
+.month-btn.active {
+  background: #5b8cff;
+  color: #fff;
+  border-color: #5b8cff;
+  font-weight: bold;
+}
+
 /* =========================
-    イベントカード
+   イベントカード
 ========================= */
 .event-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    background-color: #fff;
-    transition: box-shadow 0.3s ease;
-    width: 100%;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
- 
-.event-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
- 
+
 .event-card h3 {
-    font-size: 18px;
-    margin-bottom: 10px;
-    color: #333;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
- 
+
 .event-card p {
-    margin: 4px 0;
-    color: #555;
+  margin: 6px 0;
+  font-size: 14px;
+  color: #444;
 }
- 
+
+/* 観光地リンク */
+.event-spot-link {
+  color: #5b8cff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.event-spot-link:hover {
+  text-decoration: underline;
+}
+
+/* 説明文 */
+.description {
+  margin-top: 10px;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* 詳細リンク */
+.detail-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #5b8cff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.detail-link:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   空表示
+========================= */
+.admin-container > p {
+  text-align: center;
+  color: #777;
+}
