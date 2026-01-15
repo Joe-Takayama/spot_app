@@ -96,6 +96,22 @@ nav {
     color: #667eea;
 }
 
+.menu_down#osirase_down {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 600px;        /* 目的の固定幅 */
+  max-width: 90vw;     /* 画面外にはみ出し防止 */
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.menu_down#osirase_down.anywhere{
+    overflow-wrap: anywhere;
+}
+
+
+
 
 footer {
     margin-top: 20px;
