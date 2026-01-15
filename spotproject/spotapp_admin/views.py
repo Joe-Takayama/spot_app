@@ -7,6 +7,7 @@ from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
 from django.db.models import Avg,Prefetch
+from .utils import get_latlng
 
 
 #ホーム画面
@@ -149,22 +150,41 @@ class EventDeleteView(StaffLoginRequiredMixin, View):
     
 # 観光地登録画面
 class SpotRegistrationView(StaffLoginRequiredMixin, View):
+
     def get(self, request):
         spot_form = SpotCreateForm()
         photo_form = PhotoForm()
-        return render(request, 'spotapp_admin/spot_registration.html', {'spot_form': spot_form, 'photo_form': photo_form})
+        return render(request, 'spotapp_admin/spot_registration.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form
+        })
 
     def post(self, request):
         spot_form = SpotCreateForm(request.POST)
         photo_form = PhotoForm(request.POST, request.FILES)
 
         if spot_form.is_valid() and photo_form.is_valid():
-            spot = spot_form.save()
+
+            spot = spot_form.save(commit=False)
+
+            lat, lng = get_latlng(spot.address)
+
+            spot.latitude = lat
+            spot.longitude = lng
+
+            spot.save()
+
             photo = photo_form.save(commit=False)
             photo.spot = spot
             photo.save()
+
             return render(request, 'spotapp_admin/spot_registration_complete.html')
-        return render(request, 'spotapp_admin/spot_registration.html', {'spot_form': spot_form, 'photo_form': photo_form})
+
+        return render(request, 'spotapp_admin/spot_registration.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form
+        })
+
 
 #観光地更新画面
 class SpotUpdateView(StaffLoginRequiredMixin, View):

@@ -1,108 +1,71 @@
-/* 全体フォーム枠 */
-.form-box {
-    width: 360px;
-    margin: 0 auto;
-    padding: 20px;
-    box-sizing: border-box;
+.home-btn {
+    margin-left: 20px;
+    margin-top: 20px;
 }
 
-/* テキスト入力・テキストエリア共通 */
-.form-input,
-.form-box input[type="text"],
-.form-box textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 12px;
-    border: 1px solid #999;
-    font-size: 14px;
-    box-sizing: border-box;
-    outline: none;
-}
-
-.form-box input:focus,
-.form-box textarea:focus {
-    border-color: #333;
-}
-
-/* テキストエリア */
-.form-box textarea {
-    height: 120px;
-    resize: none;
-}
-
-/* ファイル選択 */
-.form-box input[type="file"] {
-    margin-bottom: 15px;
-}
-
-/* 送信ボタン */
-.form-box button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 20px;
-    border: 1px solid #333;
-    background: white;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.form-box button:hover {
-    background: #333;
+.home-btn a {
+    background-color: #0077cc;
     color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.5s ease;
 }
 
-/* ---------- カテゴリUI ---------- */
+.home-btn a:hover {
+    background-color: #0055cc;
+}
 
-/* カテゴリ開閉ボタン */
-.category-toggle {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #999;
-    border-radius: 12px;
-    background: white;
-    font-size: 14px;
+.spot_registration-container {
     display: flex;
-    justify-content: space-between;
-    cursor: pointer;
-    margin-bottom: 5px;
+    justify-content: center;
+    align-items: center;
 }
 
-/* カテゴリ一覧 */
-.category-list {
-    display: none;
-    border: 1px solid #999;
-    border-top: none;
-    border-radius: 0 0 12px 12px;
-    max-height: 220px;
-    overflow-y: auto;
-    padding: 10px;
+.spot_registration-form h2 {
+    text-align: center;
 }
 
-/* ラジオ非表示 */
-.category-list input[type="radio"] {
-    display: none;
-}
-
-/* カテゴリ1行 */
-.category-item {
-    display: block;
-    padding: 8px;
+.spot_registration-form {
+    background-color: #fff;
+    padding: 20px 30px;
+    width: 400px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    cursor: pointer;
 }
 
-/* ホバー */
-.category-item:hover {
-    background: #f0f0f0;
+.spot_registration-form input {
+    width: 100%;                   
+    padding: 12px;                 
+    border-radius: 6px;            
+    border: 1px solid #bbb;        /* 上下左右に1px・グレーの枠線を追加 */
+    margin-bottom: 10px;           /* 下に18pxの余白を追加（次の入力欄との距離） */
 }
 
-/* 選択中 */
-.category-list input[type="radio"]:checked + span {
-    background: #333;
+label[for="id_details"] {
+    display: block !important;
+    margin: 20px 0 8px 0 !important;
+    font-size: 16px !important;
+    color: #333 !important;
+}
+
+.spot_registration-form button {
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #0077cc;
     color: white;
-    display: block;
-    padding: 8px;
-    border-radius: 8px;
+    transition: all 0.5s ease;
 }
+
+.apot_registration-form button:hover {
+    background-color: #0055cc;
+    transition: all 0.5s ease;
+}
+
+.category-list input[type="radio"] {
+    display: block;
+}
+
 

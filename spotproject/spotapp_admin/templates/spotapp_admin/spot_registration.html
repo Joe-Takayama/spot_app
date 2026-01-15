@@ -1,22 +1,70 @@
-{% extends "base2/base2.html" %}
+{% load static %}
+<head>
+    <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
 {% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
 
-<form method="POST" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_registration' %}">
-    {% csrf_token %}
+<div class="spot_registration-container">
+  <div class="spot_registration-form">
+        <h2>観光地登録</h2>
 
-    {{ form.spot_name }}
-    {{ form.address }}
-    {{ form.business_hours }}
-    {{ form.explanation }}
+      <form class="form-box" method="POST" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_registration' %}">
 
-    <p>カテゴリーを選択してください</p>
-    {{ form.category }}
+      {% csrf_token %}
 
-    <p>写真を登録してください</p>
-    {{ photo_form.image }}
+      {{ spot_form.spot_name }}
+      {{ spot_form.address }}
+      {{ spot_form.business_hours }}
+      {{ spot_form.entrance_fee }}
+      {{ spot_form.explanation }}
+ 
+    <p>地区を選択してください</p>
+    {{ spot_form.district }}
+     <!-- 🌍 ここに地図を追加 -->
+      <p>地図で場所を選択してください</p>
+      <div id="map" style="height:350px; margin-bottom:15px;"></div>
 
-    <button type="submit">登録</button>
-</form>
+      {{ spot_form.latitude }}
+      {{ spot_form.longitude }}
+    <div class="category-list">
+      <p>カテゴリーを選択してください</p>
+      {{ spot_form.category }}
+    </div>
+      <p>写真を登録してください</p>
+      {{ photo_form.image }}
+
+      <button type="submit">登録</button>
+      </form>
+  </div>
+</div>
+
+<!-- JSはここ -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+const map = L.map('map').setView([35.681236, 139.767125], 13);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+let marker;
+
+map.on('click', function(e){
+    if(marker){
+        marker.setLatLng(e.latlng);
+    } else {
+        marker = L.marker(e.latlng).addTo(map);
+    }
+
+    document.getElementById("id_latitude").value = e.latlng.lat;
+    document.getElementById("id_longitude").value = e.latlng.lng;
+});
+</script>
 
 
 {% endblock %}

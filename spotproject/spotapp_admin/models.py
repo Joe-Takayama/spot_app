@@ -55,7 +55,8 @@ class District(models.Model):
     # created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
     # 地区
     # district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
-
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     # def __str__(self):
         # return self.spot_name
     

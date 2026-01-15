@@ -56,9 +56,12 @@ class SpotCreateForm(ModelForm):
         label="カテゴリ"
     )
 
+    latitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
+    longitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
+
     class Meta:
         model = Spot
-        fields = ['spot_name', 'address', 'business_hours',  'explanation','category',]
+        fields = ['spot_name', 'address', 'business_hours',  'explanation','category','district']
         widgets = {
             'spot_name': TextInput(attrs={
                 'placeholder': '観光地名称を入力してください'
@@ -89,24 +92,4 @@ class OsiraseForm(forms.ModelForm):
                 "placeholder": "お知らせする内容を入力してください",
             })
         }
-#観光地更新フォーム
-# class Form(ModelForm):
 
-#     class Meta:
-#         model = Spot
-#         fields = ['spot_name', 'address', 'business_hours',  'explanation',]
-#         widgets = {
-#             'spot_name': TextInput(attrs={
-#                 'placeholder': '観光地名称を入力してください'
-#             }),
-#             'address': TextInput(attrs={
-#                 'placeholder': '住所を入力してください'
-#             }),
-#             'business_hours': TextInput(attrs={
-#                 'placeholder': '営業時間を入力してください'
-#             }),
-#             'explanation': TextInput(attrs={
-#                 'placeholder': '詳細情報を入力してください'
-#             }),
-
-#         }

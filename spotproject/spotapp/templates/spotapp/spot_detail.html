@@ -71,6 +71,13 @@
             レビューを見る
         </a>
 
+        <!-- 地図表示エリア -->
+    <div id="map" style="width:100%; height:350px; margin-top:20px;"></div>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+
         <button type="button" onclick="history.back()">
             ← 戻る
         </button>
@@ -80,6 +87,19 @@
 </div>
 
 <script>
+    var lat = parseFloat("{{ spot.latitude|default:'0' }}");
+    var lng = parseFloat("{{ spot.longitude|default:'0' }}");
+
+    console.log(lat, lng);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    L.marker([lat, lng]).addTo(map)
+        .bindPopup("{{ spot.spot_name }}")
+        .openPopup();
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
