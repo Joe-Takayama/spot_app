@@ -40,9 +40,14 @@
                 </ul>
             </div>
 
+            <!-- ログインしなきゃ表示できない奴 -->
+            {% if user.is_authenticated %}
             <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn">
                 お気に入り一覧
             </a>
+            {% else %}
+                
+            {% endif %}
        
 
 
