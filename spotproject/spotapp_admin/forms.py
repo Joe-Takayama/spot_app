@@ -60,7 +60,8 @@ class SpotCreateForm(ModelForm):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         widget=forms.RadioSelect,
-        empty_label=None,
+        required=False,
+        empty_label="選択しない",
         label="カテゴリ"
     )
 
