@@ -64,12 +64,9 @@ class SpotCreateForm(ModelForm):
         label="カテゴリ"
     )
 
-    latitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
-    longitude = forms.FloatField(widget=forms.HiddenInput(), required=False)
-
     class Meta:
         model = Spot
-        fields = ['spot_name', 'address', 'business_hours',  'explanation','category','district']
+        fields = ['spot_name', 'address', 'business_hours',  'explanation','category','district','latitude','longitude']
         widgets = {
             'spot_name': TextInput(attrs={
                 'placeholder': '観光地名称を入力してください'
@@ -83,7 +80,9 @@ class SpotCreateForm(ModelForm):
             'explanation': TextInput(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
-
+            'latitude': forms.HiddenInput(),
+            'longitude': forms.HiddenInput(),
+            
         }
 
 #お知らせフォーム
