@@ -1,112 +1,138 @@
-<head>
-    {% load static %}
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    <link href="{% static 'css/profile_edit.css' %} " rel="stylesheet">
- 
-</head>
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}お気に入り一覧{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/favorite_list.css' %}" rel="stylesheet">
+{% endblock %}
+
+{# ===== ナビを最小構成に差し替え ===== #}
+{% block nav %}
+<nav class="profile-mini-nav">
+  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+  <div class="user-info" id="userMenuBtn">
+
+    <div class="user-icon">
+      {% if request.user.profile.icon %}
+        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+      {% else %}
+        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+      {% endif %}
+    </div>
+    <div class="user-name-text">
+      {{ request.user.username }} さん
+    </div>
+    <ul class="user-menu" id="userMenu">
+      <li><a href="{% url 'spotapp:profile' %}">プロフィール</a></li>
+      <li>
+            <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="user-menu-btn logout">ログアウト</button>
+
+            </form>
+        </li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}
+
+{# ===== 検索バー・フッターは消す ===== #}
+{% block searchbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block body %}
 <div class="page">
-    <header class="page-header">
-        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+  <h2 class="page-title">お気に入り一覧</h2>
 
-        <div class="user-info">
-            <div class="user-icon">
-                {% if request.user.profile.icon %}
-                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                {% else %}
-                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                {% endif %}
-            </div>
-            <div class="user-name-text">
-                {{ request.user.username }} さん
-            </div>
+  {% if favorites %}
+    <div class="favorite-list">
+      {% for fav in favorites %}
+        <div class="favorite-item">
+
+          <a class="favorite-name"
+             href="{% url 'spotapp:spot_detail' fav.spot.spot_id %}">
+            {{ fav.spot.spot_name }}
+          </a>
+
+          <button
+            type="button"
+            class="fav-btn"
+            data-url="{% url 'spotapp:favorite_toggle_ajax' fav.spot.spot_id %}">
+            お気に入り済み
+          </button>
+
         </div>
-    </header>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="favorite-empty">お気に入りはまだ登録されていません。</p>
+  {% endif %}
 
-    <main class="page-main">
-        <h2 class="page-title">お気に入り一覧</h2>
-
-        <div class="favorite-list">
-            {% if favorites %}
-                {% for fav in favorites %}
-                    <div class="favorite-item" data-item-id="{{ fav.id }}">
-                        <!-- ✅ spot名：name じゃなく spot_name の可能性が高い -->
-                        <span class="favorite-name">{{ fav.spot.spot_name }}</span>
-
-                        <!-- ✅ 解除（画面遷移なし） -->
-                        <button
-                          type="button"
-                          class="fav-btn"
-                          data-spot-id="{{ fav.spot.id }}"
-                        >
-                          ★ 解除
-                        </button>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>お気に入りはまだ登録されていません。</p>
-            {% endif %}
-        </div>
-
-        <a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
-    </main>
+  <a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
 </div>
 
-<!-- ✅ 画面遷移なしトグル用JS（このページだけでOK） -->
 <script>
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
-  const csrftoken = getCookie('csrftoken');
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
+const csrftoken = getCookie('csrftoken');
 
-  document.addEventListener("click", async (e) => {
-    const btn = e.target.closest(".fav-btn");
-    if (!btn) return;
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
 
-    const spotId = btn.dataset.spotId;
-    if (!spotId) return;
+  e.preventDefault();
+  e.stopPropagation();
 
-    btn.disabled = true;
+  btn.disabled = true;
 
-    try {
-      // ★ ここ：URLが /favorite/... ならそのまま
-      // もし /spotapp/favorite/... の形なら、先頭に /spotapp を付けてね
-      const res = await fetch(`/favorite/toggle-ajax/${spotId}/`, {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": csrftoken,
-          "Accept": "application/json",
-        },
-      });
+  try {
+    const url = btn.dataset.url;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrftoken,
+        "Accept": "application/json",
+      },
+    });
 
-      if (res.status === 403) {
-        alert("ログインが必要だよぺこ！");
-        return;
-      }
+    if (!res.ok) return;
 
-      const data = await res.json();
-      if (!data.ok) throw new Error("toggle failed");
+    const data = await res.json();
 
-      // この一覧画面で押されるのは基本「解除」だから、
-      // favorited が false になったら行ごと消す
-      if (data.favorited === false) {
-        const row = btn.closest(".favorite-item");
-        if (row) row.remove();
-      } else {
-        // もし何かの事情で追加になった場合
-        btn.textContent = "★ 解除";
-      }
-
-    } catch (err) {
-      console.error(err);
-      alert("お気に入りの更新に失敗したぺこ…");
-    } finally {
-      btn.disabled = false;
+    // 解除されたら行を消す
+    if (data.favorited === false) {
+      const item = btn.closest(".favorite-item");
+      if (item) item.remove();
+    } else {
+      btn.textContent = "お気に入り済み";
     }
-  });
-</script>
 
+  } catch (e) {
+    alert("更新に失敗しました");
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* ===== ユーザーメニュー開閉（←ここが追加部分） ===== */
+const menuBtn = document.getElementById("userMenuBtn");
+const userMenu = document.getElementById("userMenu");
+
+if (menuBtn && userMenu) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    userMenu.classList.toggle("open");
+  });
+
+  // 画面のどこかを押したら閉じる
+  document.addEventListener("click", () => {
+    userMenu.classList.remove("open");
+  });
+}
+</script>
 {% endblock %}
