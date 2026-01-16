@@ -140,10 +140,10 @@ nav {
 
 .menu_down#osirase_down {
   position: absolute;
-  top: 100%;
+  top: 110%;
   left: 0;
-  width: 600px;        /* 目的の固定幅 */
-  max-width: 90vw;     /* 画面外にはみ出し防止 */
+  transform: translateX(-60%);
+  width: clamp(300px, 50vw, 600px);
   box-sizing: border-box;
   padding: 10px;
 }
