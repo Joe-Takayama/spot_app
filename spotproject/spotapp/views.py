@@ -126,6 +126,9 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
             user.set_password(p1)
             user.save()
+
+            update_session_auth_hash(request, user)
+            
             return redirect("spotapp:password_change_complete")
 
         return render(request, "spotapp/password_change.html", {"form": form})
