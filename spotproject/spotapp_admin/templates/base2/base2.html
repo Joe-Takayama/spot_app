@@ -56,8 +56,6 @@
                     {% for o in osirase_list %}
                         <li>
                             <strong>{{ o.title }}</strong>
-                            <!-- <time style="color:#666;">{{ o.created_at|date:"Y年n月j日 H:i" }}</time> -->
-                            <div>{{ o.body|linebreaksbr }}</div>
                         </li>
                     {% empty %}
                         <p>表示できるお知らせがありません。</p>

@@ -88,3 +88,30 @@
 </div>
 {% endblock %}
 
+<script>
+    var lat = parseFloat("{{ spot.latitude|default:'0' }}");
+    var lng = parseFloat("{{ spot.longitude|default:'0' }}");
+
+    console.log(lat, lng);
+
+    // 緯度経度がある場合のみ地図表示
+    if (lat !== 0 && lng !== 0) {
+
+        // ① 地図本体を生成（← これが抜けてた）
+        var map = L.map('map').setView([lat, lng], 15);
+
+        // ② タイルレイヤー追加
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // ③ マーカー追加
+        L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup("{{ spot.spot_name }}");
+
+    } else {
+        document.getElementById("map").innerHTML =
+            "<p style='text-align:center;'>地図情報がありません</p>";
+    }
+</script>
