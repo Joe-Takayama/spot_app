@@ -27,6 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-m*t8ea__mn)h1=9)=g113d1+%g=#g+4#vxon^b0zn_(f1%&^+%'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+#DEBUGをFalse、ALLOWED_HOSTを'*'にすると404ページが表示されるはず
 DEBUG = True
 
 ALLOWED_HOSTS = []
