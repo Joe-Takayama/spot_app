@@ -10,7 +10,7 @@
 
 <header class="detail-header">
     <a href="{% url 'spotapp:event_chart' %}" class="back-btn">← 一覧へ戻る</a>
-<!-- ココにユーザー名いらない説 -->
+    <!-- ココにユーザー名いらない説 -->
 </header>
 
 <main class="detail-container">
@@ -55,6 +55,17 @@
             <span class="info-label">評価</span>
             <span class="info-value">⭐ {{ event.rating|default:"評価なし" }}</span>
         </div>
+
+        {# 🌟 観光地ページへのリンクボタン（spotに紐づいているときだけ表示） #}
+        {% if event.spot_id %}
+        <div class="spot-link-area">
+            <a href="{% url 'spotapp:spot_detail' event.spot_id.spot_id %}"
+               class="spot-link-btn">
+                📍 この観光地のページを見る →
+            </a>
+        </div>
+        {% endif %}
+
     </div>
 
     <!-- 詳細説明 -->
