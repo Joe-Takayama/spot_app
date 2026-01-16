@@ -130,31 +130,88 @@
     {% endblock %}
 
     {% block script %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
 
-            const menuBtn = document.getElementById("userMenuBtn");
-            const menu = document.getElementById("userMenu");
+    // ------------------------
+    // ユーザーメニュー
+    // ------------------------
+    const menuBtn = document.getElementById("userMenuBtn");
+    const menu = document.getElementById("userMenu");
 
-            // 要素が存在しなければ終了（エラー防止）
-            if (!menuBtn || !menu) return;
+    // user menu は存在するページだけ動かす（無いページでも他JSは動かす）
+    if (menuBtn && menu) {
+      menuBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+      });
 
-            // ▼ アイコンクリックで開閉
-            menuBtn.addEventListener("click", function(e) {
-                e.stopPropagation();
-                menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-            });
+      document.addEventListener("click", function() {
+        if (menu.style.display === "flex") {
+          menu.style.display = "none";
+        }
+      });
+    }
 
-            // ▼ 画面のどこかをクリックしたら閉じる
-            document.addEventListener("click", function() {
-                if (menu.style.display === "flex") {
-                    menu.style.display = "none";
-                }
-            });
+    // ------------------------
+    // お気に入り（画面遷移なし / Ajax）
+    // 使い方: <button type="button" class="fav-btn" data-url="...">お気に入り登録</button>
+    // ------------------------
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrftoken = getCookie('csrftoken');
 
+    document.addEventListener("click", async function (e) {
+      const btn = e.target.closest(".fav-btn");
+      if (!btn) return;
+
+      // 親の onclick（カード遷移）より先に止める
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      const url = btn.dataset.url;
+      if (!url) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrftoken,
+            "Accept": "application/json",
+          },
         });
-    </script>
 
-        {% endblock %}
+        if (!res.ok) {
+            const t = await res.text();
+            console.log("favorite ajax failed:", res.status, t);
+            alert(`favorite失敗: ${res.status}`);
+            return;
+        }
+
+
+        const data = await res.json();
+        btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
+
+        // お気に入り一覧ページなら解除時に行を消す
+        if (data.favorited === false) {
+          const item = btn.closest(".favorite-item");
+          if (item) item.remove();
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+      }
+    }, true); // capture
+
+  });
+</script>
+{% endblock %}
+
     </body>
     </html>

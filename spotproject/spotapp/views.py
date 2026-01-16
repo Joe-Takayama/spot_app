@@ -180,10 +180,7 @@ class SpotDetailView(View):
 
         is_favorited = False
         if request.user.is_authenticated:
-            is_favorited = Favorite.objects.filter(
-                user=request.user,
-                spot=spot
-            ).exists()
+            is_favorited = Favorite.objects.filter(user=request.user, spot=spot).exists()
 
         return render(request, 'spotapp/spot_detail.html', {
             'spot': spot,
