@@ -13,6 +13,7 @@
     <link href="{% static 'css/event-list.css' %}" rel="stylesheet">
     <link href="{% static 'css/registration.css' %}" rel="stylesheet">
     <link href="{% static 'css/updatedelete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/osirase_detail.css' %}" rel="stylesheet">
 </head>
 
 <body>
@@ -51,11 +52,19 @@
 
             <!-- ここにお知らせ表示を置きたい -->
             <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn">お知らせ ▼</button>
+                <button class="Menu_btn">
+                    お知らせ ▼
+                    {% if new_count %}
+                        <span class="new-count">{{ new_count }}</span>
+                    {% endif %}
+                </button>
                 <ul class="menu_down" class="menu_down anywhere">
                     {% for o in osirase_list %}
                         <li>
-                            <strong>{{ o.title }}</strong>
+                            <a href="{% url 'spotapp_admin:osirase_detail' o.pk %}"
+                                class="{% if o.is_new %}new-osirase{% endif %}">
+                                {{ o.title }}
+                            </a>
                         </li>
                     {% empty %}
                         <p>表示できるお知らせがありません。</p>
