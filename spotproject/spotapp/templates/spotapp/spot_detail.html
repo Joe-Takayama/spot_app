@@ -92,45 +92,24 @@
 
     console.log(lat, lng);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
+    // 緯度経度がある場合のみ地図表示
+    if (lat !== 0 && lng !== 0) {
 
-    L.marker([lat, lng]).addTo(map)
-        .bindPopup("{{ spot.spot_name }}")
-        .openPopup();
+        // ① 地図本体を生成（← これが抜けてた）
+        var map = L.map('map').setView([lat, lng], 15);
 
-function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-}
-const csrftoken = getCookie('csrftoken');
+        // ② タイルレイヤー追加
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
 
-const btn = document.getElementById("fav-btn");
+        // ③ マーカー追加
+        L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup("{{ spot.spot_name }}");
 
-if (btn) {
-  btn.addEventListener("click", async () => {
-    const url = btn.dataset.url;   // ← Djangoが作ったURL
-    btn.disabled = true;
-
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": csrftoken,
-          "Accept": "application/json",
-        },
-      });
-
-      const data = await res.json();
-      btn.textContent = data.favorited ? "★ 登録済み" : "♡ お気に入り登録";
-
-    } catch (e) {
-      alert("失敗したぺこ…");
-    } finally {
-      btn.disabled = false;
+    } else {
+        document.getElementById("map").innerHTML =
+            "<p style='text-align:center;'>地図情報がありません</p>";
     }
-  });
-}
 </script>
