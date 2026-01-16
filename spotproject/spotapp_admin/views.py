@@ -8,7 +8,42 @@ from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
 from django.db.models import Avg,Prefetch
 from .utils import get_latlng
+from datetime import timedelta
+from django.utils import timezone
 
+
+# お知らせ通知
+# class OsiraseNavMixin:
+#     def get_osirase_context(self, request):
+#         now = timezone.now()
+#         new_threshold = now - timedelta(days=3)
+
+#         osirase_list = Osirase.objects.all().order_by('-created_at')
+
+#         staff = None
+#         staff_id = request.session.get('staff_id')
+#         if staff_id:
+#             try:
+#                 staff = Staff.objects.get(staff_id=staff_id)
+#             except Staff.DoesNotExist:
+#                 pass
+
+#         new_count = 0
+
+#         for o in osirase_list:
+#             # 3日以内 かつ 未読 の場合のみ新着
+#             o.is_new = (
+#                 o.created_at >= new_threshold and
+#                 (staff not in o.read_by.all() if staff else True)
+#             )
+
+#             if o.is_new:
+#                 new_count += 1
+
+#         return {
+#             "osirase_list": osirase_list,
+#             "new_count": new_count
+#         }
 
 #ホーム画面
 class IndexView(View):
@@ -240,8 +275,23 @@ class OsiraseView(StaffLoginRequiredMixin, View):
             else:
                 form = OsiraseForm()
                 return render(request, "spotapp_admin/osirase.html", {"form": form})
-            
+
+
 # お知らせ表示画面
 def osirase_list(request):
     items = Osirase.objects.all()
     return render(request, "osirase_list.html", {"osirase_list": items})
+
+# お知らせ詳細画面
+class OsiraseDetailView(StaffLoginRequiredMixin, View):
+    def get(self, request, pk):
+        osirase = get_object_or_404(Osirase, pk=pk)
+
+        staff_id = request.session.get('staff_id')
+        if staff_id:
+            try:
+                staff = Staff.objects.get(staff_id=staff_id)
+                osirase.read_by.add(staff)
+            except Staff.DoesNotExist:
+                pass
+        return render(request, "spotapp_admin/osirase_detail.html", {"osirase": osirase})
