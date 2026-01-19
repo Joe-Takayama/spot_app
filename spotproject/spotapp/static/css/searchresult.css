@@ -164,3 +164,75 @@
     text-align: center;
     margin-bottom: auto;
 }
+
+/* =========================
+   検索フォーム（キーワード + 地区 + カテゴリ）
+========================= */
+.search-bar{
+    width: 60%;
+    margin: 30px auto 10px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.search-input{
+    flex: 1;
+    min-width: 260px;
+    padding: 10px 14px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.search-select{
+    min-width: 180px;
+    padding: 10px 14px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    font-size: 16px;
+    background: #fff;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.search-btn{
+    padding: 10px 18px;
+    border: 2px solid #333;
+    border-radius: 20px;
+    background: #333;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.search-btn:hover{
+    background: #fff;
+    color: #333;
+}
+
+/* =========================
+   地区・カテゴリタグ（badge）
+========================= */
+.spot-tags{
+    margin-left: 80px;     /* spot-hours/spot-rating と揃える */
+    margin-top: -8px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.badge{
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border: 2px solid #333;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}

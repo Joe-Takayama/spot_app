@@ -21,7 +21,7 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot , Profile, Favorite
+from .models import Events, Review, Spot , Profile, Favorite, Category, District
 from spotapp_admin.models import Photo
 
 from django.contrib.auth import get_user_model
@@ -128,7 +128,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
             user.save()
 
             update_session_auth_hash(request, user)
-            
+
             return redirect("spotapp:password_change_complete")
 
         return render(request, "spotapp/password_change.html", {"form": form})
@@ -144,13 +144,16 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 # ------------------------
 class SpotSearchResultView(View):
     def get(self, request):
-        keyword = request.GET.get('q')
-        spots = Spot.objects.annotate(
-            avg_rating=Avg('review__rating')
-        ).prefetch_related(
-            Prefetch(
-                'spot_photos',
-                queryset=Photo.objects.order_by('uploaded_at')
+        keyword = request.GET.get('q', '').strip()
+
+        category_id = request.GET.get('category', '').strip()
+        district_id = request.GET.get('district', '').strip()
+
+        spots = (
+            Spot.objects
+            .annotate(avg_rating=Avg('review__rating'))
+            .prefetch_related(
+                Prefetch('spot_photos', queryset=Photo.objects.order_by('uploaded_at'))
             )
         )
         
@@ -167,10 +170,27 @@ class SpotSearchResultView(View):
 
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
+        
+         # カテゴリ絞り込み
+        if category_id:
+            spots = spots.filter(category_id=category_id)
+
+        # 地区絞り込み
+        if district_id:
+            spots = spots.filter(district_id=district_id)
+
 
         return render(request, 'spotapp/spot_searchresult.html', {
             'keyword': keyword,
             'spots': spots,
+
+            # プルダウン用
+            'categories': Category.objects.all(),
+            'districts': District.objects.all(),
+
+            # 選択保持
+            'selected_category': category_id,
+            'selected_district': district_id,
         })
 
 

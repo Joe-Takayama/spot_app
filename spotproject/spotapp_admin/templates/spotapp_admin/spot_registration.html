@@ -33,17 +33,19 @@
       {{ spot_form.business_hours }}
       {{ spot_form.explanation }}
  
-    <p>地区を選択してください</p>
-    {{ spot_form.district }}
+    <div class="form-section">
+        <p>地区を選択してください</p>
+        {{ spot_form.district }}
+    </div>
      <!-- 🌍 ここに地図を追加 -->
       <p>地図で場所を選択してください</p>
       <div id="map" style="height:350px; margin-bottom:15px;"></div>
 
       {{ spot_form.latitude }}
       {{ spot_form.longitude }}
-    <div class="category-list">
-      <p>カテゴリーを選択してください</p>
-      {{ spot_form.category }}
+    <div class="form-section category-list">
+        <p>カテゴリーを選択してください</p>
+        {{ spot_form.category }}
     </div>
       <p>写真を登録してください</p>
       {{ photo_form.image }}

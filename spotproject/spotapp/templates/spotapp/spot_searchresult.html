@@ -1,7 +1,7 @@
 {% extends "base/base.html" %}
 {% load static %}
 
-{% block title %} 観光地検索結果 {% endblock %}
+{% block title %}観光地検索結果{% endblock %}
 
 {% block extra_css %}
 <link href="{% static 'css/searchresult.css' %}" rel="stylesheet">
@@ -9,78 +9,56 @@
 
 {% block body %}
 
-{% if not keyword %}
-    <p class="search-guide">
-        観光地名を入力してください
-    </p>
-{% else %}
-<div class="spot-list">
 
+  <div class="spot-list">
     {% for spot in spots %}
-    <!-- HTML構文上おかしいのでエラーが出ているだけ -->
-    <div class="spot-card"
-        onclick="location.href='{% url 'spotapp:spot_detail' spot.spot_id %}'">
+      <div class="spot-card" onclick="location.href='{% url 'spotapp:spot_detail' spot.spot_id %}'">
 
         <div class="spot-left">
-            <h3 class="spot-name">{{ spot.spot_name }}</h3>
+          <h3 class="spot-name">{{ spot.spot_name }}</h3>
 
-            <div class="spot-image">
-                {% if spot.spot_photos.first %}
-                    <img
-                        src="{{ spot.spot_photos.first.image.url }}"
-                        alt="{{ spot.spot_name }}"
-                        class="spot-img"
-                    >
-                {% else %}
-                    <img
-                        src="{% static 'img/no-image.png' %}"
-                        alt="no image"
-                        class="spot-img"
-                    >
-                {% endif %}
-            </div>
+          <div class="spot-image">
+            {% if spot.spot_photos.first %}
+              <img src="{{ spot.spot_photos.first.image.url }}" alt="{{ spot.spot_name }}" class="spot-img">
+            {% else %}
+              <img src="{% static 'img/no-image.png' %}" alt="no image" class="spot-img">
+            {% endif %}
+          </div>
         </div>
 
         <div class="spot-info">
-            <div class="spot-hours">
-                営業時間 {{ spot.business_hours }}
-            </div>
+          <div class="spot-hours">営業時間 {{ spot.business_hours }}</div>
 
-            <div class="spot-rating">
-                評価
-                {% if spot.avg_rating %}
-                    ★ {{ spot.avg_rating|floatformat:1 }}
-                {% else %}
-                    未評価
-                {% endif %}
-            </div>
+          <div class="spot-rating">
+            評価
+            {% if spot.avg_rating %}
+              ★ {{ spot.avg_rating|floatformat:1 }}
+            {% else %}
+              未評価
+            {% endif %}
+          </div>
 
-            <div class="spot-actions" onclick="event.stopPropagation()">
-                <button
-                    type="button"
-                    class="fav-btn"
-                    data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}">
-                    {% if spot.is_favorited %}
-                        お気に入り済み
-                    {% else %}
-                        お気に入り登録
-                    {% endif %}
-                </button>   
-                <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
-                    評価する
-                </a>
-            </div>
+         
 
+          <div class="spot-actions" onclick="event.stopPropagation()">
+            <button
+              type="button"
+              class="fav-btn"
+              data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}">
+              {% if spot.is_favorited %}お気に入り済み{% else %}お気に入り登録{% endif %}
+            </button>
+
+            <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
+              評価する
+            </a>
+          </div>
         </div>
 
-    </div>
+      </div>
     {% empty %}
-        <p>検索結果がありません</p>
+      <p>検索結果がありません</p>
     {% endfor %}
-
-</div>
-{% endif %}
-
+  </div>
 
 
 

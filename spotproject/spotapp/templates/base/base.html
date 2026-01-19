@@ -23,20 +23,27 @@
             <div class="Nav-block" id="areaMenu_btn">
                 <button class="Menu_btn">地区別 ▼</button>
                 <ul class="menu_down" id="areaMenu_down">
-                    <li><a href="#">北地区</a></li>
-                    <li><a href="#">南地区</a></li>
-                    <li><a href="#">東地区</a></li>
-                    <li><a href="#">西地区</a></li>
+                    {% for district in districts %}
+                        <li>
+                            <a href="{% url 'spotapp:spot_searchresult' %}?district={{ district.district_id }}">
+                                {{ district.district_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
 
             <div class="Nav-block" id="categoryMenu_btn">
                 <button class="Menu_btn">カテゴリ ▼</button>
                 <ul class="menu_down" id="categoryMenu_down">
-                    <li><a href="#">観光</a></li>
-                    <li><a href="#">グルメ</a></li>
-                    <li><a href="#">レジャー</a></li>
-                    <li><a href="#">ショッピング</a></li>
+                    {% for category in categories %}
+                        <li>
+                            <a href="{% url 'spotapp:spot_searchresult' %}?category={{ category.category_id }}">
+                                {{ category.category_name }}
+
+                            </a>
+                        </li>
+                    {% endfor %}
                 </ul>
             </div>
 
