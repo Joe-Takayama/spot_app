@@ -1,10 +1,6 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from .models import Staff, Events, Photo, Spot,Osirase
-<<<<<<< HEAD
 from spotapp.models import Spot, Category, District
-=======
-from spotapp.models import Category,District
->>>>>>> kaito
 from django import forms
 
 #職員ログインフォーム
