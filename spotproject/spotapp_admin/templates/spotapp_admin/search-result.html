@@ -12,11 +12,10 @@
 <div class="spot-list">
     {% for spot in spots %}
     <div class="spot-card">
-
         <div class="spot-left">
             <h3 class="spot-name">{{ spot.spot_name }}</h3>
             <div class="spot-image">
-                {% if spot.spot_photos.all %}
+                {% if spot.spot_photos.first %}
                     <div class="photo has-image">
                         <img
                             src="{{ spot.spot_photos.first.image.url }}"
@@ -46,20 +45,18 @@
                 {% if spot.avg_rating %}
                 ★ {{ spot.avg_rating|floatformat:1 }}
                 {% else %}
-            
+                未評価
                 {% endif %}
             </div>
-        </div>
-        
 
-        <div class="spot-actions">
-            <a href="{% url 'spotapp_admin:spot_update' spot.spot_id %}" class="btn">更新</a>
-            <a href="{% url 'spotapp_admin:spot_delete' spot.spot_id %}" class="btn">削除</a>
+            <div class="spot-actions">
+                <a href="{% url 'spotapp_admin:spot_update' spot.spot_id %}" class="btn">更新</a>
+                <a href="{% url 'spotapp_admin:spot_delete' spot.spot_id %}" class="btn">削除</a>
+            </div>
         </div>
     </div>
-</div>
-
     {% empty %}
         <p>検索結果がありません</p>
     {% endfor %}
+</div>
 {% endblock %}
