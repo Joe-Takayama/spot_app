@@ -342,7 +342,25 @@ class EventListView(View):
 class EventDetailView(View):
     def get(self, request, event_id):
         event = get_object_or_404(Events, event_id=event_id)
-        return render(request, 'spotapp/event_detail.html', {'event': event})
+
+        # 紐づいている観光地（あれば）
+        spot = event.spot_id  # ForeignKey の名前が spot_id だからこれでOK
+
+        # 評価用（お好みだけど、あると便利）
+        avg_rating = None
+        review_count = 0
+        if spot is not None:
+            reviews = Review.objects.filter(spot=spot)
+            review_count = reviews.count()
+            avg_rating = reviews.aggregate(avg=Avg("rating"))["avg"]
+
+        context = {
+            "event": event,
+            "spot": spot,
+            "avg_rating": avg_rating,
+            "review_count": review_count,
+        }
+        return render(request, "spotapp/event_detail.html", context)
 
 
 # ------------------------

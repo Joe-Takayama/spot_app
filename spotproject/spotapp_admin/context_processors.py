@@ -5,7 +5,7 @@ from .models import Osirase, Staff
 
 def osirase_nav(request):
     now = timezone.now()
-    new_threshold = now - timedelta(days=3)
+    new_threshold = now - timedelta(days=7)
 
     osirase_list = Osirase.objects.all().order_by('-created_at')
 
