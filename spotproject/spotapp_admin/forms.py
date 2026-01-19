@@ -1,6 +1,10 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from .models import Staff, Events, Photo, Spot,Osirase
+<<<<<<< HEAD
 from spotapp.models import Spot, Category, District
+=======
+from spotapp.models import Category,District
+>>>>>>> kaito
 from django import forms
 
 #職員ログインフォーム
@@ -59,7 +63,7 @@ class PhotoForm(ModelForm):
 class SpotCreateForm(ModelForm):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
-        widget=forms.RadioSelect,
+        widget=forms.Select,
         required=False,
         empty_label="カテゴリーを選択してください",
         label="カテゴリ"
@@ -71,6 +75,15 @@ class SpotCreateForm(ModelForm):
         label="地区",
     )
 
+
+    district = forms.ModelChoiceField(
+        queryset=District.objects.all(),
+        widget=forms.Select,
+        required=False,
+        empty_label="選択しない",
+        label="地区別"
+    )
+
     class Meta:
         model = Spot
         fields = [
@@ -78,10 +91,25 @@ class SpotCreateForm(ModelForm):
             'category','district','latitude','longitude'
             ]
         widgets = {
+<<<<<<< HEAD
             'spot_name': TextInput(attrs={'placeholder': '観光地名称を入力してください'}),
             'address': TextInput(attrs={'placeholder': '住所を入力してください'}),
             'business_hours': TextInput(attrs={'placeholder': '営業時間を入力してください'}),
             'explanation': TextInput(attrs={'placeholder': '詳細情報を入力してください'}),
+=======
+            'spot_name': TextInput(attrs={
+                'placeholder': '観光地名称を入力してください'
+            }),
+            'address': TextInput(attrs={
+                'placeholder': '住所を入力してください'
+            }),
+            'business_hours': TextInput(attrs={
+                'placeholder': '営業時間を入力してください'
+            }),
+            'explanation': Textarea(attrs={
+                'placeholder': '詳細情報を入力してください'
+            }),
+>>>>>>> kaito
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
         }
