@@ -67,8 +67,9 @@
             <ul  id="osirase_down" class="menu_down anywhere">
                 {% for o in osirase_list %}
                     <li>
-                        <strong>{{ o.title }}</strong>
-                        <div>{{ o.body|linebreaksbr }}</div>
+                        <a href="{% url 'spotapp:news_detail' o.pk %}">
+                            {{ o.title }}
+                        </a>
                     </li>
                 {% empty %}
                     <li>表示できるお知らせがありません。</li>

@@ -460,6 +460,11 @@ def osirase_list(request):
     return render(request, "osirase_list.html", {"osirase_list": items})
 
 
+# お知らせ詳細
+class NewsDetailView(View):
+    def get(self, request, pk):
+        news = get_object_or_404(Osirase, pk=pk)
+        return render(request, "spotapp/news_detail.html", {"news": news})
         # ------------------------
 # as_view() の定義
 # ------------------------
