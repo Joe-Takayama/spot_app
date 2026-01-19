@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from .models import Staff, Events, Photo, Spot,Osirase
-from spotapp.models import Category
+from spotapp.models import Category,District
 from django import forms
 
 #職員ログインフォーム
@@ -59,10 +59,19 @@ class PhotoForm(ModelForm):
 class SpotCreateForm(ModelForm):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
-        widget=forms.RadioSelect,
+        widget=forms.Select,
         required=False,
         empty_label="選択しない",
         label="カテゴリ"
+    )
+
+
+    district = forms.ModelChoiceField(
+        queryset=District.objects.all(),
+        widget=forms.Select,
+        required=False,
+        empty_label="選択しない",
+        label="地区別"
     )
 
     class Meta:
@@ -78,7 +87,7 @@ class SpotCreateForm(ModelForm):
             'business_hours': TextInput(attrs={
                 'placeholder': '営業時間を入力してください'
             }),
-            'explanation': TextInput(attrs={
+            'explanation': Textarea(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
             'latitude': forms.HiddenInput(),

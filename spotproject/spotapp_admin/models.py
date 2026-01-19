@@ -54,7 +54,7 @@ class Staff(models.Model):
 #     # 登録日
 #     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
 #     # 地区
-#     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
+#     district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True,verbose_name="地区別")
 #     latitude = models.FloatField(null=True, blank=True)
 #     longitude = models.FloatField(null=True, blank=True)
 #     def __str__(self):
