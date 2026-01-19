@@ -26,7 +26,7 @@ nav {
     border-bottom: 1px solid #e1e5e9;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     padding: 10px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 nav .right-nav {
@@ -91,7 +91,6 @@ form button {
     align-items: center;
     gap: 10; 
     margin-top: 10px;
-    margin-bottom: -25px;
 }
 
 #search {
