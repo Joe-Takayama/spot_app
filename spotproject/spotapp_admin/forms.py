@@ -91,25 +91,10 @@ class SpotCreateForm(ModelForm):
             'category','district','latitude','longitude'
             ]
         widgets = {
-<<<<<<< HEAD
             'spot_name': TextInput(attrs={'placeholder': '観光地名称を入力してください'}),
             'address': TextInput(attrs={'placeholder': '住所を入力してください'}),
             'business_hours': TextInput(attrs={'placeholder': '営業時間を入力してください'}),
             'explanation': TextInput(attrs={'placeholder': '詳細情報を入力してください'}),
-=======
-            'spot_name': TextInput(attrs={
-                'placeholder': '観光地名称を入力してください'
-            }),
-            'address': TextInput(attrs={
-                'placeholder': '住所を入力してください'
-            }),
-            'business_hours': TextInput(attrs={
-                'placeholder': '営業時間を入力してください'
-            }),
-            'explanation': Textarea(attrs={
-                'placeholder': '詳細情報を入力してください'
-            }),
->>>>>>> kaito
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
         }
