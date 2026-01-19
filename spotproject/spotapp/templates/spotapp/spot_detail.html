@@ -5,6 +5,7 @@
 
 {% block extra_css %}
   <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 {% endblock %}
 {# ===== ナビを最小構成に差し替え ===== #}
 {% block nav %}
@@ -119,4 +120,7 @@
     }
 </script>
 
+{% endblock %}
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 {% endblock %}

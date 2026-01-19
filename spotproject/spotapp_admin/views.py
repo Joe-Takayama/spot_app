@@ -204,8 +204,12 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
 
             lat, lng = get_latlng(spot.address)
 
-            spot.latitude = lat
-            spot.longitude = lng
+            if spot.latitude is None or spot.longitude is None:
+                lat, lng = get_latlng(spot.address)
+                if lat is not None and lng is not None:
+                    spot.latitude = lat
+                    spot.longitude = lng
+
 
             spot.save()
 
