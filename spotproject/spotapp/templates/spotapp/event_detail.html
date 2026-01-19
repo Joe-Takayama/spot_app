@@ -124,26 +124,7 @@
         {% endif %}
     </section>
 
-    {# その他情報：開催日・会場・主催者を一覧で #}
-    <section class="section-box">
-        <h2>その他情報</h2>
-
-        {% if event.event_date or event.venue or event.organizer %}
-            <ul>
-                {% if event.event_date %}
-                    <li>開催日：{{ event.event_date|date:"Y年n月j日" }}</li>
-                {% endif %}
-                {% if event.venue %}
-                    <li>会場：{{ event.venue }}</li>
-                {% endif %}
-                {% if event.organizer %}
-                    <li>主催者：{{ event.organizer }}</li>
-                {% endif %}
-            </ul>
-        {% else %}
-            <p>主催者・参加方法・注意事項など今後追加</p>
-        {% endif %}
-    </section>
+    
 
     {# Map（機能予定） #}
     <section class="map-box">
