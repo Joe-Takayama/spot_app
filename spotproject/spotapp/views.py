@@ -323,10 +323,10 @@ class EventDetailView(View):
     def get(self, request, event_id):
         event = get_object_or_404(Events, event_id=event_id)
 
-        # 紐づいている観光地（Spot）も一緒に取る
-        spot = event.spot_id  # ForeignKey の名前が spot_id になってる
+        # 紐づいている観光地（あれば）
+        spot = event.spot_id  # ForeignKey の名前が spot_id だからこれでOK
 
-        # レビューの平均とか欲しければここで集計（お好み）
+        # 評価用（お好みだけど、あると便利）
         avg_rating = None
         review_count = 0
         if spot is not None:
@@ -341,7 +341,6 @@ class EventDetailView(View):
             "review_count": review_count,
         }
         return render(request, "spotapp/event_detail.html", context)
-
 
 
 # ------------------------
