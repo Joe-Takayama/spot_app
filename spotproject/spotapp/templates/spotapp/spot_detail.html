@@ -79,6 +79,9 @@
             レビューを見る
         </a>
 
+        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
+
         <button type="button" onclick="history.back()">
             ← 戻る
         </button>
@@ -86,7 +89,7 @@
     
 
 </div>
-{% endblock %}
+
 
 <script>
     var lat = parseFloat("{{ spot.latitude|default:'0' }}");
@@ -115,3 +118,5 @@
             "<p style='text-align:center;'>地図情報がありません</p>";
     }
 </script>
+
+{% endblock %}
