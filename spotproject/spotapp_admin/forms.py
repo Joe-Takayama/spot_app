@@ -1,10 +1,6 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
 from .models import Staff, Events, Photo, Spot,Osirase
-<<<<<<< HEAD
 from spotapp.models import Spot, Category, District
-=======
-from spotapp.models import Category,District
->>>>>>> kaito
 from django import forms
 
 #職員ログインフォーム
@@ -91,12 +87,6 @@ class SpotCreateForm(ModelForm):
             'category','district','latitude','longitude'
             ]
         widgets = {
-<<<<<<< HEAD
-            'spot_name': TextInput(attrs={'placeholder': '観光地名称を入力してください'}),
-            'address': TextInput(attrs={'placeholder': '住所を入力してください'}),
-            'business_hours': TextInput(attrs={'placeholder': '営業時間を入力してください'}),
-            'explanation': TextInput(attrs={'placeholder': '詳細情報を入力してください'}),
-=======
             'spot_name': TextInput(attrs={
                 'placeholder': '観光地名称を入力してください'
             }),
@@ -109,7 +99,6 @@ class SpotCreateForm(ModelForm):
             'explanation': Textarea(attrs={
                 'placeholder': '詳細情報を入力してください'
             }),
->>>>>>> kaito
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
         }
