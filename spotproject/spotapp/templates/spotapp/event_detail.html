@@ -17,7 +17,7 @@
     {# イベント名 #}
     <h1 class="event-title">{{ event.event_name }}</h1>
 
-    {# メイン画像：とりあえず観光地の1枚目を出す（なければメッセージ） #}
+    {# メイン画像：観光地の1枚目を流用（なければメッセージ） #}
     <div class="main-photo-box">
         {% if spot and spot.spot_photos.first %}
             <img src="{{ spot.spot_photos.first.image.url }}" alt="{{ spot.spot_name }}">
@@ -83,7 +83,8 @@
         <div class="info-row">
             <span class="info-label">口コミ</span>
             {% if spot %}
-                <a href="{% url 'spotapp:spot_detail' spot.spot_id %}#review" class="info-link">
+                {# ★ ここを review_detail に飛ばす #}
+                <a href="{% url 'spotapp:review_detail' spot.spot_id %}" class="info-link">
                     口コミを見る
                 </a>
             {% else %}
@@ -114,7 +115,7 @@
 
     </div>
 
-    {# 詳細説明：Events.details を使う #}
+    {# イベント詳細説明：Events.details を使う #}
     <section class="section-box">
         <h2>イベント詳細説明</h2>
         {% if event.details %}
@@ -124,7 +125,26 @@
         {% endif %}
     </section>
 
-    
+    {# その他情報（開催日・会場・主催者をまとめて表示したいなら） #}
+    <section class="section-box">
+        <h2>その他情報</h2>
+
+        {% if event.event_date or event.venue or event.organizer %}
+            <ul>
+                {% if event.event_date %}
+                    <li>開催日：{{ event.event_date|date:"Y年n月j日" }}</li>
+                {% endif %}
+                {% if event.venue %}
+                    <li>会場：{{ event.venue }}</li>
+                {% endif %}
+                {% if event.organizer %}
+                    <li>主催者：{{ event.organizer }}</li>
+                {% endif %}
+            </ul>
+        {% else %}
+            <p>主催者・参加方法・注意事項など今後追加</p>
+        {% endif %}
+    </section>
 
     {# Map（機能予定） #}
     <section class="map-box">
