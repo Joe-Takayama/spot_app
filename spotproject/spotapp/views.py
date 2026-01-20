@@ -30,16 +30,12 @@ User = get_user_model()
 
 from django.urls import reverse
 
+# ------------------------
+# インデックス
+# ------------------------
 class IndexView(View):
     def get(self, request):
-        slide_spots = (
-            Spot.objects
-            .prefetch_related(
-                Prefetch('spot_photos', queryset=Photo.objects.order_by('uploaded_at'))
-            )
-            .filter(spot_photos__isnull=False)[:3]   # 👈 まずは3件に制限
-        )
-        return render(request, 'spotapp/index.html', {"slide_spots": slide_spots})
+        return render(request, 'spotapp/index.html')
 
 
 # ------------------------
