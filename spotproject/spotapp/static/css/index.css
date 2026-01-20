@@ -1,10 +1,12 @@
-*,body,ul {
+*, body, ul {
   margin: 0;
   padding: 0;
 }
+
 li {
   list-style: none;
 }
+
 /* ↓ スライドの外枠 */
 .slide-wrapper {
   width: 100%;
@@ -14,22 +16,28 @@ li {
   overflow: hidden; /* はみ出したスライドを隠す */
   z-index: 1;
 }
-/*  ↓ スライド（コンテンツ） */
-.slide { /*スライド全体 */
+
+/* ↓ スライド（コンテンツ全体） */
+.slide { /* スライド全体 */
   width: 300%;
   height: 100%;
   display: flex;
   transition: all 0.3s;
 }
-.slide div { /* スライド */
+
+/* ↓ スライド1枚ぶん（子要素：a.slide-item を想定） */
+.slide > * {
   width: 33.33%;
   height: 100%;
   font-size: 16px;
   display: flex;
+  flex-direction: column;
   text-align: center;
   justify-content: center;
   align-items: center;
 }
+
+/* スライド位置 */
 .slide1 { /* スライドさせるために必要なクラス */
   transform: translateX(0);
 }
@@ -39,27 +47,37 @@ li {
 .slide3 { /* スライドさせるために必要なクラス */
   transform: translateX(-66.66%);
 }
-.slide div:nth-of-type(1){ /* 画像を入力できるようになった 3:1で作るといい*/
-  background-image:  url("/static/img/Slide_test.png") !important;
-  background-repeat:no-repeat;
+
+/* 画像の見た目調整 */
+.slide-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* もし元の固定画像背景をまた使いたくなったら
+   ここを戻す用に残しておく（今はコメントアウト） */
+/*
+.slide div:nth-of-type(1){
+  background-image: url("/static/img/Slide_test.png") !important;
+  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
-/* 画像を貼る際backgraund-colorが邪魔するので消して下さい */
 .slide div:nth-of-type(2){
   background-color: #FCE8F0;
-  /* background-image:  url("/static/img/Slide_test2.png"); */
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
-.slide div:nth-of-type(3){ /* 背景色 */
+.slide div:nth-of-type(3){
   background-color: #E3F1E4;
-  /* background-image:  url("/static/img/Slide_test2.png"); */
-  background-repeat:no-repeat;
+  background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
 }
+*/
+
 /* ↓ 左右のボタン */
 .next {
   position: absolute;
@@ -74,6 +92,7 @@ li {
   -webkit-transform: rotate(45deg) translateY(50%);
   transform: rotate(45deg) translateY(50%);
 }
+
 .prev {
   position: absolute;
   width: 15px;
@@ -87,6 +106,7 @@ li {
   -webkit-transform: rotate(-135deg) translateY(-50%);
   transform: rotate(-135deg) translateY(-50%);
 }
+
 /* ↓ インジケーター */
 .indicator {
   width: 100%;
@@ -98,6 +118,7 @@ li {
   justify-content: center;
   align-items: center;
 }
+
 .indicator li {
   width: 14px;
   height: 14px;
@@ -107,17 +128,18 @@ li {
   border: 2px #000 solid;
   cursor: pointer;
 }
+
 .indicator li:first-of-type {
   background-color: #000;
 }
 
-.event_bar{
-    text-align: center;
-    padding: 12px 5px;
-    margin-top: 30px;
-    margin-left: 20px;
-    margin-right: 20px;
-    background-color: #ffea00;
-    border:solid 3px #333;
+/* ↓ イベント一覧バー */
+.event_bar {
+  text-align: center;
+  padding: 12px 5px;
+  margin-top: 30px;
+  margin-left: 20px;
+  margin-right: 20px;
+  background-color: #ffea00;
+  border: solid 3px #333;
 }
-
