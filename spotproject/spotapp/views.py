@@ -179,6 +179,21 @@ class SpotSearchResultView(View):
         if district_id:
             spots = spots.filter(district_id=district_id)
 
+            # ▼ ボタン表記用の「名前」を作る
+        selected_category_name = "カテゴリ"
+        selected_district_name = "地区別"
+
+        if category_id:
+            c = Category.objects.filter(category_id=category_id).first()
+            if c:
+                selected_category_name = c.category_name
+
+        if district_id:
+            d = District.objects.filter(district_id=district_id).first()
+            if d:
+                selected_district_name = d.district_name
+
+
 
         return render(request, 'spotapp/spot_searchresult.html', {
             'keyword': keyword,
@@ -191,6 +206,10 @@ class SpotSearchResultView(View):
             # 選択保持
             'selected_category': category_id,
             'selected_district': district_id,
+
+            # ボタン表記保持（追加）
+            "selected_category_name": selected_category_name,
+            "selected_district_name": selected_district_name,
         })
 
 
