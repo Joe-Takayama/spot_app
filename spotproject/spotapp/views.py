@@ -30,27 +30,16 @@ User = get_user_model()
 
 from django.urls import reverse
 
-# ------------------------
-# インデックス
-# ------------------------
 class IndexView(View):
     def get(self, request):
-        # 写真付きの観光地だけをスライド用に取得（例：最大10件）
         slide_spots = (
             Spot.objects
             .prefetch_related(
-                Prefetch(
-                    'spot_photos',                    # Spot 側の related_name
-                    queryset=Photo.objects.order_by('uploaded_at')
-                )
+                Prefetch('spot_photos', queryset=Photo.objects.order_by('uploaded_at'))
             )
-            .filter(spot_photos__isnull=False)[:10]   # 画像が1枚以上あるものだけ
+            .filter(spot_photos__isnull=False)[:3]   # 👈 まずは3件に制限
         )
-
-        context = {
-            "slide_spots": slide_spots,
-        }
-        return render(request, 'spotapp/index.html', context)
+        return render(request, 'spotapp/index.html', {"slide_spots": slide_spots})
 
 
 # ------------------------
