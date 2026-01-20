@@ -33,9 +33,19 @@ from django.urls import reverse
 # ------------------------
 # インデックス
 # ------------------------
+# ------------------------
+# インデックス
+# ------------------------
 class IndexView(View):
     def get(self, request):
-        return render(request, 'spotapp/index.html')
+        slide_photos = (
+            Photo.objects
+            .select_related('spot')
+            .filter(spot__isnull=False)
+            .order_by('-uploaded_at')
+        )
+
+        return render(request, 'spotapp/index.html', {'slide_photos': slide_photos})
 
 
 # ------------------------
