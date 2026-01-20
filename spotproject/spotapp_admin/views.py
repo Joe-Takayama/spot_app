@@ -202,17 +202,16 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
 
             spot = spot_form.save(commit=False)
 
-            lat, lng = get_latlng(spot.address)
+            #lat, lng = get_latlng(spot.address)
 
-            if spot.latitude is None or spot.longitude is None:
+            if not spot.latitude or not spot.longitude:
                 lat, lng = get_latlng(spot.address)
                 if lat is not None and lng is not None:
                     spot.latitude = lat
                     spot.longitude = lng
 
-
             spot.save()
-
+            
             photo = photo_form.save(commit=False)
             photo.spot = spot
             photo.save()
