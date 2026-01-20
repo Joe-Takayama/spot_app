@@ -121,9 +121,15 @@ nav {
     z-index: 2000;
 }
 
-.Nav-block:hover > .menu_down {
+/* .Nav-block:hover > .menu_down {
+    display: flex;
+} */
+ 
+ /* ✅ JSで open クラスが付いたときだけ表示 */
+.Nav-block.open > .menu_down {
     display: flex;
 }
+
 
 .menu_down li a {
     display: block;

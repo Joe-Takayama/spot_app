@@ -181,6 +181,8 @@
         if (menu.style.display === "flex") {
           menu.style.display = "none";
         }
+        // ナビのプルダウン全部閉じる
+        document.querySelectorAll(".Nav-block.open").forEach(b => b.classList.remove("open"));
       });
     }
 
@@ -276,6 +278,32 @@
         if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
         });
     });
+    // ------------------------
+// ナビのプルダウン：クリックで開閉（hover禁止）
+// ------------------------
+    const navBlocks = document.querySelectorAll(".Nav-block");
+
+    navBlocks.forEach(block => {
+    const btn = block.querySelector(".Menu_btn");
+    const down = block.querySelector(".menu_down");
+    if (!btn || !down) return;
+
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // 他のNav-blockは閉じる
+        navBlocks.forEach(b => {
+        if (b !== block) b.classList.remove("open");
+        });
+
+        block.classList.toggle("open");
+    });
+
+    // メニュー内クリックは閉じない（項目選択を優先）
+    down.addEventListener("click", (e) => e.stopPropagation());
+    });
+
 
 });
 </script>
