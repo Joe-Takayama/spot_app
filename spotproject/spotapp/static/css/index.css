@@ -90,11 +90,13 @@ li {
 .prev {
   left: 20px;
   transform: translateY(-50%) rotate(-135deg);
+  border-color: blue;
 }
 
 .next {
   right: 20px;
   transform: translateY(-50%) rotate(45deg);
+  border-color: red;
 }
  
 /* =========================
