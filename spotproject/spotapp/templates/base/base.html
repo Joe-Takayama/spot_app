@@ -24,31 +24,45 @@
 
         <div class="nav-center">
             <div class="Nav-block" id="areaMenu_btn">
-                <button class="Menu_btn">地区別 ▼</button>
-                <ul class="menu_down" id="areaMenu_down">
-                    {% for district in districts %}
-                        <li>
-                            <a href="{% url 'spotapp:spot_searchresult' %}?district={{ district.district_id }}">
-                                {{ district.district_name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                <button class="Menu_btn" type="button" id="districtBtn">
+                    {{ selected_district_name|default:"地区別" }} ▼
+                </button>
 
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn">カテゴリ ▼</button>
-                <ul class="menu_down" id="categoryMenu_down">
-                    {% for category in categories %}
-                        <li>
-                            <a href="{% url 'spotapp:spot_searchresult' %}?category={{ category.category_id }}">
-                                {{ category.category_name }}
+            <ul class="menu_down" id="areaMenu_down">
+                <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
+                {% for district in districts %}
+                <li>
+                    <a href="#"
+                        class="district-item"
+                        data-value="{{ district.district_id }}"
+                        data-label="{{ district.district_name }}">
+                        {{ district.district_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn" type="button" id="categoryBtn">
+                {{ selected_category_name|default:"カテゴリ" }} ▼
+            </button>
+
+            <ul class="menu_down" id="categoryMenu_down">
+                <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
+                {% for category in categories %}
+                    <li>
+                        <a href="#"
+                            class="category-item"
+                            data-value="{{ category.category_id }}"
+                            data-label="{{ category.category_name }}">
+                            {{ category.category_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
 
             <!-- ログインしなきゃ表示できない奴 -->
             {% if user.is_authenticated %}
@@ -67,8 +81,9 @@
             <ul  id="osirase_down" class="menu_down anywhere">
                 {% for o in osirase_list %}
                     <li>
-                        <strong>{{ o.title }}</strong>
-                        <div>{{ o.body|linebreaksbr }}</div>
+                        <a href="{% url 'spotapp:news_detail' o.pk %}">
+                            {{ o.title }}
+                        </a>
                     </li>
                 {% empty %}
                     <li>表示できるお知らせがありません。</li>
@@ -118,10 +133,16 @@
 
     <!-- 検索バー -->
     {% block searchbar %}
-    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" style="text-align: center;">
-        <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
+    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
+        <input type="text" name="q" id="search" value="{{ keyword|default:'' }}" placeholder="検索バー（あいまい検索可能）">
+
+        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
+        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
+
         <button type="submit">検索</button>
     </form>
+
+
     {% endblock %}
 
     <!-- ★ 中央幅の基準 -->
@@ -219,7 +240,44 @@
       }
     }, true); // capture
 
-  });
+    // ------------------------
+    // 地区・カテゴリ選択（検索はしない）
+    // ------------------------
+    const districtHidden = document.getElementById("search_district");
+    const categoryHidden = document.getElementById("search_category");
+
+    const districtBtn = document.getElementById("districtBtn");
+    const categoryBtn = document.getElementById("categoryBtn");
+
+    // 地区
+    document.querySelectorAll(".district-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();       // ← 遷移（検索）を止める
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "地区別";
+
+        if (districtHidden) districtHidden.value = val;
+        if (districtBtn) districtBtn.textContent = `${label} ▼`;
+        });
+    });
+
+    // カテゴリ
+    document.querySelectorAll(".category-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "カテゴリ";
+
+        if (categoryHidden) categoryHidden.value = val;
+        if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
+        });
+    });
+
+});
 </script>
 {% endblock %}
 

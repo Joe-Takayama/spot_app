@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import ContactView, LoginView, LogoutView
+from .views import ContactView, LoginView, LogoutView, NewsDetailView
 
 app_name = "spotapp"
 
@@ -54,4 +54,5 @@ urlpatterns = [
     path("logout/complete/", views.logout_complete, name="logout_complete"),
 
     # お知らせ詳細
+    path('news/<int:pk>/', NewsDetailView.as_view(), name="news_detail"),
 ]

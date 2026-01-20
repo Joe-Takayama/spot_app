@@ -59,7 +59,7 @@ class PhotoForm(ModelForm):
 class SpotCreateForm(ModelForm):
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
-        widget=forms.RadioSelect,
+        widget=forms.Select,
         required=False,
         empty_label="カテゴリーを選択してください",
         label="カテゴリ"
@@ -69,6 +69,15 @@ class SpotCreateForm(ModelForm):
         required=True,
         empty_label="地区を選択してください",
         label="地区",
+    )
+
+
+    district = forms.ModelChoiceField(
+        queryset=District.objects.all(),
+        widget=forms.Select,
+        required=False,
+        empty_label="選択しない",
+        label="地区別"
     )
 
     class Meta:
