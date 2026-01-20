@@ -282,9 +282,8 @@ class OsiraseView(StaffLoginRequiredMixin, View):
 
 
 # お知らせ表示画面
-def osirase_list(request):
-    items = Osirase.objects.all()
-    return render(request, "osirase_list.html", {"osirase_list": items})
+# def osirase_list(request):
+#     return render(request, "osirase_list.html")
 
 # お知らせ詳細画面
 class OsiraseDetailView(StaffLoginRequiredMixin, View):

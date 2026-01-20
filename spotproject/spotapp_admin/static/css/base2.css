@@ -123,9 +123,3 @@ form button {
     font-size: 0.8em;
     margin-left: 5px;
 }
-
-/* 新着お知らせの文字を赤くする */
-.new-osirase {
-    color: red !important;
-    font-weight: bold;  /* お好みで強調 */
-}

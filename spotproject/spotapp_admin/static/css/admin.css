@@ -81,6 +81,7 @@ nav {
     margin-bottom: 10px;
 }
 
+
 .menu_down a,
 .menu_down div,
 .menu_down strong {
@@ -134,3 +135,12 @@ footer {
     border-top:solid 3px #333;
 }
         
+
+.menu_down a.is-new {
+    color: red !important;
+    font-weight: bold;
+}
+
+.menu_down a.is-new:hover {
+    color: red !important;
+}

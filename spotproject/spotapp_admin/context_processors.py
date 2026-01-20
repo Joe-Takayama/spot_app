@@ -7,7 +7,7 @@ def osirase_nav(request):
     now = timezone.now()
     new_threshold = now - timedelta(days=7)
 
-    osirase_list = Osirase.objects.all().order_by('-created_at')
+    items = Osirase.objects.order_by('-created_at')
 
     staff = None
     staff_id = request.session.get('staff_id')
@@ -18,15 +18,24 @@ def osirase_nav(request):
             pass
 
     new_count = 0
-    for o in osirase_list:
+    for o in items:
         o.is_new = (
             o.created_at >= new_threshold and
             (staff not in o.read_by.all() if staff else True)
+        )
+
+        print(
+            "TITLE:", o.title,
+            "| created_at:", o.created_at,
+            "| threshold:", new_threshold,
+            "| staff:", staff,
+            "| read_by:", list(o.read_by.all()),
+            "| is_new:", o.is_new
         )
         if o.is_new:
             new_count += 1
 
     return {
-        "osirase_list": osirase_list,
+        "osirase_list": items,
         "new_count": new_count,
     }
