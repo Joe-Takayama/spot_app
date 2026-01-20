@@ -28,35 +28,26 @@ li {
   transition: transform 0.4s ease;
 }
  
-/* =========================
-   1枚分のスライド
-========================= */
-.slide-item {
-  flex: 0 0 100%;   /* ← 1枚＝ちょうど枠100% */
-  height: 100%;
-  position: relative;
-  display: block;
-  text-decoration: none;
-  color: inherit;
-}
- 
 
-/* =========================
-   スライド中身
-========================= */
+/* スライド1枚の枠（横並び用） */
 .slide-item {
-  width: 100%;
-  height: 100%;
-  display: block;
+  flex: 0 0 100%;     /* スライド1枚の幅 */
+  position: relative;
+  display: flex;      /* 子要素の画像に合わせる */
+  justify-content: center; 
+  align-items: center;
   text-decoration: none;
   color: inherit;
+  background-color: #f0f0f0; /* 淡いグレーで自然に余白を埋める */
 }
  
 /* ===== 画像 ===== */
 .slide-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
   display: block;
 }
  
