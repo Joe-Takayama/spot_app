@@ -85,7 +85,7 @@
         
         <div id="route-ui">
             <div class="route-input">
-                <input id="start" type="text" placeholder="出発地を入力">
+                <input id="start" type="text" placeholder="出発地を入力（ヒットしない場合は住所で入力）">
                 <div class="route-buttons">
                     <div class="walk">
                         <button type="button" onclick="route('car')">🚙 車</button>
@@ -137,7 +137,7 @@
             "<p style='text-align:center;'>地図情報がありません</p>";
     }
 
-    let routingControl;  // ルーティングコントロールを格納する変数
+    let routingControl;
 
     function route(mode) {
         const start = document.getElementById("start").value;
@@ -146,63 +146,67 @@
             return;
         }
 
-        //出発地→経度緯度
-        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${start}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.length === 0) {
-                    alert("出発地が見つかりません");
-                    return;
-                }
+        // 番地っぽい文字がある場合はGSI住所検索
+        const hasNumber = /\d/.test(start);
 
-                const sLat = data[0].lat;
-                const sLng = data[0].lon;
-
-                //既存ルート削除
-                if (routingControl) {
-                    map.removeControl(routingControl);
-                }
-
-                routingControl = L.Routing.control({
-                    router: L.Routing.osrmv1({
-                        serviceUrl: 'https://router.project-osrm.org/route/v1',
-                        profile: mode === "car" ? "car" : "foot"
-                    }),
-                    waypoints: [
-                        L.latLng(sLat, sLng),
-                        L.latLng(lat, lng) //観光地（目的地）
-                    ],
-                    lineOptions: {
-                        styles: [{ color: 'blue', weight: 5 }]
-                    },
-                    addWaypoints: false,
-                    draggableWaypoints: false,
-                    show: false,
-                }).addTo(map);
-
-                routingControl.on('routesfound', function(e) {
-                    const r = e.routes[0];
-                    const distanceKm = r.summary.totalDistance / 1000;
-
-                    let minutes;
-
-                    if (mode === "car") {
-                        //車の場合
-                        minutes = Math.round(r.summary.totalTime / 60);
-                    } else {
-                        // 徒歩の場合（時速4kmで想定）
-                        minutes = Math.round((distanceKm / 4) * 60);
+        if (hasNumber) {
+            // GSI住所検索
+            fetch(`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(start)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        alert("出発地が見つかりません");
+                        return;
                     }
-
-                    document.getElementById("route-info").innerHTML = 
-                        `距離: ${distanceKm.toFixed(1)} km<br>
-                        時間: ${minutes} 分`;
-
-                        //ルート全体を表示
-                        map.fitBounds(L.latLngBounds(r.coordinates));
+                    const sLat = data[0].geometry.coordinates[1];
+                    const sLng = data[0].geometry.coordinates[0];
+                    createRoute(sLat, sLng, mode);
                 });
-            });
-    }    
+        } else {
+            // 建物名などはOSM検索
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(start)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        alert("出発地が見つかりません");
+                        return;
+                    }
+                    const sLat = parseFloat(data[0].lat);
+                    const sLng = parseFloat(data[0].lon);
+                    createRoute(sLat, sLng, mode);
+                });
+        }
+    }
+
+    function createRoute(sLat, sLng, mode) {
+        if (routingControl) map.removeControl(routingControl);
+
+        routingControl = L.Routing.control({
+            router: L.Routing.osrmv1({
+                serviceUrl: 'https://router.project-osrm.org/route/v1',
+                profile: mode === "car" ? "car" : "foot"
+            }),
+            waypoints: [
+                L.latLng(sLat, sLng),  // 出発地
+                L.latLng(lat, lng)     // 観光地（目的地）
+            ],
+            lineOptions: { styles: [{ color: 'blue', weight: 5 }] },
+            addWaypoints: false,
+            draggableWaypoints: false,
+            show: false,
+        }).addTo(map);
+
+        routingControl.on('routesfound', function(e) {
+            const r = e.routes[0];
+            const distanceKm = r.summary.totalDistance / 1000;
+            let minutes = mode === "car" ? Math.round(r.summary.totalTime / 60) : Math.round((distanceKm / 4) * 60);
+
+            document.getElementById("route-info").innerHTML =
+                `距離: ${distanceKm.toFixed(1)} km<br>時間: ${minutes} 分`;
+
+            map.fitBounds(L.latLngBounds(r.coordinates));
+        });
+    } 
 
 </script>
 
