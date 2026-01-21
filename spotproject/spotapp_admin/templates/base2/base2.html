@@ -111,8 +111,11 @@
 
     <form class="search-form" action="{% url 'spotapp_admin:search-result' %}" method="get">
         <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
+        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
+        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
+
+        <button type="submit">検索</button>
         <div class="submit">
-            <button type="submit">検索</button>
         </div>
     </form>
 

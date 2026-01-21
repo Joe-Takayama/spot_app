@@ -48,7 +48,14 @@ from django.utils import timezone
 #ホーム画面
 class IndexView(View):
     def get(self, request):
-        return render(request, 'spotapp_admin/index.html')
+        slide_photos = (
+            Photo.objects
+            .select_related('spot')
+            .filter(spot__isnull=False)
+            .order_by('-uploaded_at')
+        )
+
+        return render(request, 'spotapp_admin/index.html',{'slide_photos': slide_photos})
     
 
 #登録選択画面
