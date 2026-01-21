@@ -265,23 +265,39 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
 
 #観光地更新画面
 class SpotUpdateView(StaffLoginRequiredMixin, View):
+
     def get(self, request, spot_id):
         page = get_object_or_404(Spot, pk=spot_id)
         spot_form = SpotCreateForm(instance=page)
-        spot_photo = PhotoForm(instance=page)
-        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': spot_photo, 'page': page})
-    
+
+        photo = page.photos.first()   # ← Spotに紐づく写真取得
+        photo_form = PhotoForm(instance=photo)
+
+        return render(request, 'spotapp_admin/spot_update.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form,
+            'page': page
+        })
+
     def post(self, request, spot_id):
         page = get_object_or_404(Spot, pk=spot_id)
-        spot_form = SpotCreateForm(request.POST, request.FILES, instance=page)
-        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+
+        photo = page.photos.first()
+
+        spot_form = SpotCreateForm(request.POST, instance=page)
+        photo_form = PhotoForm(request.POST, request.FILES, instance=photo)
 
         if spot_form.is_valid() and photo_form.is_valid():
             spot_form.save()
             photo_form.save()
             return render(request, 'spotapp_admin/spot_update_complete.html')
-        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': photo_form, 'page': page})
-    
+
+        return render(request, 'spotapp_admin/spot_update.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form,
+            'page': page
+        })
+
 # 観光地削除確認画面
 class SpotDeleteView(StaffLoginRequiredMixin, View):
     def get(self, request, spot_id):
