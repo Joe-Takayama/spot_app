@@ -304,6 +304,19 @@
     down.addEventListener("click", (e) => e.stopPropagation());
     });
 
+    // 何も入力・選択しないで検索ボタンを押したときは全部クリア
+    document.getElementById('searchForm').addEventListener("submit", function(e) {
+        const keyword = document.getElementById('search').value.trim();
+        const district = document.getElementById('search_district').value.trim();
+        const category = document.getElementById('search_category').value.trim();
+
+        // すべて空なら送信させない
+        if (!keyword && !district && !category) {
+            e.preventDefault();
+            alert('検索条件を1つ以上指定してください。');
+        }
+    });
+
 
 });
 </script>
