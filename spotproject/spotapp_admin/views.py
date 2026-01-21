@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
 from .models import Staff, Photo, Osirase
-from spotapp.models import Spot, Events
+from spotapp.models import Spot, Events, Category, District
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
@@ -66,6 +66,10 @@ class UpdelView(StaffLoginRequiredMixin, View):
 class SpotSearchView(StaffLoginRequiredMixin, View):
     def get(self, request):
         keyword = request.GET.get('q')
+
+        category_id = request.GET.get('category', '').strip()
+        district_id = request.GET.get('district', '').strip()
+
         spots = Spot.objects.annotate(
     avg_rating=Avg('review__rating')
 ).prefetch_related(
@@ -76,12 +80,47 @@ class SpotSearchView(StaffLoginRequiredMixin, View):
 )
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
+        
+        # カテゴリ絞り込み
+        if category_id:
+            spots = spots.filter(category_id=category_id)
+
+        # 地区絞り込み
+        if district_id:
+            spots = spots.filter(district_id=district_id)
+
+            # ▼ ボタン表記用の「名前」を作る
+        selected_category_name = "カテゴリ"
+        selected_district_name = "地区別"
+
+        if category_id:
+            c = Category.objects.filter(category_id=category_id).first()
+            if c:
+                selected_category_name = c.category_name
+
+        if district_id:
+            d = District.objects.filter(district_id=district_id).first()
+            if d:
+                selected_district_name = d.district_name
+
+
 
         return render(request, 'spotapp_admin/search-result.html', {
             'keyword': keyword,
             'spots': spots,
-        })
 
+            # プルダウン用
+            'categories': Category.objects.all(),
+            'districts': District.objects.all(),
+
+            # 選択保持
+            'selected_category': category_id,
+            'selected_district': district_id,
+
+            # ボタン表記保持（追加）
+            "selected_category_name": selected_category_name,
+            "selected_district_name": selected_district_name,
+        })
 
 
 # ログイン画面

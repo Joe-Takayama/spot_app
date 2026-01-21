@@ -28,20 +28,20 @@
                     {{ selected_district_name|default:"地区別" }} ▼
                 </button>
 
-            <ul class="menu_down" id="areaMenu_down">
-                <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
-                {% for district in districts %}
-                <li>
-                    <a href="#"
-                        class="district-item"
-                        data-value="{{ district.district_id }}"
-                        data-label="{{ district.district_name }}">
-                        {{ district.district_name }}
-                    </a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+                <ul class="menu_down" id="areaMenu_down">
+                    <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
+                    {% for district in districts %}
+                    <li>
+                        <a href="#"
+                            class="district-item"
+                            data-value="{{ district.district_id }}"
+                            data-label="{{ district.district_name }}">
+                            {{ district.district_name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
         <div class="Nav-block" id="categoryMenu_btn">
             <button class="Menu_btn" type="button" id="categoryBtn">

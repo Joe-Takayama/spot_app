@@ -171,7 +171,7 @@ class SpotSearchResultView(View):
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
         
-         # カテゴリ絞り込み
+        # カテゴリ絞り込み
         if category_id:
             spots = spots.filter(category_id=category_id)
 
