@@ -72,13 +72,13 @@ class SpotCreateForm(ModelForm):
     )
 
 
-    district = forms.ModelChoiceField(
-        queryset=District.objects.all(),
-        widget=forms.Select,
-        required=False,
-        empty_label="選択しない",
-        label="地区別"
-    )
+    #district = forms.ModelChoiceField(
+     #   queryset=District.objects.all(),
+      #  widget=forms.Select,
+       # required=False,
+        #empty_label="選択しない",
+        #label="地区別"
+    #)
 
     class Meta:
         model = Spot
