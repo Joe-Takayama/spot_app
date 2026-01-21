@@ -74,8 +74,10 @@
             <div class="Nav-block" id="categoryMenu_btn">
                 <button class="Menu_btn">
                     お知らせ ▼
-                    {% if new_count %}
-                        <span class="new-count">{{ new_count }}</span>
+                    {% if request.session.staff_id %}
+                        {% if new_count %}
+                            <span class="new-count">{{ new_count }}</span>
+                        {% endif %}
                     {% endif %}
                 </button>
                 <ul class="menu_down" class="menu_down anywhere">
