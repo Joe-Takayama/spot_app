@@ -3,6 +3,9 @@
     <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
+
+{% block title %} 観光地登録 {% endblock %}
+
 {% block body %}
 <div class="home-btn">
     <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
