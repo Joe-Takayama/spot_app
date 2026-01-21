@@ -11,9 +11,9 @@
     
     <div id="slide" class="slide">
         {% for photo in slide_photos %}
-            <a href="{% url 'spotapp:spot_detail' photo.spot.spot_id %}" class="slide-item">
+            <div class="slide-item">
                 <img src="{{ photo.image.url }}" alt="{{ photo.spot.spot_name }}">
-            </a>
+            </div>
         {% empty %}
             <div class="slide-item">
                 <p>観光地がありません。</p>
