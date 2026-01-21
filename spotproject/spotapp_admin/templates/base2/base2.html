@@ -3,7 +3,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8" />
-    <title>メニューHTML</title>
+    <title>{% block title %} ホーム {% endblock %}</title>
     <link href="{% static 'css/admin.css' %}" rel="stylesheet">
     <link href="{% static 'css/logout.css' %}" rel="stylesheet">
     <link href="{% static 'css/event_delete.css' %}" rel="stylesheet">
@@ -125,7 +125,7 @@
     </div>
 
     <footer class="footer">
-        <span>E班</span>
+        <span>&copy; E班</span>
     </footer>
 
     <script src="{% static 'js/admin.js' %}"></script>

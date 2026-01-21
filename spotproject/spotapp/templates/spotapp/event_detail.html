@@ -126,22 +126,6 @@
     </section>
 
 
-    {# Map（機能予定） #}
-    <section class="map-box">
-        <h2>Map（機能予定）</h2>
-
-        {% if spot and spot.latitude and spot.longitude %}
-            <p>地図機能は今後実装予定です。（緯度：{{ spot.latitude }}, 経度：{{ spot.longitude }}）</p>
-        {% else %}
-            <p>地図機能は現在準備中です。</p>
-        {% endif %}
-
-        <ul>
-            <li>現在地からの距離・所要時間（徒歩・車・電車）</li>
-            <li>ルート案内</li>
-            <li>周辺施設・ホテル情報表示</li>
-        </ul>
-    </section>
 
 </main>
 
