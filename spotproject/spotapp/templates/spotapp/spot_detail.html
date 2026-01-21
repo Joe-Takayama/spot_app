@@ -6,6 +6,7 @@
 {% block extra_css %}
   <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 {% endblock %}
 {# ===== ナビを最小構成に差し替え ===== #}
 {% block nav %}
@@ -80,6 +81,23 @@
             レビューを見る
         </a>
 
+        <!-- ルート案内・時間表示 -->
+        
+        <div id="route-ui">
+            <div class="route-input">
+                <input id="start" type="text" placeholder="出発地を入力">
+                <div class="route-buttons">
+                    <div class="walk">
+                        <button type="button" onclick="route('car')">🚙 車</button>
+                    </div>
+                    <div class="car">
+                        <button type="button" onclick="route('foot')">🚶 徒歩</button>
+                    </div>
+                </div>
+                <div id="route-info"></div>
+            </div>
+        </div>
+        <!-- 地図 -->
         <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
 
 
@@ -118,9 +136,78 @@
         document.getElementById("map").innerHTML =
             "<p style='text-align:center;'>地図情報がありません</p>";
     }
+
+    let routingControl;  // ルーティングコントロールを格納する変数
+
+    function route(mode) {
+        const start = document.getElementById("start").value;
+        if (!start) {
+            alert("出発地を入力してください");
+            return;
+        }
+
+        //出発地→経度緯度
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${start}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.length === 0) {
+                    alert("出発地が見つかりません");
+                    return;
+                }
+
+                const sLat = data[0].lat;
+                const sLng = data[0].lon;
+
+                //既存ルート削除
+                if (routingControl) {
+                    map.removeControl(routingControl);
+                }
+
+                routingControl = L.Routing.control({
+                    router: L.Routing.osrmv1({
+                        serviceUrl: 'https://router.project-osrm.org/route/v1',
+                        profile: mode === "car" ? "car" : "foot"
+                    }),
+                    waypoints: [
+                        L.latLng(sLat, sLng),
+                        L.latLng(lat, lng) //観光地（目的地）
+                    ],
+                    lineOptions: {
+                        styles: [{ color: 'blue', weight: 5 }]
+                    },
+                    addWaypoints: false,
+                    draggableWaypoints: false,
+                    show: false,
+                }).addTo(map);
+
+                routingControl.on('routesfound', function(e) {
+                    const r = e.routes[0];
+                    const distanceKm = r.summary.totalDistance / 1000;
+
+                    let minutes;
+
+                    if (mode === "car") {
+                        //車の場合
+                        minutes = Math.round(r.summary.totalTime / 60);
+                    } else {
+                        // 徒歩の場合（時速4kmで想定）
+                        minutes = Math.round((distanceKm / 4) * 60);
+                    }
+
+                    document.getElementById("route-info").innerHTML = 
+                        `距離: ${distanceKm.toFixed(1)} km<br>
+                        時間: ${minutes} 分`;
+
+                        //ルート全体を表示
+                        map.fitBounds(L.latLngBounds(r.coordinates));
+                });
+            });
+    }    
+
 </script>
 
 {% endblock %}
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 {% endblock %}
