@@ -350,7 +350,7 @@ def osirase_list(request):
     return render(request, "osirase_list.html", {"osirase_list": items})
 
 # お知らせ詳細画面
-class OsiraseDetailView(StaffLoginRequiredMixin, View):
+class OsiraseDetailView(View):
     def get(self, request, pk):
         osirase = get_object_or_404(Osirase, pk=pk)
 
