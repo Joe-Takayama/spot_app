@@ -18,21 +18,17 @@ from .forms import (
     SignupForm,
     ContactForm,
     LoginForm,
-
 )
 
-from .models import Events, Review, Spot , Profile, Favorite, Category, District
+from .models import Events, Review, Spot, Profile, Favorite, Category, District
 from spotapp_admin.models import Photo
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
-
 from django.urls import reverse
 
-# ------------------------
-# インデックス
-# ------------------------
+
 # ------------------------
 # インデックス
 # ------------------------
@@ -71,12 +67,14 @@ class SignupCompleteView(View):
     def get(self, request):
         return render(request, 'spotapp/signup_complete.html')
 
+
 # ------------------------
 # プロフィール表示ビュー
 # ------------------------
 @login_required
 def profile_view(request):
     return render(request, "spotapp/profile.html")
+
 
 # ------------------------
 # プロフィール編集ビュー
@@ -105,7 +103,6 @@ class ProfileEditView(LoginRequiredMixin, View):
         return redirect("spotapp:profile_edit_complete")
 
 
-
 class ProfileEditCompleteView(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, "spotapp/profile_edit_complete.html")
@@ -131,7 +128,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
                 return render(
                     request,
                     "spotapp/password_change.html",
-                    {"form": form, "error": "パスワードが一致しません"}
+                    {"form": form, "error": "パスワードが一致しません"},
                 )
 
             user.set_password(p1)
@@ -155,9 +152,27 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 class SpotSearchResultView(View):
     def get(self, request):
         keyword = request.GET.get('q', '').strip()
-
         category_id = request.GET.get('category', '').strip()
         district_id = request.GET.get('district', '').strip()
+
+        # 🔸検索条件が全て空のときは一覧を出さない
+        if not keyword and not category_id and not district_id:
+            return render(request, 'spotapp/spot_searchresult.html', {
+                'keyword': keyword,
+                'spots': Spot.objects.none(),  # 0件
+
+                # プルダウン用
+                'categories': Category.objects.all(),
+                'districts': District.objects.all(),
+
+                # 選択保持（空）
+                'selected_category': '',
+                'selected_district': '',
+
+                # ボタン表記
+                "selected_category_name": "カテゴリ",
+                "selected_district_name": "地区別",
+            })
 
         spots = (
             Spot.objects
@@ -166,7 +181,7 @@ class SpotSearchResultView(View):
                 Prefetch('spot_photos', queryset=Photo.objects.order_by('uploaded_at'))
             )
         )
-        
+
         if request.user.is_authenticated:
             favorites_subquery = Favorite.objects.filter(
                 user=request.user,
@@ -180,7 +195,7 @@ class SpotSearchResultView(View):
 
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
-        
+
         # カテゴリ絞り込み
         if category_id:
             spots = spots.filter(category_id=category_id)
@@ -189,7 +204,7 @@ class SpotSearchResultView(View):
         if district_id:
             spots = spots.filter(district_id=district_id)
 
-            # ▼ ボタン表記用の「名前」を作る
+        # ▼ ボタン表記用の「名前」を作る
         selected_category_name = "カテゴリ"
         selected_district_name = "地区別"
 
@@ -203,8 +218,6 @@ class SpotSearchResultView(View):
             if d:
                 selected_district_name = d.district_name
 
-
-
         return render(request, 'spotapp/spot_searchresult.html', {
             'keyword': keyword,
             'spots': spots,
@@ -217,7 +230,7 @@ class SpotSearchResultView(View):
             'selected_category': category_id,
             'selected_district': district_id,
 
-            # ボタン表記保持（追加）
+            # ボタン表記保持
             "selected_category_name": selected_category_name,
             "selected_district_name": selected_district_name,
         })
@@ -244,7 +257,7 @@ class SpotDetailView(View):
 
         Review.objects.create(
             spot=spot,
-            user = request.user,
+            user=request.user,
             rating=request.POST.get('rating'),
             comment=request.POST.get('comment')
         )
@@ -255,7 +268,7 @@ class SpotDetailView(View):
 # ------------------------
 # レビュー投稿
 # ------------------------
-class ReviewCreateView(LoginRequiredMixin,View):
+class ReviewCreateView(LoginRequiredMixin, View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/review_create.html', {'spot': spot})
@@ -294,6 +307,7 @@ class ReviewDetailView(View):
             "reviews": spot.review_set.all()
         })
 
+
 # ------------------------
 # お気に入り一覧
 # ------------------------
@@ -306,6 +320,7 @@ def favorite_list(request):
         .order_by("-created_at")
     )
     return render(request, "spotapp/favorite_list.html", {"favorites": favorites})
+
 
 # ------------------------
 # お気に入り追加・削除
@@ -327,6 +342,7 @@ def favorite_toggle(request, spot_id):
 
     return redirect(request.META.get("HTTP_REFERER") or "spotapp:spot_detail", spot_id=spot_id)
 
+
 # ------------------------
 # お気に入り追加・削除（画面遷移なし/Ajax）
 # ------------------------
@@ -346,26 +362,25 @@ def favorite_toggle_ajax(request, spot_id):
 
 
 # ------------------------
-# イベント用にういいいいいいいいい
+# イベント
 # ------------------------
 class EventListView(View):
     def get(self, request):
-        month = request.GET.get("month")  # ← 追加
+        month = request.GET.get("month")
 
         event_list = Events.objects.order_by("-event_date")
 
-        # 🔹 月指定があれば絞り込み
+        # 月指定があれば絞り込み
         if month:
             event_list = event_list.filter(event_date__month=month)
 
         context = {
             "event_list": event_list,
             "months": range(1, 13),
-            "selected_month": month,  # ← 追加
+            "selected_month": month,
         }
 
         return render(request, "spotapp/event_chart.html", context)
-
 
 
 class EventDetailView(View):
@@ -375,7 +390,7 @@ class EventDetailView(View):
         # 紐づいている観光地（あれば）
         spot = event.spot_id  # ForeignKey の名前が spot_id だからこれでOK
 
-        # 評価用（お好みだけど、あると便利）
+        # 評価用
         avg_rating = None
         review_count = 0
         if spot is not None:
@@ -414,8 +429,8 @@ class ContactView(View):
             subject=subject,
             body=body,
             from_email='igakouga2n2n@gmail.com',
-            #↓ここにメールを増やせば受け取れる人が増える
-            to=['mit2471573@stu.o-hara.ac.jp'], 
+            # ↓ここにメールを増やせば受け取れる人が増える
+            to=['mit2471573@stu.o-hara.ac.jp'],
             connection=connection,
         )
         email.send()
@@ -482,19 +497,22 @@ class LogoutCompleteView(View):
     def get(self, request):
         return render(request, "spotapp/logout_complete.html")
 
+
 # ------------------------
-# お知らせ表示画面
+# お知らせ表示画面 / 詳細
+# ------------------------
 def osirase_list(request):
     items = Osirase.objects.all()
     return render(request, "osirase_list.html", {"osirase_list": items})
 
 
-# お知らせ詳細
 class NewsDetailView(View):
     def get(self, request, pk):
         news = get_object_or_404(Osirase, pk=pk)
         return render(request, "spotapp/news_detail.html", {"news": news})
-        # ------------------------
+
+
+# ------------------------
 # as_view() の定義
 # ------------------------
 index = IndexView.as_view()
@@ -505,7 +523,6 @@ signup_complete = SignupCompleteView.as_view()
 login_view = LoginView.as_view()
 logout_view = LogoutView.as_view()
 logout_complete = LogoutCompleteView.as_view()
-
 
 profile_edit = ProfileEditView.as_view()
 profile_edit_complete = ProfileEditCompleteView.as_view()
@@ -518,9 +535,7 @@ spot_detail = SpotDetailView.as_view()
 
 review_create = ReviewCreateView.as_view()
 review_complete = ReviewCompleteView.as_view()
-review_detail= ReviewDetailView.as_view()
-
-
+review_detail = ReviewDetailView.as_view()
 
 event_chart = EventListView.as_view()
 event_detail = EventDetailView.as_view()
