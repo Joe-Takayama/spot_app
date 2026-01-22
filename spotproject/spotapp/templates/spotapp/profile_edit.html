@@ -1,28 +1,39 @@
-<head>
-    {% load static %}
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    <link href="{% static 'css/profile_edit.css' %}" rel="stylesheet">
-</head>
+{% extends "base/base.html" %}
+{% load static %}
 
+{% block title %}プロフィール編集{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/profile_edit.css' %}" rel="stylesheet">
+{% endblock %}
+{# ===== ナビを最小構成に差し替え ===== #}
+{# ===== ナビを最小構成に差し替え ===== #}
+{% block nav %}
+<nav class="profile-mini-nav">
+  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+  <div class="user-info">
+    <div class="user-icon">
+      {% if request.user.profile.icon %}
+        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+      {% else %}
+        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+      {% endif %}
+    </div>
+    <div class="user-name-text">
+      {{ request.user.username }} さん
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+
+{# プロフィール編集では検索いらないなら消す #}
+{% block searchbar %}{% endblock %}
 
 {% block body %}
 <div class="page">
-    <header class="page-header">
-        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
-
-        <div class="user-info">
-            <div class="user-icon">
-                {% if request.user.profile.icon %}
-                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                {% else %}
-                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                {% endif %}
-            </div>
-            <div class="user-name-text">
-                {{ request.user.username }} さん
-            </div>
-        </div>
-    </header>
+  
 
     <main class="page-main">
         <h2 class="page-title">プロフィール編集</h2>
