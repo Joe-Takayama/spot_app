@@ -1,7 +1,30 @@
-.page-center {
-    display: flex;
-    justify-content: center;  /* 横中央 */
-    align-items: center;      /* 縦中央 */
-    height: 80vh;             /* 画面の約8割を使って中央寄せ */
-    text-align: center;       /* テキスト中央寄せ */
+.page-center{
+  min-height: 70vh;          /* ヘッダーありでも中央寄せが崩れにくい */
+  display: flex;
+  flex-direction: column;    /* ← 縦に積む（重要） */
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 16px;                 /* タイトルとボタンの間隔 */
+  padding: 24px 16px;
+  box-sizing: border-box;
+}
+
+.page-center h1{
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.page-center .btn{
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 2px solid #667eea;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.page-center .btn:hover{
+  opacity: 0.9;
 }
