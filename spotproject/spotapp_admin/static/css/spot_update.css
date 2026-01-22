@@ -130,3 +130,13 @@ label[for="id_details"] {
     margin-bottom: 15px;
 }
 
+.map-box{
+  height: 350px;
+  margin-bottom: 15px;
+  border: 2px solid #333;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+
+
