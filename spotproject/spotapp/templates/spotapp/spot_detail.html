@@ -73,8 +73,8 @@
             </button>
         </div>
 
-        <h2 class="spot-address">住所  {{ spot.address }}</h2>
-        <h2 class="spot-hours">営業時間  {{ spot.business_hours }}</h2>
+        <h2 class="spot-address">住所<br>{{ spot.address }}</h2>
+        <h2 class="spot-hours">営業時間<br>{{ spot.business_hours }}</h2>
 
         
         <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
