@@ -2,18 +2,60 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .forms import StaffForm, EventCreateForm, PhotoForm,SpotCreateForm,OsiraseForm
 from .models import Staff, Photo, Osirase
-from spotapp.models import Spot, Events
+from spotapp.models import Spot, Events, Category, District
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
 from .mixins import StaffLoginRequiredMixin
 from django.db.models import Avg,Prefetch
 from .utils import get_latlng
+from datetime import timedelta
+from django.utils import timezone
 
+
+# お知らせ通知
+# class OsiraseNavMixin:
+#     def get_osirase_context(self, request):
+#         now = timezone.now()
+#         new_threshold = now - timedelta(days=3)
+
+#         osirase_list = Osirase.objects.all().order_by('-created_at')
+
+#         staff = None
+#         staff_id = request.session.get('staff_id')
+#         if staff_id:
+#             try:
+#                 staff = Staff.objects.get(staff_id=staff_id)
+#             except Staff.DoesNotExist:
+#                 pass
+
+#         new_count = 0
+
+#         for o in osirase_list:
+#             # 3日以内 かつ 未読 の場合のみ新着
+#             o.is_new = (
+#                 o.created_at >= new_threshold and
+#                 (staff not in o.read_by.all() if staff else True)
+#             )
+
+#             if o.is_new:
+#                 new_count += 1
+
+#         return {
+#             "osirase_list": osirase_list,
+#             "new_count": new_count
+#         }
 
 #ホーム画面
 class IndexView(View):
     def get(self, request):
-        return render(request, 'spotapp_admin/index.html')
+        slide_photos = (
+            Photo.objects
+            .select_related('spot')
+            .filter(spot__isnull=False)
+            .order_by('-uploaded_at')
+        )
+
+        return render(request, 'spotapp_admin/index.html',{'slide_photos': slide_photos})
     
 
 #登録選択画面
@@ -31,6 +73,10 @@ class UpdelView(StaffLoginRequiredMixin, View):
 class SpotSearchView(StaffLoginRequiredMixin, View):
     def get(self, request):
         keyword = request.GET.get('q')
+
+        category_id = request.GET.get('category', '').strip()
+        district_id = request.GET.get('district', '').strip()
+
         spots = Spot.objects.annotate(
     avg_rating=Avg('review__rating')
 ).prefetch_related(
@@ -41,12 +87,47 @@ class SpotSearchView(StaffLoginRequiredMixin, View):
 )
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
+        
+        # カテゴリ絞り込み
+        if category_id:
+            spots = spots.filter(category_id=category_id)
+
+        # 地区絞り込み
+        if district_id:
+            spots = spots.filter(district_id=district_id)
+
+            # ▼ ボタン表記用の「名前」を作る
+        selected_category_name = "カテゴリ"
+        selected_district_name = "地区別"
+
+        if category_id:
+            c = Category.objects.filter(category_id=category_id).first()
+            if c:
+                selected_category_name = c.category_name
+
+        if district_id:
+            d = District.objects.filter(district_id=district_id).first()
+            if d:
+                selected_district_name = d.district_name
+
+
 
         return render(request, 'spotapp_admin/search-result.html', {
             'keyword': keyword,
             'spots': spots,
-        })
 
+            # プルダウン用
+            'categories': Category.objects.all(),
+            'districts': District.objects.all(),
+
+            # 選択保持
+            'selected_category': category_id,
+            'selected_district': district_id,
+
+            # ボタン表記保持（追加）
+            "selected_category_name": selected_category_name,
+            "selected_district_name": selected_district_name,
+        })
 
 
 # ログイン画面
@@ -167,13 +248,16 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
 
             spot = spot_form.save(commit=False)
 
-            lat, lng = get_latlng(spot.address)
+            #lat, lng = get_latlng(spot.address)
 
-            spot.latitude = lat
-            spot.longitude = lng
+            if not spot.latitude or not spot.longitude:
+                lat, lng = get_latlng(spot.address)
+                if lat is not None and lng is not None:
+                    spot.latitude = lat
+                    spot.longitude = lng
 
             spot.save()
-
+            
             photo = photo_form.save(commit=False)
             photo.spot = spot
             photo.save()
@@ -188,23 +272,41 @@ class SpotRegistrationView(StaffLoginRequiredMixin, View):
 
 #観光地更新画面
 class SpotUpdateView(StaffLoginRequiredMixin, View):
+
     def get(self, request, spot_id):
         page = get_object_or_404(Spot, pk=spot_id)
         spot_form = SpotCreateForm(instance=page)
-        spot_photo = PhotoForm(instance=page)
-        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': spot_photo, 'page': page})
-    
+
+        photo = page.spot_photos.first()
+        photo_form = PhotoForm(instance=photo)
+
+
+        return render(request, 'spotapp_admin/spot_update.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form,
+            'page': page
+        })
+
     def post(self, request, spot_id):
         page = get_object_or_404(Spot, pk=spot_id)
-        spot_form = SpotCreateForm(request.POST, request.FILES, instance=page)
-        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+
+        photo = page.spot_photos.first()
+
+        spot_form = SpotCreateForm(request.POST, instance=page)
+        photo_form = PhotoForm(request.POST, request.FILES, instance=photo)
 
         if spot_form.is_valid() and photo_form.is_valid():
             spot_form.save()
             photo_form.save()
             return render(request, 'spotapp_admin/spot_update_complete.html')
-        return render(request, 'spotapp_admin/spot_update.html', {'spot_form': spot_form, 'photo_form': photo_form, 'page': page})
-    
+
+        return render(request, 'spotapp_admin/spot_update.html', {
+            'spot_form': spot_form,
+            'photo_form': photo_form,
+            'page': page
+        })
+
+
 # 観光地削除確認画面
 class SpotDeleteView(StaffLoginRequiredMixin, View):
     def get(self, request, spot_id):
@@ -240,8 +342,23 @@ class OsiraseView(StaffLoginRequiredMixin, View):
             else:
                 form = OsiraseForm()
                 return render(request, "spotapp_admin/osirase.html", {"form": form})
-            
+
+
 # お知らせ表示画面
 def osirase_list(request):
     items = Osirase.objects.all()
     return render(request, "osirase_list.html", {"osirase_list": items})
+
+# お知らせ詳細画面
+class OsiraseDetailView(View):
+    def get(self, request, pk):
+        osirase = get_object_or_404(Osirase, pk=pk)
+
+        staff_id = request.session.get('staff_id')
+        if staff_id:
+            try:
+                staff = Staff.objects.get(staff_id=staff_id)
+                osirase.read_by.add(staff)
+            except Staff.DoesNotExist:
+                pass
+        return render(request, "spotapp_admin/osirase_detail.html", {"osirase": osirase})

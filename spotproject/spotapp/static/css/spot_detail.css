@@ -1,13 +1,13 @@
 .page-header {
     display: flex;
-    justify-content: space-between;   /* 左右に配置 */
-    align-items: center;              /* 上下中央揃え */
+    justify-content: space-between;
+    align-items: center;
     padding: 10px 20px;
     width: 100%;
     box-sizing: border-box;
 }
 
-/* ホームボタン（左側） */
+/* ホームボタン */
 .btn-home {
     text-decoration: none;
     color: #fff;
@@ -18,7 +18,7 @@
     background: #667eea;
 }
 
-/* ユーザー情報（右側） */
+/* ユーザー情報 */
 .user-info {
     display: flex;
     flex-direction: column;
@@ -26,11 +26,11 @@
     gap: 10px;
 }
 
-/* アイコン画像 */
+/* アイコン */
 .user-icon img {
     width: 40px;
     height: 40px;
-    border-radius: 50%;  /* 丸くする */
+    border-radius: 50%;
     object-fit: cover;
 }
 
@@ -40,43 +40,69 @@
     color: #333;
 }
 
-.spot-info{
-    max-width: 800px;        
-    margin: 40px auto;  
+/* =========================
+   観光地情報
+========================= */
+.spot-info {
+    max-width: 800px;
+    margin: 40px auto;
     display: flex;
     flex-direction: column;
     align-items: stretch;
 }
-.spot-name{
+
+.spot-name {
     text-align: left;
-    padding: 10;
+    padding: 10px;
 }
+
 .spot-actions {
     width: 100%;
     display: flex;
-    justify-content: flex-end; /* 右寄せ */
-    padding: 20;
+    justify-content: flex-end;
+    padding: 20px;
 }
-
 
 .spot-address,
 .spot-hours {
     text-align: center;
-    padding: 20;
+    padding: 20px;
 }
 
+/* =========================
+   画像表示
+========================= */
 .spot-image {
-    display: flex;
-    justify-content: center;
-    padding: 20;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
+.photo {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.spot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* =========================
+   ボタン
+========================= */
 .btn {
     display: block;
-    width: fit-content;   /* 中身サイズにする */
-    margin: 30px auto;    /* 左右autoで中央 */
+    width: fit-content;
+    margin: 30px auto;
 }
-.spot-info button{
+
+.spot-info button {
     margin-top: 20px;
     padding: 10px 20px;
     border-radius: 8px;
@@ -84,5 +110,51 @@
     background-color: #007BFF;
     color: white;
     cursor: pointer;
-    align-self:first baseline  /* ボタンも中央に */
+    align-self: center; /* ← 修正 */
+}
+
+
+#route-ui {
+  position: static; /* ここをabsoluteからstaticに変更 */
+  z-index: auto;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto; /* 中央に寄せる */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.route-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.route-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.route-buttons button {
+    padding: 8px 12px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: blue;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.route-buttons button:hover {
+    background-color: #007BFF;
+}
+
+.route-buttons button.active {
+    background-color: green; /* 押されたボタンの色 */
+    color: white;
 }

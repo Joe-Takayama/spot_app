@@ -3,11 +3,14 @@
     <html lang="ja">
     <head>
         <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{%  block title %}メニューHTML{% endblock %}</title>
         <!--共通css-->
         <link href="{% static 'css/style.css' %}" rel="stylesheet">
         <!--テンプレごとのcss-->
         {% block extra_css %} {% endblock %}
+        {% block extra_js %}{% endblock %}
+
     </head>
     <body>
 
@@ -21,24 +24,45 @@
 
         <div class="nav-center">
             <div class="Nav-block" id="areaMenu_btn">
-                <button class="Menu_btn">地区別 ▼</button>
+                <button class="Menu_btn" type="button" id="districtBtn">
+                    {{ selected_district_name|default:"地区別" }} ▼
+                </button>
+
                 <ul class="menu_down" id="areaMenu_down">
-                    <li><a href="#">北地区</a></li>
-                    <li><a href="#">南地区</a></li>
-                    <li><a href="#">東地区</a></li>
-                    <li><a href="#">西地区</a></li>
+                    <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
+                    {% for district in districts %}
+                    <li>
+                        <a href="#"
+                            class="district-item"
+                            data-value="{{ district.district_id }}"
+                            data-label="{{ district.district_name }}">
+                            {{ district.district_name }}
+                        </a>
+                    </li>
+                    {% endfor %}
                 </ul>
             </div>
 
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn">カテゴリ ▼</button>
-                <ul class="menu_down" id="categoryMenu_down">
-                    <li><a href="#">観光</a></li>
-                    <li><a href="#">グルメ</a></li>
-                    <li><a href="#">レジャー</a></li>
-                    <li><a href="#">ショッピング</a></li>
-                </ul>
-            </div>
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn" type="button" id="categoryBtn">
+                {{ selected_category_name|default:"カテゴリ" }} ▼
+            </button>
+
+            <ul class="menu_down" id="categoryMenu_down">
+                <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
+                {% for category in categories %}
+                    <li>
+                        <a href="#"
+                            class="category-item"
+                            data-value="{{ category.category_id }}"
+                            data-label="{{ category.category_name }}">
+                            {{ category.category_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
 
             <!-- ログインしなきゃ表示できない奴 -->
             {% if user.is_authenticated %}
@@ -57,8 +81,9 @@
             <ul  id="osirase_down" class="menu_down anywhere">
                 {% for o in osirase_list %}
                     <li>
-                        <strong>{{ o.title }}</strong>
-                        <div>{{ o.body|linebreaksbr }}</div>
+                        <a href="{% url 'spotapp:news_detail' o.pk %}">
+                            {{ o.title }}
+                        </a>
                     </li>
                 {% empty %}
                     <li>表示できるお知らせがありません。</li>
@@ -108,10 +133,16 @@
 
     <!-- 検索バー -->
     {% block searchbar %}
-    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" style="text-align: center;">
-        <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
+    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
+        <input type="text" name="q" id="search" value="{{ keyword|default:'' }}" placeholder="検索バー（あいまい検索可能）">
+
+        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
+        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
+
         <button type="submit">検索</button>
     </form>
+
+
     {% endblock %}
 
     <!-- ★ 中央幅の基準 -->
@@ -124,37 +155,172 @@
         <!-- フッター -->
     {% block footer %}
     <footer class="footer">
-        <span>E班</span>
+        <span>&copy; E班</span>
         <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
     </footer>
     {% endblock %}
 
     {% block script %}
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
 
-            const menuBtn = document.getElementById("userMenuBtn");
-            const menu = document.getElementById("userMenu");
+    // ------------------------
+    // ユーザーメニュー
+    // ------------------------
+    const menuBtn = document.getElementById("userMenuBtn");
+    const menu = document.getElementById("userMenu");
 
-            // 要素が存在しなければ終了（エラー防止）
-            if (!menuBtn || !menu) return;
+    // user menu は存在するページだけ動かす（無いページでも他JSは動かす）
+    if (menuBtn && menu) {
+      menuBtn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+      });
 
-            // ▼ アイコンクリックで開閉
-            menuBtn.addEventListener("click", function(e) {
-                e.stopPropagation();
-                menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-            });
+      document.addEventListener("click", function() {
+        if (menu.style.display === "flex") {
+          menu.style.display = "none";
+        }
+        // ナビのプルダウン全部閉じる
+        document.querySelectorAll(".Nav-block.open").forEach(b => b.classList.remove("open"));
+      });
+    }
 
-            // ▼ 画面のどこかをクリックしたら閉じる
-            document.addEventListener("click", function() {
-                if (menu.style.display === "flex") {
-                    menu.style.display = "none";
-                }
-            });
+    // ------------------------
+    // お気に入り（画面遷移なし / Ajax）
+    // 使い方: <button type="button" class="fav-btn" data-url="...">お気に入り登録</button>
+    // ------------------------
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const csrftoken = getCookie('csrftoken');
 
+    document.addEventListener("click", async function (e) {
+      const btn = e.target.closest(".fav-btn");
+      if (!btn) return;
+
+      // 親の onclick（カード遷移）より先に止める
+      e.preventDefault();
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+
+      const url = btn.dataset.url;
+      if (!url) return;
+
+      btn.disabled = true;
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrftoken,
+            "Accept": "application/json",
+          },
         });
-    </script>
 
-        {% endblock %}
+        if (!res.ok) {
+            const t = await res.text();
+            console.log("favorite ajax failed:", res.status, t);
+            alert(`favorite失敗: ${res.status}`);
+            return;
+        }
+
+
+        const data = await res.json();
+        btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
+
+        // お気に入り一覧ページなら解除時に行を消す
+        if (data.favorited === false) {
+          const item = btn.closest(".favorite-item");
+          if (item) item.remove();
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+      }
+    }, true); // capture
+
+    // ------------------------
+    // 地区・カテゴリ選択（検索はしない）
+    // ------------------------
+    const districtHidden = document.getElementById("search_district");
+    const categoryHidden = document.getElementById("search_category");
+
+    const districtBtn = document.getElementById("districtBtn");
+    const categoryBtn = document.getElementById("categoryBtn");
+
+    // 地区
+    document.querySelectorAll(".district-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();       // ← 遷移（検索）を止める
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "地区別";
+
+        if (districtHidden) districtHidden.value = val;
+        if (districtBtn) districtBtn.textContent = `${label} ▼`;
+        });
+    });
+
+    // カテゴリ
+    document.querySelectorAll(".category-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "カテゴリ";
+
+        if (categoryHidden) categoryHidden.value = val;
+        if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
+        });
+    });
+    // ------------------------
+// ナビのプルダウン：クリックで開閉（hover禁止）
+// ------------------------
+    const navBlocks = document.querySelectorAll(".Nav-block");
+
+    navBlocks.forEach(block => {
+    const btn = block.querySelector(".Menu_btn");
+    const down = block.querySelector(".menu_down");
+    if (!btn || !down) return;
+
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // 他のNav-blockは閉じる
+        navBlocks.forEach(b => {
+        if (b !== block) b.classList.remove("open");
+        });
+
+        block.classList.toggle("open");
+    });
+
+    // メニュー内クリックは閉じない（項目選択を優先）
+    down.addEventListener("click", (e) => e.stopPropagation());
+    });
+
+    // 何も入力・選択しないで検索ボタンを押したときは全部クリア
+    document.getElementById('searchForm').addEventListener("submit", function(e) {
+        const keyword = document.getElementById('search').value.trim();
+        const district = document.getElementById('search_district').value.trim();
+        const category = document.getElementById('search_category').value.trim();
+
+        // すべて空なら送信させない
+        if (!keyword && !district && !category) {
+            e.preventDefault();
+            alert('検索条件を1つ以上指定してください。');
+        }
+    });
+
+
+});
+</script>
+{% endblock %}
+
     </body>
     </html>

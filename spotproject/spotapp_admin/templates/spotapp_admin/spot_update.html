@@ -1,28 +1,58 @@
-{% extends "base2/base2.html" %}
+{% load static %}
+<head>
+    <link href="{% static 'css/spot_update.css' %}" rel="stylesheet">
+</head>
+{% block title %} 観光地更新 {% endblock %}
 {% block body %}
-<h2>観光地更新</h2>
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
+<div class="spot_update-container">
+    <div class="spot_update-form">
+        <h2>観光地更新</h2>
+        
+        <div class="image-gallery">
+            {% if page.photos.all %}
+                <p class="gallery-title">現在の写真</div>
+                <div class="gallery">
+                    {% for photo in page.photos.all %}
+                        <div class="photo-item">
+                            <img src="{{ photo.image.url }}" alt="観光地写真">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        <form method="post" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_update' page.pk %}">
+            <div class="form-box">
+                {% csrf_token %}
 
-{% if page.photos.all %}
-   <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
+                {{ spot_form.spot_name.label_tag }}
+                {{ spot_form.spot_name }}
 
-    <div class="form-box">
+                {{ spot_form.address.label_tag }}
+                {{ spot_form.address }}
 
-        {{ form.spot_name }}
-        {{ form.address }}
-        {{ form.business_hours }}
-        {{ form.explanation }}
+                {{ spot_form.business_hours.label_tag }}
+                {{ spot_form.business_hours }}
 
-        {% if form.errors %}
-            <div class="form-error">
-                {{ form.errors }}
+                {{ spot_form.explanation.label_tag }}
+                {{ spot_form.explanation }}
+
+                {{ spot_form.category.label_tag }}
+                {{ spot_form.category }}
+
+                {{ spot_form.district.label_tag }}
+                {{ spot_form.district }}
+
+                {{ photo_form.image.label_tag }}
+                {{ photo_form.image }}
+
+            <button type="submit">更新</button>
             </div>
-        {% endif %}
-
-        <button type="submit">更新</button>
-
+        </form>
     </div>
-</form>
-{% endif %}
-
+</div>
+<a href="{% url 'spotapp_admin:spot_list' %}">観光地一覧に戻る</a>
 {% endblock %}

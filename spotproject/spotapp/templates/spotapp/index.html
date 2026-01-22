@@ -1,42 +1,49 @@
 {% extends "base/base.html" %}
 {% load static %}
-
-
-{%  block title %}ホーム{% endblock %}
+ 
+{% block title %}ホーム{% endblock %}
+ 
 {% block extra_css %}
 <link href="{% static 'css/index.css' %}" rel="stylesheet">
 {% endblock %}
-
+ 
 {% block body %}
-
-    <!-- ココのコピペ 　https://tagnote.net/js-parts/slideshow/-->
-    <!-- スライドの外枠 -->
-    <div class="slide-wrapper">
-    <!-- スライド（コンテンツ） -->
+ 
+<div class="slide-wrapper">
+ 
+    <!-- ★ 初期状態は slide1 -->
     <div id="slide" class="slide">
-        <div><p></p></div>
-        <div><p>スライド２</p></div>
-        <div><p>スライド３</p></div>
+        {% for photo in slide_photos %}
+            <a href="{% url 'spotapp:spot_detail' photo.spot.spot_id %}" class="slide-item">
+                <img src="{{ photo.image.url }}" alt="{{ photo.spot.spot_name }}">
+            </a>
+        {% empty %}
+            <div class="slide-item">
+                <p>観光地がありません。</p>
+            </div>
+        {% endfor %}
+ 
     </div>
-
-    <!-- 左右のボタン -->
+ 
+    <!-- 左右ボタン -->
     <span id="prev" class="prev"></span>
     <span id="next" class="next"></span>
+ 
     <!-- インジケーター -->
     <ul class="indicator" id="indicator">
-        <li class="list"></li>
-        <li class="list"></li>
-        <li class="list"></li>
+        {% for photo in slide_photos %}
+            <li class="list"></li>
+        {% endfor %}
     </ul>
-    </div>
-
-    <div class="event_bar">
-        <p><a href="{% url 'spotapp:event_chart' %}">イベント一覧</a></p>
-    </div>
-    
+</div>
+ 
+<div class="event_bar">
+    <p><a href="{% url 'spotapp:event_chart' %}">イベント一覧</a></p>
+</div>
+ 
 {% endblock %}
-
+ 
 {% block script %}
     {{ block.super }}
-    <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

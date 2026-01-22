@@ -2,6 +2,7 @@
 <head>
     <link rel="stylesheet", href="{% static 'css/event_update.css' %}">
 </head>
+{% block title %} イベント更新 {% endblock %}
 
 {% block body %}
 <div class="home-btn">
@@ -32,5 +33,5 @@
         </form>
     </div>
 </div>
-<a href="{% url 'spotapp_admin:event_list' %}">イベント一覧に戻る</a>
+<a href="{% url 'spotapp_admin:event_list' %}" class="back-link">←イベント一覧に戻る</a>
 {% endblock %}

@@ -46,17 +46,20 @@ class Spot(models.Model):
     # 住所
     address = models.CharField(max_length=200, verbose_name="住所")
     # カテゴリ（Category は下じゃなくて「文字列」で参照する）
-    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey('Category', on_delete=models.SET_NULL, null=True, blank=True)
     # 説明
     explanation = models.TextField(max_length=2000, verbose_name="説明")
     # 営業時間
     business_hours = models.CharField(max_length=100, verbose_name="営業時間")
     # 定休日
-    regular_holiday = models.CharField(max_length=100, verbose_name="定休日")
+    regular_holiday = models.CharField(max_length=100, blank=True, null=True, verbose_name="定休日")
     # 登録日
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日時")
     # 地区
-    district = models.ForeignKey('District', on_delete=models.SET_NULL, null=True)
+    district = models.ForeignKey('District', on_delete=models.SET_NULL, null=True, blank=True)
+    # 緯度経度
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
  
     def __str__(self):
         return self.spot_name

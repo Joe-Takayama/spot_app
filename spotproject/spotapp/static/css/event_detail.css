@@ -28,11 +28,6 @@
     font-weight: bold;
 }
 
-.user-info {
-    color: #444;
-    font-size: 14px;
-}
-
 /* ===========================
    イベント名
    =========================== */
@@ -112,6 +107,31 @@
 }
 
 /* ===========================
+   観光地リンクボタン（追加）
+   =========================== */
+.spot-link-area {
+    margin: 8px 0 18px 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.spot-link-btn {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #4a60d3;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.spot-link-btn:hover {
+    background: #3c50b8;
+}
+
+/* ===========================
    セクション共通
    =========================== */
 .section-box,
@@ -133,4 +153,14 @@
 .map-box li {
     line-height: 1.8;
     color: #444;
+}
+
+/* ===========================
+   スマホ最適化
+   =========================== */
+@media (max-width: 480px) {
+    .spot-link-btn {
+        width: 100%;
+        text-align: center;
+    }
 }
