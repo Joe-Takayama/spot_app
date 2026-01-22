@@ -79,6 +79,15 @@
   text-decoration:none;
   font-weight: 800;
 }
+.form-errors {
+  margin-bottom: 12px;
+}
+.error-text {
+  margin: 6px 0;
+  color: #e53935;
+  font-weight: 600;
+}
+
 
 /* スマホ */
 @media (max-width: 480px){

@@ -88,13 +88,24 @@ class ProfileEditView(LoginRequiredMixin, View):
 
     def post(self, request):
         user = request.user
-        form = ProfileEditForm(request.POST, instance=user)
-
-        if not form.is_valid():
-            return render(request, "spotapp/profile_edit.html", {"form": form})
-        form.save()
+        form = ProfileEditForm(request.POST or None, instance=request.user, user=request.user)
 
         icon_file = request.FILES.get('icon')
+
+         # まずバリデーション（重複チェックもここで走る）
+        if not form.is_valid():
+            return render(request, "spotapp/profile_edit.html", {"form": form})
+        
+         # ② 「変更なし」を弾く（username変更なし & icon未選択）
+        if (not form.has_changed()) and (not icon_file):
+            form.add_error(None, "変更内容がありません。")
+            return render(request, "spotapp/profile_edit.html", {"form": form})
+
+        # ③ username変更があった時だけ保存（無駄更新しない）
+        if form.has_changed():
+            form.save()
+
+        
         # profile が無い場合も作る（保険）
         profile, _ = Profile.objects.get_or_create(user=user)
 
