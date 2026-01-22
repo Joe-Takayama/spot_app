@@ -1,16 +1,19 @@
 {% extends "base/base.html" %}
+{% load static %}
 
-{% block title %}新規登録完了{% endblock %}
+{% block title %}プロフィール変更完了{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/profile_edit_complete.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block searchbar %}{% endblock %}  {# 検索いらないなら消す #}
 
 {% block body %}
-
-<div style="padding: 30px; text-align:center;">
-
-    <h2>プロフィール情報が変更されました</h2>
-
-
-    <a href="{% url 'spotapp:index' %}">トップへ戻る</a>
-
+<div class="page profile-edit-done-page">
+  <main class="page-main">
+    <h2 class="page-title">プロフィール情報が変更されました</h2>
+    <a class="btn-primary-outline" href="{% url 'spotapp:index' %}">トップへ戻る</a>
+  </main>
 </div>
-
 {% endblock %}
