@@ -87,15 +87,19 @@
             <div class="route-input">
                 <input id="start" type="text" placeholder="出発地を入力（ヒットしない場合は住所で入力）">
                 <div class="route-buttons">
-                    <div class="walk">
+                    <div class="car">
                         <button type="button" onclick="route('car')">🚙 車</button>
                     </div>
-                    <div class="car">
+                    <div class="walk">
                         <button type="button" onclick="route('foot')">🚶 徒歩</button>
                     </div>
                 </div>
+
+                
+
                 <div id="route-selector" style="margin-top:15px;"></div> <!-- ルート1,2,3のボタン -->
                 <div id="route-info"></div>
+                <div id="route-roads" style="margin-top:10px;"></div>
             </div>
         </div>
         <!-- 地図 -->
@@ -115,201 +119,229 @@
     var lat = parseFloat("{{ spot.latitude|default:'0' }}");
     var lng = parseFloat("{{ spot.longitude|default:'0' }}");
 
-    console.log(lat, lng);
+    let map;
+    let routeLines = [];
+    let startMarker = null;
+    let allRoutes = [];
 
-    // 緯度経度がある場合のみ地図表示
+    // カスタムアイコン
+    const startIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // ======================
+    // 地図初期化
+    // ======================
     if (lat !== 0 && lng !== 0) {
+        map = L.map('map').setView([lat, lng], 15);
 
-        // ① 地図本体を生成（← これが抜けてた）
-        var map = L.map('map').setView([lat, lng], 15);
-
-        // ② タイルレイヤー追加
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // ③ マーカー追加
         L.marker([lat, lng])
             .addTo(map)
             .bindPopup("{{ spot.spot_name }}");
-
     } else {
         document.getElementById("map").innerHTML =
             "<p style='text-align:center;'>地図情報がありません</p>";
     }
 
-    let routeLines = [];        // ルートの表示の青い線
-    let alternativeRoutes = []; // 2つのルートを格納
-    let selectedRouteIndex = 0; //今選ばれてるマップ
-
-    window.route = function(mode) { //modeは車か徒歩とかの選択
-        // 入力された住所または建物名称
+    // ======================
+    // ルート検索
+    // ======================
+    window.route = function(mode) {
         const start = document.getElementById("start").value;
-
-        // 何も入力されてなかったらこの文字を表示する
         if (!start) { alert("出発地を入力してください"); return; }
 
-        // 出発地を経度緯度に変換して検索をしている処理
-        getLatLng(start).then(([sLat,sLng]) => {
-
-            // 経度緯度の取得に成功したら変数に経度緯度を代入して、この関数を実行する。modeは移動手段
-            fetchRoutes(sLat, sLng, mode);
-            // 見つからなかったらこの文字を表示する
-        }).catch(() => alert("出発地が見つかりません"));
+        getLatLng(start)
+            .then(([sLat, sLng]) => fetchRoutes(sLat, sLng, mode))
+            .catch(() => alert("出発地が見つかりません"));
     };
 
-    // この関数は出発地（経度・緯度）と移動手段（mode）をもとに
-    // OSRMという無料のルート計算サーバーに最適ルートを教えてもらって、結果（最適ルート）を取得し、処理する
+    // ======================
+    // ルート取得
+    // ======================
     function fetchRoutes(sLat, sLng, mode) {
+        const profile = mode === "foot" ? "foot" : "car";
 
-        // OSRMのルート計算APIのURLに移動手段（mode）、経度（sLng）、緯度（sLat）で、目的地（lng,lat）で
-        //　ルートを教えてもらっている
-        fetch(`https://router.project-osrm.org/route/v1/${mode}/${sLng},${sLat};${lng},${lat}?alternatives=true&overview=full&geometries=geojson`)
-        // alternatives=true → 最適ルート以外にも代替ルートを複数
-        // overview=full → 道に沿った線
-        // geometries=geojson → ルートの座標をGeoJSON形式で返す（Leaflet.jsで描きやすい）
+        fetch(`https://router.project-osrm.org/route/v1/${profile}/${sLng},${sLat};${lng},${lat}?alternatives=true&overview=full&geometries=geojson&steps=true`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.routes || data.routes.length === 0) { alert("ルートが見つかりません"); return; }
 
-        // 結果（ルート）がきたら、json()で中身をJavaScriptのオブジェクトに変換
-        .then(res => res.json())
+                allRoutes = [];
 
-        .then(data => {
-            // dataの中身（distance: 距離、duration: 所要時間、geometry: ルートの形状）
-            if (!data.routes || data.routes.length === 0) { alert("ルートが見つかりません"); return; }
-
-            // 最大3ルート
-            alternativeRoutes = data.routes.slice(0,3);
-
-            // 時間が最も短いルートを自動選択
-            selectedRouteIndex = 0;
-            let minTime = alternativeRoutes[0].duration;
-            alternativeRoutes.forEach((r, i)=>{
-                if(r.duration < minTime) { 
-                    minTime = r.duration; 
-                    selectedRouteIndex = i;
+                if (mode === "foot") {
+                    data.routes.forEach((route, index) => {
+                        allRoutes.push({ route, type: "foot", index });
+                    });
+                } else {
+                    data.routes.forEach((route, index) => {
+                        let highwayDistance = 0;
+                        route.legs[0].steps.forEach(step => {
+                            const name = step.name || "";
+                            const ref  = step.ref  || "";
+                            if (name.includes("自動車道") || /^E\d+/.test(ref)) highwayDistance += step.distance;
+                        });
+                        const highwayRatio = highwayDistance / route.distance;
+                        allRoutes.push({ route, type: highwayRatio > 0.3 ? "highway" : "normal", highwayRatio, index });
+                    });
+                    allRoutes.sort((a,b) => a.highwayRatio - b.highwayRatio);
                 }
-            });
 
-            createRouteButtons(mode); // ← mode を渡す
-            drawRoute(alternativeRoutes[selectedRouteIndex], mode); // ← mode を渡す
-        });
+                createRouteButtons(mode);
+                drawRoute(allRoutes[0].route, allRoutes[0].type, mode);
+                showRoads(allRoutes[0].route, allRoutes[0].type, mode);
+            });
     }
 
-    // ルート1、ルート2などのボタンを作る関数
+    // ======================
+    // ルートボタン生成
+    // ======================
     function createRouteButtons(mode) {
-        
-        //HTMLからroute-selectorとうid属性を取得する
         const selectorDiv = document.getElementById("route-selector");
-
-        // 初期値は空（何も表示されていない）
         selectorDiv.innerHTML = "";
 
-        // 取得したルートをループで探して、
-        alternativeRoutes.forEach((route, index)=>{
+        if (mode === "foot") {
+            allRoutes.forEach((item, i) => {
+                const btn = document.createElement("button");
+                btn.classList.add("route-btn");
+                btn.innerText = allRoutes.length > 1 ? `徒歩ルート${i+1}` : "徒歩ルート";
+                btn.onclick = () => {
+                    drawRoute(item.route, "foot", mode);
+                    showRoads(item.route, "foot", mode);
+                };
+                selectorDiv.appendChild(btn);
+            });
+            return;
+        }
+
+        const highways = allRoutes.filter(r => r.type === "highway");
+        const normals  = allRoutes.filter(r => r.type === "normal");
+
+        highways.forEach((item, i) => {
             const btn = document.createElement("button");
-            btn.innerText = `ルート${index+1}`;
-            btn.style.marginRight = "10px";
-            btn.onclick = () => drawRoute(alternativeRoutes[index], mode); // ← mode を渡す
+            btn.innerText = highways.length === 1 ? "高速ルート" : `高速ルート${i+1}`;
+            btn.onclick = () => {
+                drawRoute(item.route, "highway", mode);
+                showRoads(item.route, "highway", mode);
+            };
+            selectorDiv.appendChild(btn);
+        });
+
+        normals.forEach((item, i) => {
+            const btn = document.createElement("button");
+            btn.innerText = normals.length === 1 ? "一般道ルート" : `一般道ルート${i+1}`;
+            btn.onclick = () => {
+                drawRoute(item.route, "normal", mode);
+                showRoads(item.route, "normal", mode);
+            };
             selectorDiv.appendChild(btn);
         });
     }
 
-
-    let startMarker = null; // スタート地点のマーカー保持用
-
-    // この関数は選ばれた1つのルートを地図上に描画し、スタート時点に赤いピンを立て、
-    // 距離と時間を表示する
-    function drawRoute(route, mode) {
-
-        // 既存ルート削除
+    // ======================
+    // ルート描画
+    // ======================
+    function drawRoute(route, type, mode) {
         routeLines.forEach(line => map.removeLayer(line));
         routeLines = [];
 
-        // 既存スタートマーカー削除
-        if (startMarker) {
-            map.removeLayer(startMarker);
-            startMarker = null;
+        if (startMarker) { map.removeLayer(startMarker); startMarker = null; }
+
+        let coords = [];
+        if (mode === "foot") {
+            route.legs[0].steps.forEach(step => {
+                const name = step.name || "", ref = step.ref || "";
+                const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
+                if (!isHighway) step.geometry.coordinates.forEach(c => coords.push([c[1], c[0]]));
+            });
+        } else {
+            coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
         }
 
+        const lineStyle = {
+            color: type === "highway" ? "#007bff" : type === "normal" ? "green" : "blue",
+            weight: 5,
+            dashArray: type === "foot" ? "8, 8" : null
+        };
 
-        const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
-        const line = L.polyline(coords, {color:'blue', weight:5}).addTo(map);
+        const line = L.polyline(coords, lineStyle).addTo(map);
         routeLines.push(line);
 
-        // スタート地点に赤いピンを立てる
-        const startLatLng = coords[0]; // ルートの最初の座標
-
-        // 赤いピンを持ってきている。おまけで影とかも
-        startMarker = L.marker(startLatLng, {icon: L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        })}).addTo(map).bindPopup("出発地");
+        startMarker = L.marker(coords[0], {icon: startIcon}).addTo(map).bindPopup("出発地");
 
         const distanceKm = route.distance / 1000;
-
-        // 徒歩なら時速4kmで計算
-        let minutes;
-        if (mode === "foot") {
-            minutes = Math.round((distanceKm / 4) * 60); // 徒歩: 時速4km
-        } else {
-            minutes = Math.round(route.duration / 60);   // 車: OSRMの値
-        }
+        const minutes = mode === "foot" ? Math.round((distanceKm / 4) * 60) : Math.round(route.duration / 60);
 
         document.getElementById("route-info").innerHTML =
             `距離: ${distanceKm.toFixed(1)} km<br>時間: ${minutes} 分`;
 
-        map.fitBounds(line.getBounds());
+        map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 20 });
+
+        document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // この関数はユーザーが入力した住所を経度と緯度の数字のペアに変換する
-    function getLatLng(address){
+    // ======================
+    // 通過道路表示（→で統一）
+    // ======================
+    function showRoads(route, type, mode) {
+        let highways = [], generalRoads = new Set();
 
-        // 成功したらresolveに経度緯度を渡す、失敗したらrejectでエラーにする
-        return new Promise((resolve, reject)=>{
+        route.legs[0].steps.forEach(step => {
+            const name = step.name || "", ref = step.ref || "";
+            if (mode === "foot") { if (name) generalRoads.add(name); return; }
+            const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
+            if (isHighway) highways.push(name || `高速道路(${ref})`);
+            else {
+                if (/^\d+$/.test(ref)) generalRoads.add(`国道${ref}号`);
+                else if (name.includes("県道")) generalRoads.add(name);
+            }
+        });
 
-            // 入力に正規表現で数字が1つでも入っているかをチェック
+        let html = "通過道路:<br>";
+        if (mode === "foot") {
+            html += `<strong>徒歩ルート</strong><br>${[...generalRoads].slice(0,10).join(" → ")}`;
+        } else {
+            if (type === "highway" && highways.length)
+                html += `<strong>高速道路</strong><br>${[...new Set(highways)].join(" → ")}`;
+            if ((type === "normal" || type === "general") && generalRoads.size)
+                html += `<strong>一般道</strong><br>${[...generalRoads].join(" → ")}`;
+        }
+
+        document.getElementById("route-roads").innerHTML = html;
+    }
+
+    // ======================
+    // 住所→緯度経度
+    // ======================
+    function getLatLng(address) {
+        return new Promise((resolve, reject) => {
             const hasNumber = /\d/.test(address);
-
-            // 数字が入っていたら国土地理院(GSI)の住所検索APIを使う
-            // 数字が入っていなかったらオープンストリートマップ（Nominatim）検索APIを使う
             const url = hasNumber
                 ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
-                : `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
-
+                : `https://nominatim.openstreetmap.org/search?format=json&countrycodes=jp&limit=1&q=${encodeURIComponent(address)}`;
             fetch(url)
-            .then(res => res.json())
-            .then(data => {
-
-                // データが空、または配列が0だったらrejectを呼んでエラーにする
-                if (!data || data.length === 0) return reject();
-
-                // 経度・緯度
-                let lat, lng;
-
-                // GSI（国土地理院の場合）
-                if (hasNumber) {
-                    // GSI は [lng, lat]
-                    lat = parseFloat(data[0].geometry.coordinates[1]);
-                    lng = parseFloat(data[0].geometry.coordinates[0]);
-                } else { // オープンストリートマップの場合
-                    // OSM
-                    lat = parseFloat(data[0].lat);
-                    lng = parseFloat(data[0].lon);
-                }
-
-                // 成功したら経度緯度を返す
-                resolve([lat, lng]);
-            })
-            .catch(err => reject());
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) reject();
+                    let lat, lng;
+                    if (hasNumber) { lat = data[0].geometry.coordinates[1]; lng = data[0].geometry.coordinates[0]; }
+                    else { lat = data[0].lat; lng = data[0].lon; }
+                    resolve([lat, lng]);
+                }).catch(() => reject());
         });
     }
-
-
-
 </script>
+
+
+
 
 {% endblock %}
 {% block extra_js %}
