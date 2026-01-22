@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from .models import Profile
 
+from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -54,12 +55,30 @@ class UserUpdateForm(forms.ModelForm):
 
 #プロフィール編集用フォーム
 class ProfileEditForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)  # viewから渡す
+        super().__init__(*args, **kwargs)
+
     class Meta:
         model = User
         fields = ["username"]
-        labels = {
-            "username": "変更後のユーザー名",
-        }
+        labels = {"username": "変更後のユーザー名"}
+
+    def clean_username(self):
+        username = (self.cleaned_data.get("username") or "").strip()
+
+        if not username:
+            raise ValidationError("ユーザー名を入力してください。")
+
+        # 自分以外で同名がいたらNG（大文字小文字無視）
+        qs = User.objects.filter(username__iexact=username)
+        if self.user:
+            qs = qs.exclude(pk=self.user.pk)
+
+        if qs.exists():
+            raise ValidationError("そのユーザー名は既に使われています。")
+
+        return username
 
 # パスワード変更用フォーム
 class PasswordChangeOnlyForm(forms.Form):

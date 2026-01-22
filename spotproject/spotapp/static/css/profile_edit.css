@@ -41,7 +41,7 @@
 .profile-edit-page input[type="file"]{
   width: 100%;
   padding: 12px 12px;
-  border: 1px solid #cfcfcf;
+  border: 1px solid #12b7d8;
   border-radius: 10px;
   box-sizing: border-box;
 }
@@ -79,6 +79,15 @@
   text-decoration:none;
   font-weight: 800;
 }
+.form-errors {
+  margin-bottom: 12px;
+}
+.error-text {
+  margin: 6px 0;
+  color: #e53935;
+  font-weight: 600;
+}
+
 
 /* スマホ */
 @media (max-width: 480px){
