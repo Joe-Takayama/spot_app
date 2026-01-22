@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    let marker;
+    let marker = null;
 
     map.on('click', function(e){
         if(marker){
@@ -88,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("id_longitude").value = e.latlng.lng;
     });
 
+    // 住所・施設名検索
     document.getElementById("search-address").addEventListener("click", function(){
 
         const input = document.getElementById("id_address");
@@ -96,32 +97,40 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        const address = "日本 " + input.value;
+        const address = input.value;
+        const hasNumber = /\d/.test(address);
 
-        fetch(
-  `https://nominatim.openstreetmap.org/search` +
-  `?format=json` +
-  `&limit=1` +
-  `&accept-language=ja` +
-  `&countrycodes=jp` +
-  `&q=${encodeURIComponent(address)}`
-)
-
+        const url = hasNumber
+            ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
+            : `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=ja&countrycodes=jp&q=${encodeURIComponent("日本 " + address)}`;
+        
+        fetch(url)
         .then(res => res.json())
         .then(data => {
-            console.log("検索結果:", data);
 
-            if(!data || data.length === 0){
-                alert("場所が見つかりません（住所を詳しくしてください）");
+            if(!data || data.length === 0) {
+                alert("場所が見つかりません。住所を詳しく入力してください");
                 return;
             }
 
-            const lat = parseFloat(data[0].lat);
-            const lng = parseFloat(data[0].lon);
+            let lat, lng;
+
+            if (hasNumber) {
+                // 国土地理院[lng, lat]
+                lat = data[0].geometry.coordinates[1];
+                lng = data[0].geometry.coordinates[0];
+            } else {
+                //オープンストリーム
+                lat = data[0].lat;
+                lng = data[0].lon;
+            }
+
+            lat = parseFloat(lat);
+            lng = parseFloat(lng);
 
             map.setView([lat, lng], 16);
 
-            if(marker){
+            if(marker) {
                 marker.setLatLng([lat, lng]);
             } else {
                 marker = L.marker([lat, lng]).addTo(map);
@@ -130,8 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("id_latitude").value = lat;
             document.getElementById("id_longitude").value = lng;
         })
-        .catch(err => {
-            console.error(err);
+        .catch(()=> {
             alert("検索エラーが発生しました");
         });
     });
