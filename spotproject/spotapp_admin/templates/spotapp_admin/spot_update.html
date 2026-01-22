@@ -48,10 +48,40 @@
                 {{ photo_form.image.label_tag }}
                 {{ photo_form.image }}
 
+                <div id="map" style="width:100%; height:350px; margin-top:20px;"></div>
+                {{ spot_form.latitude }}
+                {{ spot_form.longitude }}
+
+
             <button type="submit">更新</button>
             </div>
         </form>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     </div>
 </div>
 <a href="{% url 'spotapp_admin:spot_list' %}">観光地一覧に戻る</a>
 {% endblock %}
+
+<script>
+    const latInput = document.getElementById("id_latitude");
+    const lngInput = document.getElementById("id_longitude");
+
+    const lat = latInput.value ? parseFloat(latInput.value) : 35.681236;
+    const lng = lngInput.value ? parseFloat(lngInput.value) : 139.767125;
+
+    const map = L.map('map').setView([lat, lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    const marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    marker.on('dragend', function () {
+        const pos = marker.getLatLng();
+        latInput.value = pos.lat;
+        lngInput.value = pos.lng;
+    });
+</script>

@@ -87,18 +87,22 @@
 </div>
 
 <script>
-    var lat = parseFloat("{{ spot.latitude|default:'0' }}");
+ var lat = parseFloat("{{ spot.latitude|default:'0' }}");
     var lng = parseFloat("{{ spot.longitude|default:'0' }}");
 
     console.log(lat, lng);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap'
-    }).addTo(map);
+    if (lat && lng) {
+        var map = L.map('map').setView([lat, lng], 15);
 
-    L.marker([lat, lng]).addTo(map)
-        .bindPopup("{{ spot.spot_name }}")
-        .openPopup();
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([lat, lng]).addTo(map)
+            .bindPopup("{{ spot.spot_name }}")
+            .openPopup();
+    }
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
