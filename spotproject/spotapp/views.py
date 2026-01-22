@@ -193,6 +193,12 @@ class SpotSearchResultView(View):
         selected_category_name = "カテゴリ"
         selected_district_name = "地区別"
 
+        # 絞り込みはその後
+        if category_id:
+            spots = spots.filter(category_id=category_id)
+        if district_id:
+            spots = spots.filter(district_id=district_id)
+
         if category_id:
             c = Category.objects.filter(category_id=category_id).first()
             if c:
