@@ -1,238 +1,342 @@
 /* =========================
    検索結果 全体
 ========================= */
+:root{
+  --bg: #f7f8fb;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+
+  --accent: #4f46e5;       /* 青紫 */
+  --accent2: #22d3ee;      /* 水色（薄く使う） */
+  --warn: #f59e0b;         /* 星など */
+}
+
+body{
+  background: linear-gradient(180deg, var(--bg), #eef1f6);
+  color: var(--text);
+}
+
+/* リスト */
 .spot-list {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    align-items: center;
-    margin: 30px 0;
-}
-
-/* =========================
-   カード
-========================= */
-.spot-card {
-    width: 60%;
-    border: 2px solid #333;
-    border-radius: 30px;
-    padding: 25px;
-    display: flex;
-    gap: 30px;
-    box-sizing: border-box;
-
-    position: relative;
-    cursor: pointer;
-    background-color: #fff;
-
-    transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
-        background-color 0.15s ease;
-}
-
-/* hover：浮く */
-.spot-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 35px rgba(0,0,0,0.2);
-    background-color: #fafafa;
-}
-
-/* active：押した瞬間 */
-.spot-card:active {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-}
-
-/* 押した瞬間に暗くなる（視覚的に超重要） */
-.spot-card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: 30px;
-    pointer-events: none;
-}
-
-.spot-card:active::after {
-    background-color: rgba(0, 0, 0, 0.06);
-}
-
-/* =========================
-   左側
-========================= */
-.spot-left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 180px;
-}
-
-.spot-name {
-    font-size: 30px;
-    font-weight: bold;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-.spot-image {
-    width: 200px;
-    height: 180px;
-    border: 2px solid #333;
-    border-radius: 20px;
-    box-sizing: border-box;
-    background-color: #f8f8f8;
-    overflow: hidden;
-}
-.spot-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.photo {
-    width: 100%;
-    height: 100%;
-    border-radius: 15px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* 写真あり → 枠なし */
-.photo.has-image {
-    border: none;
-}
-
-/* 写真なし → 枠あり */
-.photo.no-image {
-    border: 2px dashed #aaa;
-    background-color: #fff;
-}
-
-/* =========================
-   右側
-========================= */
-.spot-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    position: relative;
-}
-
-
-.spot-hours,
-.spot-rating {
-    font-size: 30px;
-    margin-left: 80px;
-    margin-bottom: 20px;
-}
-
-/* =========================
-   アクション
-========================= */
-.spot-actions {
-    display: flex;
-    gap: 15px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
-/* ボタン */
-.spot-actions button,
-.spot-actions .btn {
-    padding: 8px 16px;
-    border: 1px solid #333;
-    border-radius: 20px;
-    background-color: #fff;
-    font-size: 14px;
-    cursor: pointer;
-    text-decoration: none;
-    color: #000;
-}
-
-.spot-actions button:hover,
-.spot-actions .btn:hover {
-    background-color: #333;
-    color: #fff;
-}
-
-.search-guide{
-    text-align: center;
-    margin-bottom: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  align-items: center;
+  margin: 28px 0 40px;
 }
 
 /* =========================
    検索フォーム（キーワード + 地区 + カテゴリ）
 ========================= */
 .search-bar{
-    width: 60%;
-    margin: 30px auto 10px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+  width: min(980px, 92%);
+  margin: 22px auto 10px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  background: rgba(255,255,255,0.75);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+  backdrop-filter: blur(6px);
 }
 
 .search-input{
-    flex: 1;
-    min-width: 260px;
-    padding: 10px 14px;
-    border: 2px solid #333;
-    border-radius: 20px;
-    font-size: 16px;
-    box-sizing: border-box;
+  flex: 1;
+  min-width: 260px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 16px;
+  box-sizing: border-box;
+  background: #f9fafb;
+  outline: none;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.search-input:focus{
+  background: #fff;
+  border-color: rgba(79,70,229,0.6);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.18);
 }
 
 .search-select{
-    min-width: 180px;
-    padding: 10px 14px;
-    border: 2px solid #333;
-    border-radius: 20px;
-    font-size: 16px;
-    background: #fff;
-    box-sizing: border-box;
-    cursor: pointer;
+  min-width: 180px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 16px;
+  background: #fff;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.search-select:focus{
+  border-color: rgba(79,70,229,0.6);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.14);
+  outline: none;
 }
 
 .search-btn{
-    padding: 10px 18px;
-    border: 2px solid #333;
-    border-radius: 20px;
-    background: #333;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(79,70,229,0.30);
+  transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
 }
 
 .search-btn:hover{
-    background: #fff;
-    color: #333;
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(79,70,229,0.38);
+  filter: brightness(1.03);
+}
+
+/* ガイド文 */
+.search-guide{
+  text-align: center;
+  color: var(--muted);
+  margin: 6px 0 0;
+}
+
+/* =========================
+   カード
+========================= */
+.spot-card {
+  width: min(980px, 92%);
+  border: 1px solid var(--line);
+  border-radius: 26px;
+  padding: 22px;
+  display: flex;
+  gap: 22px;
+  box-sizing: border-box;
+
+  position: relative;
+  cursor: pointer;
+  background: var(--card);
+
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+/* hover：浮く（やりすぎない） */
+.spot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 55px rgba(0,0,0,0.12);
+  border-color: rgba(79,70,229,0.25);
+}
+
+/* active：押した瞬間 */
+.spot-card:active {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+}
+
+/* 押した瞬間の暗転 */
+.spot-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 26px;
+  pointer-events: none;
+}
+.spot-card:active::after {
+  background-color: rgba(17,24,39,0.04);
+}
+
+/* =========================
+   左側
+========================= */
+.spot-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+}
+
+.spot-name {
+  font-size: 26px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 画像枠 */
+.spot-image {
+  width: 200px;
+  height: 180px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-sizing: border-box;
+  background: #f3f4f6;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.10);
+}
+
+.spot-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo{
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 写真なしは“薄めの点線”で自然に */
+.photo.no-image{
+  border: 2px dashed #cbd5e1;
+  background-color: #ffffff;
+  color: var(--muted);
+  font-weight: 700;
+}
+.photo.has-image{
+  border: none;
+}
+
+/* =========================
+   右側
+========================= */
+.spot-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  padding-right: 180px; /* 右下ボタン分の逃げ */
+}
+
+.spot-hours,
+.spot-rating {
+  font-size: 20px;
+  margin-left: 0;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+/* 時間のラベル感 */
+.spot-hours{
+  color: #1f2937;
+}
+
+/* 評価は少しだけアクセント */
+.spot-rating{
+  font-weight: 900;
+}
+
+/* 星がテキストなら色だけ合わせる（★が含まれてる前提） */
+.spot-rating span,
+.spot-rating i{
+  color: var(--warn);
 }
 
 /* =========================
    地区・カテゴリタグ（badge）
 ========================= */
 .spot-tags{
-    margin-left: 80px;     /* spot-hours/spot-rating と揃える */
-    margin-top: -8px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+  margin-left: 0;
+  margin-top: 2px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .badge{
-    display: inline-flex;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid rgba(79,70,229,0.25);
+  border-radius: 999px;
+  background: rgba(79,70,229,0.06);
+  color: #3730a3;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* =========================
+   アクション（右下ボタン）
+========================= */
+.spot-actions {
+  display: flex;
+  gap: 10px;
+  position: absolute;
+  bottom: 18px;
+  right: 18px;
+}
+
+.spot-actions button,
+.spot-actions .btn {
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  text-decoration: none;
+  color: #111827;
+
+  box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease, border-color .16s ease;
+}
+
+/* 主要ボタンっぽく見せたい方（2つ目とかにクラス付けられるなら最高だけど、無しでもOK） */
+.spot-actions button:hover,
+.spot-actions .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.12);
+  border-color: rgba(79,70,229,0.25);
+}
+
+/* =========================
+   レスポンシブ（スマホ）
+========================= */
+@media (max-width: 820px){
+  .spot-card{
+    flex-direction: column;
     align-items: center;
-    padding: 6px 14px;
-    border: 2px solid #333;
-    border-radius: 999px;
-    background: #fff;
-    font-size: 14px;
-    font-weight: bold;
+    gap: 16px;
+    padding: 18px;
+  }
+
+  .spot-left{
+    width: auto;
+  }
+
+  .spot-info{
+    padding-right: 0;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .spot-actions{
+    position: static;
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  .search-bar{
+    padding: 14px;
+  }
 }
