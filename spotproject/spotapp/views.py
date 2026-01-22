@@ -83,7 +83,7 @@ def profile_view(request):
 # ------------------------
 class ProfileEditView(LoginRequiredMixin, View):
     def get(self, request):
-        form = ProfileEditForm(instance=request.user)
+        form = ProfileEditForm(instance=request.user, user=request.user)
         return render(request, "spotapp/profile_edit.html", {"form": form})
 
     def post(self, request):
@@ -127,32 +127,20 @@ class ProfileEditCompleteView(LoginRequiredMixin, View):
 # ------------------------
 class PasswordChangeView(LoginRequiredMixin, View):
     def get(self, request):
-        form = PasswordChangeOnlyForm()
+        form = PasswordChangeOnlyForm(request.user)
         return render(request, "spotapp/password_change.html", {"form": form})
 
     def post(self, request):
-        user = request.user
-        form = PasswordChangeOnlyForm(request.POST)
+        form = PasswordChangeOnlyForm(request.user, request.POST)
 
-        if form.is_valid():
-            p1 = form.cleaned_data["new_password1"]
-            p2 = form.cleaned_data["new_password2"]
+        if not form.is_valid():
+            return render(request, "spotapp/password_change.html", {"form": form})
 
-            if p1 != p2:
-                return render(
-                    request,
-                    "spotapp/password_change.html",
-                    {"form": form, "error": "パスワードが一致しません"}
-                )
+        request.user.set_password(form.cleaned_data["new_password1"])
+        request.user.save()
+        update_session_auth_hash(request, request.user)
 
-            user.set_password(p1)
-            user.save()
-
-            update_session_auth_hash(request, user)
-
-            return redirect("spotapp:password_change_complete")
-
-        return render(request, "spotapp/password_change.html", {"form": form})
+        return redirect("spotapp:password_change_complete")
 
 
 class PasswordChangeCompleteView(LoginRequiredMixin, View):

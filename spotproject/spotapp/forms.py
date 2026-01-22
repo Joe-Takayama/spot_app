@@ -82,8 +82,10 @@ class ProfileEditForm(forms.ModelForm):
 
 # パスワード変更用フォーム
 class PasswordChangeOnlyForm(forms.Form):
-    """パスワード変更用フォーム（Userとは別管理）"""
-
+    old_password = forms.CharField(
+        label="現在のパスワード",
+        widget=forms.PasswordInput
+    )
     new_password1 = forms.CharField(
         label="新しいパスワード",
         widget=forms.PasswordInput
@@ -92,6 +94,30 @@ class PasswordChangeOnlyForm(forms.Form):
         label="新しいパスワード（確認）",
         widget=forms.PasswordInput
     )
+
+    def __init__(self, user, *args, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+
+    def clean_old_password(self):
+        old = self.cleaned_data.get("old_password")
+        if not self.user.check_password(old):
+            raise ValidationError("現在のパスワードが違います。")
+        return old
+
+    def clean(self):
+        cleaned = super().clean()
+        old = cleaned.get("old_password")
+        p1 = cleaned.get("new_password1")
+        p2 = cleaned.get("new_password2")
+
+        if p1 and p2 and p1 != p2:
+            self.add_error("new_password2", "新しいパスワードが一致しません。")
+
+        if old and p1 and old == p1:
+            self.add_error("new_password1", "現在のパスワードと同じものは使えません。")
+
+        return cleaned
 
 #お問い合わせフォーム
 class ContactForm(forms.Form):
