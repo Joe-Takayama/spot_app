@@ -1,7 +1,11 @@
-<head>
+{% extends "base/base.html" %}
 {% load static %}
+
+{% block title %}プロフィール変更完了{% endblock %}
+
+{% block extra_css %}
 <link href="{% static 'css/review_complete.css' %}" rel="stylesheet">
-</head>
+{% endblock %}
 
 {% block body %}
 <div class="page-center">

@@ -1,0 +1,32 @@
+.profile-edit-done-page{
+  width: min(1100px, 95vw);
+  margin: 24px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.profile-edit-done-page .page-main{
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 26px;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.profile-edit-done-page .page-title{
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0 0 16px;
+}
+
+.profile-edit-done-page .btn-primary-outline{
+  display: inline-block;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #667eea;
+  text-decoration: none;
+  font-weight: 800;
+}
