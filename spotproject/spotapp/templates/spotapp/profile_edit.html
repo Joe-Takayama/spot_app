@@ -1,50 +1,71 @@
-<head>
-    {% load static %}
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    <link href="{% static 'css/profile_edit.css' %}" rel="stylesheet">
-</head>
+{% extends "base/base.html" %}
+{% load static %}
 
+{% block title %}プロフィール編集{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/profile_edit.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block nav %}
+<nav class="profile-mini-nav">
+  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+  <div class="user-info">
+    <div class="user-icon">
+      {% if request.user.profile.icon %}
+        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+      {% else %}
+        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+      {% endif %}
+    </div>
+    <div class="user-name-text">
+      {{ request.user.username }} さん
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block searchbar %}{% endblock %}
 
 {% block body %}
-<div class="page">
-    <header class="page-header">
-        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+<div class="page profile-edit-page">
+  <main class="page-main">
+    <h2 class="page-title">プロフィール編集</h2>
 
-        <div class="user-info">
-            <div class="user-icon">
-                {% if request.user.profile.icon %}
-                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                {% else %}
-                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                {% endif %}
-            </div>
-            <div class="user-name-text">
-                {{ request.user.username }} さん
-            </div>
+    <form method="post" class="form-card" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {# ✅ エラー表示 #}
+      {% if form.errors %}
+        <div class="form-errors">
+          {% for field in form %}
+            {% for error in field.errors %}
+              <p class="error-text">{{ error }}</p>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <p class="error-text">{{ error }}</p>
+          {% endfor %}
         </div>
-    </header>
+      {% endif %}
 
-    <main class="page-main">
-        <h2 class="page-title">プロフィール編集</h2>
+      {# ✅ username は1回だけ #}
+      <div class="form-group">
+        {{ form.username.label_tag }}
+        {{ form.username }}
+      </div>
 
-        <form method="post" class="form-card" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                {{ form.username.label_tag }}
-                {{ form.username }}
-            </div>
+      <div class="form-group">
+        <label for="id_icon">変更するアイコンを選択してください</label>
+        <input type="file" name="icon" id="id_icon" accept="image/*">
+      </div>
 
-            <div class="form-group">
-                <label for="id_icon">変更するアイコンを選択してください</label>
-                <input type="file" name="icon" id="id_icon" accept="image/*">
-            </div>
+      <button type="submit" class="btn-primary">変更する</button>
+    </form>
 
-            <button type="submit" class="btn-primary">変更する</button>
-        </form>
-
-        <a href="{% url 'spotapp:password_change' %}" class="btn-primary-outline">パスワードを変更する</a>
-
-        <a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
-    </main>
+    <a href="{% url 'spotapp:password_change' %}" class="btn-primary-outline">パスワードを変更する</a>
+    <a href="{% url 'spotapp:profile' %}" class="link-back">← 戻る</a>
+  </main>
 </div>
 {% endblock %}

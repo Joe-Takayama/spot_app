@@ -1,8 +1,9 @@
 {% load static %}
 <head>
     <link href="{% static 'css/spot_update.css' %}" rel="stylesheet">
+    <title>{% block title %} 観光地更新 {% endblock %}</title>
 </head>
-{% block title %} 観光地更新 {% endblock %}
+
 {% block body %}
 <div class="home-btn">
     <a href="{% url 'spotapp_admin:index' %}">ホーム</a>

@@ -1,159 +1,100 @@
-/* ------------------------------
-   全体レイアウト
------------------------------- */
-.page {
-    width: 90%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
+/* =========================
+   プロフィール編集（このページだけ）
+========================= */
+.profile-edit-page{
+  width: min(1100px, 95vw);
+  margin: 24px auto;
+  padding: 0 16px;
+  box-sizing: border-box;
 }
 
-/* ------------------------------
-   ヘッダー（共通）
------------------------------- */
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
+.profile-edit-page .page-title{
+  font-size: 26px;
+  font-weight: 800;
+  text-align: center;
+  margin: 10px 0 22px;
 }
 
-.btn-home {
-    background: #0077cc;
-    padding: 10px 15px;
-    color: #fff;
-    border-radius: 6px;
-    text-decoration: none;
-    font-size: 14px;
+/* カード */
+.profile-edit-page .form-card{
+  max-width: 720px;          /* ← ここが“狭い”の解決ポイント */
+  margin: 0 auto 18px;
+  padding: 26px;
+  background: #fff;
+  border: 1px solid #e7e7e7;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
-.btn-home:hover {
-    background: #005fa3;
+.profile-edit-page .form-group{
+  margin-bottom: 18px;
 }
 
-.user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+.profile-edit-page .form-group label{
+  display:block;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color:#333;
 }
 
-.user-icon-placeholder {
-    width: 55px;
-    height: 55px;
-    background: #e0e0e0;
-    border-radius: 50%;
-    font-size: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.profile-edit-page input[type="text"],
+.profile-edit-page input[type="file"]{
+  width: 100%;
+  padding: 12px 12px;
+  border: 1px solid #12b7d8;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
-.user-icon img {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    object-fit: cover;
-    transition: transform 0.2s ease, opacity 0.2s ease;
+/* ボタン */
+.profile-edit-page .btn-primary{
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-.user-name-text {
-    font-size: 14px;
-    font-weight: bold;
+.profile-edit-page .actions{
+  max-width: 720px;
+  margin: 0 auto;
+  display: grid;
+  gap: 12px;
 }
 
-/* ------------------------------
-   メイン部分
------------------------------- */
-.page-main {
-    padding: 10px;
+.profile-edit-page .btn-primary-outline{
+  display:block;
+  text-align:center;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #667eea;
+  text-decoration:none;
+  font-weight: 800;
 }
 
-.page-title {
-    font-size: 22px;
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: bold;
+.profile-edit-page .link-back{
+  display:block;
+  text-decoration:none;
+  font-weight: 800;
 }
-
-/* ------------------------------
-   フォーム共通
------------------------------- */
-.form-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
+.form-errors {
+  margin-bottom: 12px;
 }
-
-.form-group {
-    margin-bottom: 18px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-}
-
-/* エラー表示 */
 .error-text {
-    color: #d00;
-    margin-bottom: 15px;
-    font-weight: bold;
+  margin: 6px 0;
+  color: #e53935;
+  font-weight: 600;
 }
 
-/* ------------------------------
-   ボタン系
------------------------------- */
-.btn-primary {
-    width: 100%;
-    background: #0077cc;
-    color: #fff;
-    padding: 12px;
-    border-radius: 6px;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
 
-.btn-primary:hover {
-    background: #005fa3;
-}
-
-.btn-primary-outline {
-    display: block;
-    text-align: center;
-    padding: 12px;
-    border-radius: 6px;
-    border: 2px solid #0077cc;
-    color: #0077cc;
-    font-weight: bold;
-    text-decoration: none;
-    margin-top: 20px;
-}
-
-.btn-primary-outline:hover {
-    background: #e8f3ff;
-}
-
-.link-back {
-    display: block;
-    text-decoration: none;
-    margin-top: 15px;
-    color: #0077cc;
-    font-weight: bold;
-}
-
-.page-title {
-    margin-bottom: 15px;
+/* スマホ */
+@media (max-width: 480px){
+  .profile-edit-page .form-card{
+    padding: 20px;
+  }
+  .profile-edit-page .page-title{
+    font-size: 22px;
+  }
 }
