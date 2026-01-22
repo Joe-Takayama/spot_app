@@ -117,20 +117,27 @@
 #route-ui {
   position: static; /* ここをabsoluteからstaticに変更 */
   z-index: auto;
-  background: white;
+  background: white;    
   padding: 10px;
   border-radius: 8px;
   width: 100%;
-  max-width: 300px;
+  max-width: 500px;
   margin: 20px auto; /* 中央に寄せる */
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  min-height: 200px;
 }
+
 
 .route-input {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.route-input #start {
+    width: 100%;
+    max-width: 400px;
 }
 
 .route-buttons {
