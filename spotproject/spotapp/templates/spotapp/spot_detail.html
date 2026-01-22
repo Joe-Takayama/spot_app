@@ -139,7 +139,7 @@
     }
 
     let routeLines = [];        // ルートの表示の青い線
-    let alternativeRoutes = []; // 2つのルートの
+    let alternativeRoutes = []; // 2つのルートを格納
     let selectedRouteIndex = 0; //今選ばれてるマップ
 
     window.route = function(mode) { //modeは車か徒歩とかの選択
@@ -182,7 +182,7 @@
             // 時間が最も短いルートを自動選択
             selectedRouteIndex = 0;
             let minTime = alternativeRoutes[0].duration;
-            alternativeRoutes.forEach((r,i)=>{
+            alternativeRoutes.forEach((r, i)=>{
                 if(r.duration < minTime) { 
                     minTime = r.duration; 
                     selectedRouteIndex = i;
@@ -194,10 +194,17 @@
         });
     }
 
+    // ルート1、ルート2などのボタンを作る関数
     function createRouteButtons(mode) {
+        
+        //HTMLからroute-selectorとうid属性を取得する
         const selectorDiv = document.getElementById("route-selector");
+
+        // 初期値は空（何も表示されていない）
         selectorDiv.innerHTML = "";
-        alternativeRoutes.forEach((route,index)=>{
+
+        // 取得したルートをループで探して、
+        alternativeRoutes.forEach((route, index)=>{
             const btn = document.createElement("button");
             btn.innerText = `ルート${index+1}`;
             btn.style.marginRight = "10px";
@@ -209,7 +216,10 @@
 
     let startMarker = null; // スタート地点のマーカー保持用
 
+    // この関数は選ばれた1つのルートを地図上に描画し、スタート時点に赤いピンを立て、
+    // 距離と時間を表示する
     function drawRoute(route, mode) {
+
         // 既存ルート削除
         routeLines.forEach(line => map.removeLayer(line));
         routeLines = [];
@@ -220,12 +230,15 @@
             startMarker = null;
         }
 
+
         const coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
         const line = L.polyline(coords, {color:'blue', weight:5}).addTo(map);
         routeLines.push(line);
 
         // スタート地点に赤いピンを立てる
         const startLatLng = coords[0]; // ルートの最初の座標
+
+        // 赤いピンを持ってきている。おまけで影とかも
         startMarker = L.marker(startLatLng, {icon: L.icon({
             iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
             shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
@@ -251,10 +264,17 @@
         map.fitBounds(line.getBounds());
     }
 
-
+    // この関数はユーザーが入力した住所を経度と緯度の数字のペアに変換する
     function getLatLng(address){
-        return new Promise((resolve,reject)=>{
+
+        // 成功したらresolveに経度緯度を渡す、失敗したらrejectでエラーにする
+        return new Promise((resolve, reject)=>{
+
+            // 入力に正規表現で数字が1つでも入っているかをチェック
             const hasNumber = /\d/.test(address);
+
+            // 数字が入っていたら国土地理院(GSI)の住所検索APIを使う
+            // 数字が入っていなかったらオープンストリートマップ（Nominatim）検索APIを使う
             const url = hasNumber
                 ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
                 : `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`;
@@ -262,20 +282,25 @@
             fetch(url)
             .then(res => res.json())
             .then(data => {
+
+                // データが空、または配列が0だったらrejectを呼んでエラーにする
                 if (!data || data.length === 0) return reject();
 
+                // 経度・緯度
                 let lat, lng;
 
+                // GSI（国土地理院の場合）
                 if (hasNumber) {
                     // GSI は [lng, lat]
                     lat = parseFloat(data[0].geometry.coordinates[1]);
                     lng = parseFloat(data[0].geometry.coordinates[0]);
-                } else {
+                } else { // オープンストリートマップの場合
                     // OSM
                     lat = parseFloat(data[0].lat);
                     lng = parseFloat(data[0].lon);
                 }
 
+                // 成功したら経度緯度を返す
                 resolve([lat, lng]);
             })
             .catch(err => reject());
