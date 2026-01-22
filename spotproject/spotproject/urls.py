@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views import defaults as default_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # 利用者のパス
@@ -26,3 +28,10 @@ urlpatterns = [
     path('admin_top/', include('spotapp_admin.urls')),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# 404エラーを表示させるための奴　http://127.0.0.1:8000/404/
+if settings.DEBUG:
+    urlpatterns += [
+        # DEBUG=True でも /404/ にアクセスすれば自作404を表示
+        path('404/', default_views.page_not_found, {'exception': Exception()}),
+    ]
