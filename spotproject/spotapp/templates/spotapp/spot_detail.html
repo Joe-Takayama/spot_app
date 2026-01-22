@@ -112,22 +112,11 @@
 
 
 <script>
- var lat = parseFloat("{{ spot.latitude|default:'0' }}");
+    var lat = parseFloat("{{ spot.latitude|default:'0' }}");
     var lng = parseFloat("{{ spot.longitude|default:'0' }}");
 
     console.log(lat, lng);
 
-    if (lat && lng) {
-        var map = L.map('map').setView([lat, lng], 15);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        L.marker([lat, lng]).addTo(map)
-            .bindPopup("{{ spot.spot_name }}")
-            .openPopup();
-    }
     // 緯度経度がある場合のみ地図表示
     if (lat !== 0 && lng !== 0) {
 
@@ -149,24 +138,42 @@
             "<p style='text-align:center;'>地図情報がありません</p>";
     }
 
-    let routeLines = [];        // 描画中のルートを保持
-    let alternativeRoutes = []; // 候補ルート
-    let selectedRouteIndex = 0;
+    let routeLines = [];        // ルートの表示の青い線
+    let alternativeRoutes = []; // 2つのルートの
+    let selectedRouteIndex = 0; //今選ばれてるマップ
 
-    window.route = function(mode) {
+    window.route = function(mode) { //modeは車か徒歩とかの選択
+        // 入力された住所または建物名称
         const start = document.getElementById("start").value;
+
+        // 何も入力されてなかったらこの文字を表示する
         if (!start) { alert("出発地を入力してください"); return; }
 
-        // 出発地をOSM/GSIで検索して sLat, sLng を取得（前のコードと同じ）
+        // 出発地を経度緯度に変換して検索をしている処理
         getLatLng(start).then(([sLat,sLng]) => {
+
+            // 経度緯度の取得に成功したら変数に経度緯度を代入して、この関数を実行する。modeは移動手段
             fetchRoutes(sLat, sLng, mode);
+            // 見つからなかったらこの文字を表示する
         }).catch(() => alert("出発地が見つかりません"));
     };
 
+    // この関数は出発地（経度・緯度）と移動手段（mode）をもとに
+    // OSRMという無料のルート計算サーバーに最適ルートを教えてもらって、結果（最適ルート）を取得し、処理する
     function fetchRoutes(sLat, sLng, mode) {
+
+        // OSRMのルート計算APIのURLに移動手段（mode）、経度（sLng）、緯度（sLat）で、目的地（lng,lat）で
+        //　ルートを教えてもらっている
         fetch(`https://router.project-osrm.org/route/v1/${mode}/${sLng},${sLat};${lng},${lat}?alternatives=true&overview=full&geometries=geojson`)
+        // alternatives=true → 最適ルート以外にも代替ルートを複数
+        // overview=full → 道に沿った線
+        // geometries=geojson → ルートの座標をGeoJSON形式で返す（Leaflet.jsで描きやすい）
+
+        // 結果（ルート）がきたら、json()で中身をJavaScriptのオブジェクトに変換
         .then(res => res.json())
+
         .then(data => {
+            // dataの中身（distance: 距離、duration: 所要時間、geometry: ルートの形状）
             if (!data.routes || data.routes.length === 0) { alert("ルートが見つかりません"); return; }
 
             // 最大3ルート
@@ -176,7 +183,10 @@
             selectedRouteIndex = 0;
             let minTime = alternativeRoutes[0].duration;
             alternativeRoutes.forEach((r,i)=>{
-                if(r.duration < minTime) { minTime = r.duration; selectedRouteIndex = i; }
+                if(r.duration < minTime) { 
+                    minTime = r.duration; 
+                    selectedRouteIndex = i;
+                }
             });
 
             createRouteButtons(mode); // ← mode を渡す
