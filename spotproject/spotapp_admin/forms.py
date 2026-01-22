@@ -1,6 +1,6 @@
 from django.forms import ModelForm, TextInput, PasswordInput, Textarea
-from .models import Staff, Events, Photo, Spot,Osirase
-from spotapp.models import Category,District
+from .models import Staff,Photo,Osirase
+from spotapp.models import Spot, Events, Category, District
 from django import forms
 
 #職員ログインフォーム
@@ -61,38 +61,38 @@ class SpotCreateForm(ModelForm):
         queryset=Category.objects.all(),
         widget=forms.Select,
         required=False,
-        empty_label="選択しない",
+        empty_label="カテゴリーを選択してください",
         label="カテゴリ"
     )
-
-
     district = forms.ModelChoiceField(
         queryset=District.objects.all(),
-        widget=forms.Select,
-        required=False,
-        empty_label="選択しない",
-        label="地区別"
+        required=True,
+        empty_label="地区を選択してください",
+        label="地区",
     )
+
+
+    #district = forms.ModelChoiceField(
+     #   queryset=District.objects.all(),
+      #  widget=forms.Select,
+       # required=False,
+        #empty_label="選択しない",
+        #label="地区別"
+    #)
 
     class Meta:
         model = Spot
-        fields = ['spot_name', 'address', 'business_hours',  'explanation','category','district','latitude','longitude']
+        fields = [
+            'spot_name', 'address', 'business_hours',  'explanation',
+            'category','district','latitude','longitude'
+            ]
         widgets = {
-            'spot_name': TextInput(attrs={
-                'placeholder': '観光地名称を入力してください'
-            }),
-            'address': TextInput(attrs={
-                'placeholder': '住所を入力してください'
-            }),
-            'business_hours': TextInput(attrs={
-                'placeholder': '営業時間を入力してください'
-            }),
-            'explanation': Textarea(attrs={
-                'placeholder': '詳細情報を入力してください'
-            }),
+            'spot_name': TextInput(attrs={'placeholder': '観光地名称を入力してください'}),
+            'address': TextInput(attrs={'placeholder': '住所を入力してください'}),
+            'business_hours': TextInput(attrs={'placeholder': '営業時間を入力してください'}),
+            'explanation': TextInput(attrs={'placeholder': '詳細情報を入力してください'}),
             'latitude': forms.HiddenInput(),
             'longitude': forms.HiddenInput(),
-            
         }
 
 #お知らせフォーム

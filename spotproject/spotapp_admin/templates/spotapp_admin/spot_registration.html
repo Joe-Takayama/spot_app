@@ -3,6 +3,9 @@
     <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
+
+{% block title %} 観光地登録 {% endblock %}
+
 {% block body %}
 <div class="home-btn">
     <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
@@ -30,20 +33,26 @@
 
       {{ spot_form.spot_name }}
       {{ spot_form.address }}
+        <button type="button" id="search-address" style="margin:10px 0;">
+            住所から地図表示
+        </button>
+
       {{ spot_form.business_hours }}
       {{ spot_form.explanation }}
  
-    <p>地区を選択してください</p>
-    {{ spot_form.district }}
+    <div class="form-section">
+        <p>地区を選択してください</p>
+        {{ spot_form.district }}
+    </div>
      <!-- 🌍 ここに地図を追加 -->
       <p>地図で場所を選択してください</p>
       <div id="map" style="height:350px; margin-bottom:15px;"></div>
 
       {{ spot_form.latitude }}
       {{ spot_form.longitude }}
-    <div class="category-list">
-      <p>カテゴリーを選択してください</p>
-      {{ spot_form.category }}
+    <div class="form-section category-list">
+        <p>カテゴリーを選択してください</p>
+        {{ spot_form.category }}
     </div>
       <p>写真を登録してください</p>
       {{ photo_form.image }}
@@ -54,28 +63,81 @@
 </div>
 
 <!-- JSはここ -->
+
+
+<!-- Leaflet本体 -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
-const map = L.map('map').setView([35.681236, 139.767125], 13);
+document.addEventListener("DOMContentLoaded", function () {
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-}).addTo(map);
+    const map = L.map('map').setView([35.681236, 139.767125], 13);
 
-let marker;
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
 
-map.on('click', function(e){
-    if(marker){
-        marker.setLatLng(e.latlng);
-    } else {
-        marker = L.marker(e.latlng).addTo(map);
-    }
+    let marker;
 
-    document.getElementById("id_latitude").value = e.latlng.lat;
-    document.getElementById("id_longitude").value = e.latlng.lng;
+    map.on('click', function(e){
+        if(marker){
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+        document.getElementById("id_latitude").value = e.latlng.lat;
+        document.getElementById("id_longitude").value = e.latlng.lng;
+    });
+
+    document.getElementById("search-address").addEventListener("click", function(){
+
+        const input = document.getElementById("id_address");
+        if(!input || !input.value.trim()){
+            alert("住所を入力してください");
+            return;
+        }
+
+        const address = "日本 " + input.value;
+
+        fetch(
+  `https://nominatim.openstreetmap.org/search` +
+  `?format=json` +
+  `&limit=1` +
+  `&accept-language=ja` +
+  `&countrycodes=jp` +
+  `&q=${encodeURIComponent(address)}`
+)
+
+        .then(res => res.json())
+        .then(data => {
+            console.log("検索結果:", data);
+
+            if(!data || data.length === 0){
+                alert("場所が見つかりません（住所を詳しくしてください）");
+                return;
+            }
+
+            const lat = parseFloat(data[0].lat);
+            const lng = parseFloat(data[0].lon);
+
+            map.setView([lat, lng], 16);
+
+            if(marker){
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            document.getElementById("id_latitude").value = lat;
+            document.getElementById("id_longitude").value = lng;
+        })
+        .catch(err => {
+            console.error(err);
+            alert("検索エラーが発生しました");
+        });
+    });
+
 });
 </script>
-
 
 {% endblock %}

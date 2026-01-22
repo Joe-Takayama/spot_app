@@ -1,41 +1,41 @@
 import requests
 
-# 住所から緯度・経度を取得する関数
 def get_latlng(address):
     if not address:
         return None, None
-    
+
+    address = address.strip()
 
     url = "https://nominatim.openstreetmap.org/search"
-
     params = {
         "q": address,
-        "format": "json"
+        "format": "json",
+        "limit": 1,
+        "countrycodes": "jp",
+        "accept-language": "ja",
+        "addressdetails": 1
     }
-
     headers = {
         "User-Agent": "spotapp/1.0 (admin@example.com)"
     }
 
     try:
+        response = requests.get(url, params=params, headers=headers, timeout=10)
 
-        res = requests.get(url, params=params, headers=headers, timeout=5).json()
+        print("request url:", response.url)
 
-        if res.status_code != 200:
-            print('Nominatim status error:', res.status_code)
+        if response.status_code != 200:
+            print("status error:", response.status_code)
             return None, None
-        
-        if not res.text:
-            print('Nominatim empty response')
+
+        data = response.json()
+        print("response data:", data)
+
+        if not data:
             return None, None
-        
-        data = res.json()
-    
+
+        return float(data[0]["lat"]), float(data[0]["lon"])
+
     except Exception as e:
-        print('get_latlng error:', e)
+        print("error:", e)
         return None, None
-    
-    if data:
-        return float(data[0]['lat']), float(data[0]['lon'])
-    
-    return None, None

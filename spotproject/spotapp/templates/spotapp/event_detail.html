@@ -10,35 +10,69 @@
 
 <header class="detail-header">
     <a href="{% url 'spotapp:event_chart' %}" class="back-btn">← 一覧へ戻る</a>
-<!-- ココにユーザー名いらない説 -->
 </header>
 
 <main class="detail-container">
 
-    <!-- イベント名 -->
-    <h1 class="event-title">{{ event.event_name|default:"イベント名" }}</h1>
+    {# イベント名 #}
+    <h1 class="event-title">{{ event.event_name }}</h1>
 
-    <!-- メイン画像 -->
+    {# メイン画像：観光地の1枚目を流用（なければメッセージ） #}
     <div class="main-photo-box">
-        {% if event.main_image %}
-            <img src="{{ event.main_image.url }}" alt="{{ event.event_name }}">
+        {% if spot and spot.spot_photos.first %}
+            <img src="{{ spot.spot_photos.first.image.url }}" alt="{{ spot.spot_name }}">
         {% else %}
             <p>イベント写真がありません</p>
         {% endif %}
     </div>
 
-    <!-- 基本情報 -->
+    {# 基本情報 #}
     <div class="info-section">
 
         <div class="info-row">
             <span class="info-label">住所</span>
-            <span class="info-value">{{ event.location|default:"未登録" }}</span>
-            <button class="fav-btn">お気に入り登録</button>
+            <span class="info-value">
+                {% if spot and spot.address %}
+                    {{ spot.address }}
+                {% else %}
+                    未登録
+                {% endif %}
+            </span>
         </div>
 
         <div class="info-row">
             <span class="info-label">営業時間</span>
-            <span class="info-value">{{ event.start_date }}〜{{ event.end_date }}</span>
+            <span class="info-value">
+                {% if spot and spot.business_hours %}
+                    {{ spot.business_hours }}
+                {% else %}
+                    〜
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">開催日</span>
+            <span class="info-value">
+                {% if event.event_date %}
+                    {{ event.event_date|date:"Y年n月j日" }}
+                {% else %}
+                    未登録
+                {% endif %}
+            </span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">会場</span>
+            <span class="info-value">
+                {% if event.venue %}
+                    {{ event.venue }}
+                {% elif spot %}
+                    {{ spot.spot_name }}
+                {% else %}
+                    未登録
+                {% endif %}
+            </span>
         </div>
 
         <div class="info-row">
@@ -48,36 +82,50 @@
 
         <div class="info-row">
             <span class="info-label">口コミ</span>
-            <a href="#" class="info-link">口コミを見る</a>
+            {% if spot %}
+                {# ★ ここを review_detail に飛ばす #}
+                <a href="{% url 'spotapp:review_detail' spot.spot_id %}" class="info-link">
+                    口コミを見る
+                </a>
+            {% else %}
+                <span class="info-value">口コミなし</span>
+            {% endif %}
         </div>
 
         <div class="info-row">
             <span class="info-label">評価</span>
-            <span class="info-value">⭐ {{ event.rating|default:"評価なし" }}</span>
+            <span class="info-value">
+                {% if avg_rating %}
+                    ⭐ {{ avg_rating|floatformat:1 }}（{{ review_count }}件）
+                {% else %}
+                    評価なし
+                {% endif %}
+            </span>
         </div>
+
+        {# 観光地ページへのリンクボタン #}
+        {% if spot %}
+        <div class="spot-link-area">
+            <a href="{% url 'spotapp:spot_detail' spot.spot_id %}"
+               class="spot-link-btn">
+                📍 この観光地のページを見る →
+            </a>
+        </div>
+        {% endif %}
+
     </div>
 
-    <!-- 詳細説明 -->
+    {# イベント詳細説明：Events.details を使う #}
     <section class="section-box">
         <h2>イベント詳細説明</h2>
-        <p>{{ event.description|default:"イベントの説明が登録されていません。" }}</p>
+        {% if event.details %}
+            <p>{{ event.details|linebreaksbr }}</p>
+        {% else %}
+            <p>イベントの説明が登録されていません。</p>
+        {% endif %}
     </section>
 
-    <!-- その他情報 -->
-    <section class="section-box">
-        <h2>その他情報</h2>
-        <p>主催者・参加方法・注意事項など今後追加</p>
-    </section>
 
-    <!-- Map機能 -->
-    <section class="map-box">
-        <h2>Map（機能予定）</h2>
-        <ul>
-            <li>現在地からの距離・所要時間（徒歩・車・電車）</li>
-            <li>ルート案内</li>
-            <li>周辺施設・ホテル情報表示</li>
-        </ul>
-    </section>
 
 </main>
 

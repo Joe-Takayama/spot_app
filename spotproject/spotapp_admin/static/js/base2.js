@@ -29,4 +29,37 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+    const districtHidden = document.getElementById("search_district");
+    const categoryHidden = document.getElementById("search_category");
+
+    const districtBtn = document.getElementById("districtBtn");
+    const categoryBtn = document.getElementById("categoryBtn");
+
+    // 地区
+    document.querySelectorAll(".district-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();       // ← 遷移（検索）を止める
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "地区別";
+
+        if (districtHidden) districtHidden.value = val;
+        if (districtBtn) districtBtn.textContent = `${label} ▼`;
+        });
+    });
+
+    // カテゴリ
+    document.querySelectorAll(".category-item").forEach(a => {
+        a.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const val = a.dataset.value || "";
+        const label = a.dataset.label || "カテゴリ";
+
+        if (categoryHidden) categoryHidden.value = val;
+        if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
+        });
+    });
 });

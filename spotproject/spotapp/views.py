@@ -21,7 +21,7 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot , Profile, Favorite
+from .models import Events, Review, Spot , Profile, Favorite, Category, District
 from spotapp_admin.models import Photo
 
 from django.contrib.auth import get_user_model
@@ -33,9 +33,19 @@ from django.urls import reverse
 # ------------------------
 # インデックス
 # ------------------------
+# ------------------------
+# インデックス
+# ------------------------
 class IndexView(View):
     def get(self, request):
-        return render(request, 'spotapp/index.html')
+        slide_photos = (
+            Photo.objects
+            .select_related('spot')
+            .filter(spot__isnull=False)
+            .order_by('-uploaded_at')
+        )
+
+        return render(request, 'spotapp/index.html', {'slide_photos': slide_photos})
 
 
 # ------------------------
@@ -126,6 +136,9 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
             user.set_password(p1)
             user.save()
+
+            update_session_auth_hash(request, user)
+
             return redirect("spotapp:password_change_complete")
 
         return render(request, "spotapp/password_change.html", {"form": form})
@@ -141,13 +154,16 @@ class PasswordChangeCompleteView(LoginRequiredMixin, View):
 # ------------------------
 class SpotSearchResultView(View):
     def get(self, request):
-        keyword = request.GET.get('q')
-        spots = Spot.objects.annotate(
-            avg_rating=Avg('review__rating')
-        ).prefetch_related(
-            Prefetch(
-                'spot_photos',
-                queryset=Photo.objects.order_by('uploaded_at')
+        keyword = request.GET.get('q', '').strip()
+
+        category_id = request.GET.get('category', '').strip()
+        district_id = request.GET.get('district', '').strip()
+
+        spots = (
+            Spot.objects
+            .annotate(avg_rating=Avg('review__rating'))
+            .prefetch_related(
+                Prefetch('spot_photos', queryset=Photo.objects.order_by('uploaded_at'))
             )
         )
         
@@ -164,10 +180,46 @@ class SpotSearchResultView(View):
 
         if keyword:
             spots = spots.filter(spot_name__icontains=keyword)
+        
+        # カテゴリ絞り込み
+        if category_id:
+            spots = spots.filter(category_id=category_id)
+
+        # 地区絞り込み
+        if district_id:
+            spots = spots.filter(district_id=district_id)
+
+            # ▼ ボタン表記用の「名前」を作る
+        selected_category_name = "カテゴリ"
+        selected_district_name = "地区別"
+
+        if category_id:
+            c = Category.objects.filter(category_id=category_id).first()
+            if c:
+                selected_category_name = c.category_name
+
+        if district_id:
+            d = District.objects.filter(district_id=district_id).first()
+            if d:
+                selected_district_name = d.district_name
+
+
 
         return render(request, 'spotapp/spot_searchresult.html', {
             'keyword': keyword,
             'spots': spots,
+
+            # プルダウン用
+            'categories': Category.objects.all(),
+            'districts': District.objects.all(),
+
+            # 選択保持
+            'selected_category': category_id,
+            'selected_district': district_id,
+
+            # ボタン表記保持（追加）
+            "selected_category_name": selected_category_name,
+            "selected_district_name": selected_district_name,
         })
 
 
@@ -180,10 +232,7 @@ class SpotDetailView(View):
 
         is_favorited = False
         if request.user.is_authenticated:
-            is_favorited = Favorite.objects.filter(
-                user=request.user,
-                spot=spot
-            ).exists()
+            is_favorited = Favorite.objects.filter(user=request.user, spot=spot).exists()
 
         return render(request, 'spotapp/spot_detail.html', {
             'spot': spot,
@@ -322,7 +371,25 @@ class EventListView(View):
 class EventDetailView(View):
     def get(self, request, event_id):
         event = get_object_or_404(Events, event_id=event_id)
-        return render(request, 'spotapp/event_detail.html', {'event': event})
+
+        # 紐づいている観光地（あれば）
+        spot = event.spot_id  # ForeignKey の名前が spot_id だからこれでOK
+
+        # 評価用（お好みだけど、あると便利）
+        avg_rating = None
+        review_count = 0
+        if spot is not None:
+            reviews = Review.objects.filter(spot=spot)
+            review_count = reviews.count()
+            avg_rating = reviews.aggregate(avg=Avg("rating"))["avg"]
+
+        context = {
+            "event": event,
+            "spot": spot,
+            "avg_rating": avg_rating,
+            "review_count": review_count,
+        }
+        return render(request, "spotapp/event_detail.html", context)
 
 
 # ------------------------
@@ -422,6 +489,11 @@ def osirase_list(request):
     return render(request, "osirase_list.html", {"osirase_list": items})
 
 
+# お知らせ詳細
+class NewsDetailView(View):
+    def get(self, request, pk):
+        news = get_object_or_404(Osirase, pk=pk)
+        return render(request, "spotapp/news_detail.html", {"news": news})
         # ------------------------
 # as_view() の定義
 # ------------------------
