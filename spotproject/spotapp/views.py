@@ -27,6 +27,7 @@ from spotapp_admin.models import Photo
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+from django.http import HttpResponseForbidden
 
 from django.urls import reverse
 
@@ -299,6 +300,20 @@ class ReviewDetailView(View):
             "reviews": spot.review_set.all()
         })
 
+
+#レビュー消去用
+@login_required
+def review_delete(request, review_id):
+    review = get_object_or_404(Review, review_id=review_id)
+
+
+    if review.user != request.user:
+        return HttpResponseForbidden("削除権限がありません")
+
+    if request.method == "POST":
+        spot_id = review.spot.spot_id
+        review.delete()
+        return redirect('spotapp:review_detail', spot_id=spot_id)
 # ------------------------
 # お気に入り一覧
 # ------------------------

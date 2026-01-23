@@ -90,7 +90,7 @@ form button {
     justify-content: center;
     align-items: center;
     gap: 10; 
-    margin-top: 10px;
+    margin-top: 0px;
 }
 
 #search {
