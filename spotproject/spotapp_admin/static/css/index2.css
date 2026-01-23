@@ -1,123 +1,70 @@
 *, body, ul {
   margin: 0;
   padding: 0;
-}
- 
-li {
-  list-style: none;
+  box-sizing: border-box;
 }
  
 /* =========================
-   スライドの外枠
+   管理メニュー
 ========================= */
-.slide-wrapper {
+
+.menu-container {
   width: min(1100px, 95%);
-  height: 320px;
-  margin: 100px auto 0;
-  position: relative;
-  top: -50px;
-  overflow: hidden;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #6366f1, #22d3ee);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-}
- 
-/* =========================
-   スライド全体（横並び）
-========================= */
-.slide {
+  margin: 0 auto;
+  min-height: 100vh;
   display: flex;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.4s ease;
-}
- 
-
-/* スライド1枚の枠（横並び用） */
-.slide-item {
-  flex: 0 0 100%;     /* スライド1枚の幅 */
-  position: relative;
-  display: flex;      /* 子要素の画像に合わせる */
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
-  color: inherit;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(6px);
-}
- 
-/* ===== 画像 ===== */
-.slide-item img {
-  max-width: 90%;
-  max-height: 90%;
-  object-fit: contain;
-  border-radius: 18px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-}
-/* タイトル */
-.slide-item p {
-  position: absolute;
-  bottom: 18px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-}
- 
-/* =========================
-   矢印ボタン
-========================= */
-.prev, .next {
-  position: absolute;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  border-top: 3px solid #000;
-  border-right: 3px solid #000;
-  cursor: pointer;
-  z-index: 10;
-}
- 
-.prev {
-  left: 20px;
-  transform: translateY(-50%) rotate(-135deg);
-  border-color: blue;
 }
 
-.next {
-  right: 20px;
-  transform: translateY(-50%) rotate(45deg);
-  border-color: red;
-}
- 
-/* =========================
-   インジケーター
-========================= */
-.indicator {
-  position: absolute;
-  bottom: 16px;
-  left: 50%;
-  transform: translateX(-50%);
+.menu-box {
   display: flex;
-  gap: 14px;
-  z-index: 10;
+  height: 320px;
+  gap: 24px;
 }
- 
-.indicator li {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
+
+/* 左右2分割 */
+.spot-box,
+.event-box {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+  padding: 24px;
+}
+
+/* 見出し */
+.menu-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgba(255,255,255,0.7);
+  padding-bottom: 6px;
+}
+
+/* ボタン */
+.menu-btn {
+  display: block;
+  margin: 10px 0;
+  padding: 12px 40px;
   background: #fff;
-  border: 2px solid #000;
-  cursor: pointer;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
 }
- 
-.indicator li.active {
-  background-color: #000;
+
+.menu-btn:hover {
+  transform: translateY(-2px);
 }
+
  
 /* =========================
    イベント一覧バー
