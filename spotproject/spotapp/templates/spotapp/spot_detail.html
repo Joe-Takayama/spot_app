@@ -76,7 +76,13 @@
         <h2 class="spot-address">住所<br>{{ spot.address }}</h2>
         <h2 class="spot-hours">営業時間<br>{{ spot.business_hours }}</h2>
 
-        
+        <div class="spot-detail">
+            <div class="spot-name">
+                <h2>{{ spot.spot_name }}について</h2>
+            </div>
+            <p>{{ spot.explanation }}</p>
+        </div>
+
         <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
             レビューを見る
         </a>
