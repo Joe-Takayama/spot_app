@@ -1,12 +1,77 @@
 {% extends "base2/base2.html" %}
-{% block title %} 観光地削除 {% endblock %}
+<title>{% block title %} 観光地削除 {% endblock %}</title>
 {% block shrebar %}{% endblock %}
+
 {% block body %}
-<h2>この観光地を削除しますか?</h2>
-    <p>観光地名称: {{ page.spot_name }}</p>
-        <form method="POST", action="{% url 'spotapp_admin:spot_delete' page.pk %}">
+<div class="delete-confirm-container">
+
+    <h2>この観光地を削除しますか？</h2>
+
+    <p class="spot-name">
+        観光地名称：{{ page.spot_name }}
+    </p>
+
+    <div class="delete-actions">
+        <form method="POST" action="{% url 'spotapp_admin:spot_delete' page.pk %}">
             {% csrf_token %}
-            <button type="submit">はい</button>
+            <button type="submit" class="btn btn-danger">はい</button>
         </form>
-        <a href="{% url 'spotapp_admin:spot_list' %}">いいえ</a>
+
+        <a href="{% url 'spotapp_admin:spot_list' %}" class="btn btn-cancel">
+            いいえ
+        </a>
+    </div>
+
+</div>
+<style>
+/* 全体を中央に */
+.delete-confirm-container {
+    max-width: 500px;
+    margin: 120px auto;
+    text-align: center;
+}
+
+/* 観光地名 */
+.spot-name {
+    font-size: 16px;
+    margin: 20px 0 30px;
+}
+
+/* はい・いいえ 横並び */
+.delete-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* 共通ボタン */
+.btn {
+    padding: 10px 28px;
+    border-radius: 6px;
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+
+/* はい（削除） */
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #b52a37;
+}
+
+/* いいえ（キャンセル） */
+.btn-cancel {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-cancel:hover {
+    background-color: #545b62;
+}
+</style>
 {% endblock %}
