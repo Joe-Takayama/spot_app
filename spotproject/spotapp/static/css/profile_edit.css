@@ -1,98 +1,177 @@
 /* =========================
    プロフィール編集（このページだけ）
 ========================= */
+
 .profile-edit-page{
   width: min(1100px, 95vw);
-  margin: 24px auto;
-  padding: 0 16px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
   box-sizing: border-box;
 }
 
-.profile-edit-page .page-title{
-  font-size: 26px;
-  font-weight: 800;
-  text-align: center;
-  margin: 10px 0 22px;
+/* ===== ミニナビ（このページ用） ===== */
+.profile-mini-nav{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
 }
 
-/* カード */
-.profile-edit-page .form-card{
-  max-width: 720px;          /* ← ここが“狭い”の解決ポイント */
-  margin: 0 auto 18px;
-  padding: 26px;
-  background: #fff;
-  border: 1px solid #e7e7e7;
+.profile-mini-nav .btn-home{
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 800;
+  background: #4a90e2;
+  color: #fff;
+  box-shadow: 0 8px 18px rgba(74,144,226,0.28);
+}
+
+.profile-mini-nav .user-info{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-mini-nav .user-icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid rgba(0,0,0,0.06);
+  background: #f4f6ff;
+  display: grid;
+  place-items: center;
+}
+
+.profile-mini-nav .user-icon img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-mini-nav .user-name-text{
+  font-weight: 800;
+}
+
+/* ===== 本文レイアウト ===== */
+.profile-edit-page .page-main{
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+  padding-top: 28px;
+}
+
+.profile-edit-page .page-title{
+  font-size: 24px;
+  font-weight: 900;
+  margin: 0 0 6px;
+}
+
+/* エラー */
+.profile-edit-page .form-errors{
+  width: min(760px, 92vw);
+  background: #fff6f6;
+  border: 1px solid rgba(255,0,0,0.15);
   border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  padding: 12px 14px;
+  box-sizing: border-box;
+}
+
+.profile-edit-page .error-text{
+  margin: 4px 0;
+  font-weight: 800;
+  color: #c62828;
+}
+
+/* ===== カード ===== */
+.profile-edit-page .form-card{
+  width: min(760px, 92vw);
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  padding: 28px 24px;
+  box-sizing: border-box;
 }
 
 .profile-edit-page .form-group{
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .profile-edit-page .form-group label{
-  display:block;
-  font-weight: 700;
+  display: block;
+  font-weight: 900;
   margin-bottom: 8px;
-  color:#333;
+  color: #333;
 }
 
 .profile-edit-page input[type="text"],
 .profile-edit-page input[type="file"]{
   width: 100%;
   padding: 12px 12px;
-  border: 1px solid #12b7d8;
-  border-radius: 10px;
-  box-sizing: border-box;
-}
-
-/* ボタン */
-.profile-edit-page .btn-primary{
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px 16px;
-  border: none;
+  border: 1px solid rgba(0,0,0,0.18);
   border-radius: 12px;
-  font-weight: 800;
-  cursor: pointer;
+  box-sizing: border-box;
+  background: #fff;
 }
 
-.profile-edit-page .actions{
-  max-width: 720px;
-  margin: 0 auto;
-  display: grid;
-  gap: 12px;
+.profile-edit-page input[type="text"]:focus{
+  outline: none;
+  border-color: rgba(74,144,226,0.65);
+  box-shadow: 0 0 0 4px rgba(74,144,226,0.15);
+}
+
+/* ===== ボタン類（プロフィール画面寄せ） ===== */
+.profile-edit-page .btn-primary{
+  width: min(520px, 100%);
+  display: block;
+  margin: 14px auto 0;
+  padding: 14px 18px;
+  border: none;
+  border-radius: 999px; /* ピル */
+  font-weight: 900;
+  cursor: pointer;
+  color: #fff;
+  background: #4a90e2;
+  box-shadow: 0 10px 26px rgba(74,144,226,0.35);
+}
+
+.profile-edit-page .btn-primary:hover{
+  opacity: 0.92;
 }
 
 .profile-edit-page .btn-primary-outline{
-  display:block;
-  text-align:center;
-  padding: 12px 16px;
-  border-radius: 12px;
-  border: 2px solid #667eea;
-  text-decoration:none;
-  font-weight: 800;
+  width: min(520px, 92vw);
+  display: block;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 999px;
+  border: 2px solid #4a90e2;
+  text-decoration: none;
+  font-weight: 900;
+  color: #4a90e2;
+  background: #fff;
+}
+
+.profile-edit-page .btn-primary-outline:hover{
+  background: rgba(74,144,226,0.06);
 }
 
 .profile-edit-page .link-back{
-  display:block;
-  text-decoration:none;
-  font-weight: 800;
+  width: min(520px, 92vw);
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 900;
+  color: #555;
 }
-.form-errors {
-  margin-bottom: 12px;
-}
-.error-text {
-  margin: 6px 0;
-  color: #e53935;
-  font-weight: 600;
-}
-
 
 /* スマホ */
 @media (max-width: 480px){
   .profile-edit-page .form-card{
-    padding: 20px;
+    padding: 22px 18px;
   }
   .profile-edit-page .page-title{
     font-size: 22px;
