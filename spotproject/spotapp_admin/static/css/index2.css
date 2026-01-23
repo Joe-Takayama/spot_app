@@ -11,11 +11,15 @@ li {
    スライドの外枠
 ========================= */
 .slide-wrapper {
-  width: 100%;
-  height: 300px;
-  margin-top: 80px;
+  width: min(1100px, 95%);
+  height: 320px;
+  margin: 100px auto 0;
   position: relative;
-  overflow: hidden; /* 枠からはみ出した部分は非表示 */
+  top: -50px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #6366f1, #22d3ee);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
 }
  
 /* =========================
@@ -36,32 +40,31 @@ li {
   display: flex;      /* 子要素の画像に合わせる */
   justify-content: center; 
   align-items: center;
-  text-decoration: none;
   color: inherit;
-  background-color: #f0f0f0; /* 淡いグレーで自然に余白を埋める */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(6px);
 }
  
 /* ===== 画像 ===== */
 .slide-item img {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: 100%;
+  max-width: 90%;
+  max-height: 90%;
   object-fit: contain;
-  display: block;
+  border-radius: 18px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
- 
 /* タイトル */
 .slide-item p {
   position: absolute;
-  bottom: 12px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.55);
   color: #fff;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 999px;
   font-size: 14px;
+  letter-spacing: 0.05em;
 }
  
 /* =========================
