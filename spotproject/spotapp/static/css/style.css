@@ -1,6 +1,6 @@
 /* ===============================
    ベース設定
-   =============================== */
+=============================== */
 html, body {
     margin: 0;
     padding: 0;
@@ -16,7 +16,7 @@ body {
 
 /* ===============================
    ナビバー（全幅）
-   =============================== */
+=============================== */
 nav {
     width: 100%;
     min-height: 80px;
@@ -49,7 +49,7 @@ nav {
 
 /* ===============================
    中央幅コンテナ（★幅の基準）
-   =============================== */
+=============================== */
 .page-container {
     width: 100%;
     max-width: 1300px;     /* ← 幅はここだけで決める */
@@ -60,7 +60,7 @@ nav {
 
 /* ===============================
    検索バー
-   =============================== */
+=============================== */
 #search {
     width: 80%;
     max-width: 600px;
@@ -73,7 +73,7 @@ nav {
 
 /* ===============================
    ホーム・共通ボタン
-   =============================== */
+=============================== */
 .btn-home,
 .Menu_btn,
 .user-btn {
@@ -96,7 +96,7 @@ nav {
 
 /* ===============================
    ドロップダウン（地区・カテゴリ）
-   =============================== */
+=============================== */
 .Nav-block {
     position: relative;
 }
@@ -124,12 +124,11 @@ nav {
 /* .Nav-block:hover > .menu_down {
     display: flex;
 } */
- 
- /* ✅ JSで open クラスが付いたときだけ表示 */
+
+/* ✅ JSで open クラスが付いたときだけ表示 */
 .Nav-block.open > .menu_down {
     display: flex;
 }
-
 
 .menu_down li a {
     display: block;
@@ -143,7 +142,7 @@ nav {
     color: #667eea;
 }
 
-
+/* お知らせドロップダウン（特殊） */
 .menu_down#osirase_down {
   position: absolute;
   top: 110%;
@@ -158,10 +157,9 @@ nav {
     overflow-wrap: anywhere;
 }
 
-
 /* ===============================
    ユーザー情報・メニュー
-   =============================== */
+=============================== */
 .user-menu-wrapper {
     position: relative;
 }
@@ -231,12 +229,12 @@ nav {
 
 /* ✅ ログアウト(button)をプロフィール(a)と同じ見た目にする（現状崩さない） */
 .user-menu li form {
-    margin: 0;               /* formの余白でズレるの防止 */
+    margin: 0;
 }
 
 .user-menu li .user-menu-btn {
     display: block;
-    padding: 12px 18px;      /* ← .user-menu li a と同じ */
+    padding: 12px 18px;
     width: 100%;
     text-decoration: none;
     color: #333;
@@ -247,7 +245,6 @@ nav {
     font: inherit;
 }
 
-/* hoverもaと同じ */
 .user-menu li .user-menu-btn:hover {
     background: #f8f9fa;
     color: #667eea;
@@ -269,7 +266,7 @@ nav {
 
 /* ===============================
    フッター（最下部）
-   =============================== */
+=============================== */
 .footer {
     margin-top: auto;
     width: 100%;
@@ -301,7 +298,8 @@ nav {
 }
 
 /* ===============================
-   ナビバー：スマホ対応
+   ✅ スマホ対応（共通ナビの崩れ対策：確定版）
+   原因：navが横並び固定で幅が足りず、ボタン文字が縦に折り返される
 =============================== */
 @media (max-width: 768px) {
 
@@ -310,7 +308,7 @@ nav {
     overflow-x: hidden;
   }
 
-  /* ナビを2段にする */
+  /* ナビを折り返しOKにして2段化 */
   nav {
     flex-wrap: wrap;
     gap: 10px;
@@ -318,12 +316,7 @@ nav {
     min-height: auto;
   }
 
-  .nav-left,
-  .nav-right {
-    flex: 0 0 auto;
-  }
-
-  /* 中央のボタン群は “全幅” で下段へ */
+  /* 真ん中を下段（全幅）にする */
   .nav-center {
     flex: 0 0 100%;
     order: 3;
@@ -332,16 +325,27 @@ nav {
     gap: 8px;
   }
 
-  /* ボタンを押しやすく＆縦化防止 */
-  .btn-home,
-  .Menu_btn,
-  .user-btn {
-    padding: 10px 12px;
-    font-size: 14px;
-    white-space: nowrap;
+  /* 各ブロックの幅固定があると崩れるので解除 */
+  .Nav-block {
+    width: auto;
   }
 
-  /* ユーザー欄を小さくして場所を作る */
+  /* ここが本命：ボタン縦化を絶対殺す（上書き勝ち用） */
+  nav .btn-home,
+  nav .Menu_btn,
+  nav .user-btn {
+    min-width: 88px !important;       /* 細くなりすぎ防止 */
+    padding: 10px 12px !important;    /* 押しやすく */
+    font-size: 14px !important;
+
+    white-space: nowrap !important;   /* 改行させない */
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    line-height: 1.2 !important;
+    writing-mode: horizontal-tb !important; /* 念のため縦書き殺す */
+  }
+
+  /* ユーザー欄を横並び＆小さく */
   .user-info {
     flex-direction: row;
     gap: 8px;
@@ -356,18 +360,18 @@ nav {
     font-size: 14px;
   }
 
-  /* 検索バーもスマホ幅に収める */
+  /* 検索バー：画面に収める */
   #search {
     width: min(92vw, 420px);
     margin: 12px auto;
   }
 
-  /* ドロップダウンが画面外に飛ばないように */
+  /* ドロップダウンが画面外に飛ばない保険 */
   .menu_down {
     max-width: calc(100vw - 24px);
   }
 
-  /* お知らせだけ特殊なので中央寄せに寄せる */
+  /* お知らせは特殊配置なので中央寄せに寄せる */
   .menu_down#osirase_down {
     left: 50%;
     transform: translateX(-50%);
