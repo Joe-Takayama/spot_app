@@ -9,7 +9,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 {% endblock %}
 
-{# ===== ナビを最小構成に差し替え ===== #}
 {% block nav %}
 <nav class="profile-mini-nav">
   <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
@@ -29,86 +28,92 @@
 </nav>
 {% endblock %}
 
-{# ===== 検索バー・フッターは消す ===== #}
 {% block searchbar %}{% endblock %}
 {% block footer %}{% endblock %}
 
 {% block body %}
 <div class="spot-detail-page">
 
-  <!-- ========= Hero ========= -->
-  <section class="hero">
-    <div class="hero-media">
-      {% with first_photo=spot.spot_photos.first %}
-        {% if first_photo %}
-          <img
-            src="{{ first_photo.image.url }}"
-            alt="{{ spot.spot_name }}"
-            class="hero-img"
-          >
-        {% else %}
-          <img
-            src="{% static 'img/no-image.png' %}"
-            alt="no image"
-            class="hero-img"
-          >
-        {% endif %}
-      {% endwith %}
+  <!-- 観光地名称 -->
+  <h1 class="spot-title">{{ spot.spot_name }}</h1>
+
+  <!-- 観光地写真 -->
+  <div class="spot-photo">
+    {% with first_photo=spot.spot_photos.first %}
+      {% if first_photo %}
+        <img src="{{ first_photo.image.url }}" alt="{{ spot.spot_name }}">
+      {% else %}
+        <img src="{% static 'img/no-image.png' %}" alt="no image">
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- 住所 + お気に入り（同じ段） -->
+  <div class="row-address-fav">
+    <div class="box box-address">
+      <div class="box-label">住所</div>
+      <div class="box-value">{{ spot.address }}</div>
     </div>
 
-    <div class="hero-body">
-      <div class="hero-head">
-        <h1 class="title">{{ spot.spot_name }}</h1>
+    <button
+      id="fav-btn"
+      data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
+      class="fav-btn"
+      type="button"
+    >
+      {% if is_favorited %}
+        ★ 登録済み
+      {% else %}
+        ☆ お気に入り登録
+      {% endif %}
+    </button>
+  </div>
 
-        <div class="spot-actions" onclick="event.stopPropagation()">
-          <button
-            id="fav-btn"
-            data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
-            class="btn btn-primary"
-            type="button"
-          >
-            {% if is_favorited %}
-              ★ 登録済み
-            {% else %}
-              ☆ お気に入り登録
-            {% endif %}
-          </button>
-        </div>
-      </div>
+  <!-- ボックス縦積み（設計書の並び） -->
+  <div class="stack">
+    <div class="box">
+      <div class="box-label">営業時間</div>
+      <div class="box-value">{{ spot.business_hours|default:"未設定" }}</div>
+    </div>
 
-      <!-- クイック情報 -->
-      <div class="quick">
-        <div class="quick-item">
-          <div class="quick-label">住所</div>
-          <div class="quick-value">{{ spot.address }}</div>
-        </div>
-
-        <div class="quick-item">
-          <div class="quick-label">営業時間</div>
-          <div class="quick-value">{{ spot.business_hours }}</div>
-        </div>
-      </div>
-
-      <div class="hero-actions">
-        <a href="{% url 'spotapp:review_detail' spot.spot_id %}" class="btn btn-outline">
-          レビューを見る
-        </a>
-        <button class="btn btn-ghost" type="button" onclick="history.back()">← 戻る</button>
+    <div class="box">
+      <div class="box-label">入場料</div>
+      {# フィールド名が違っても空で出るだけ（エラーにはならない） #}
+      <div class="box-value">
+        {{ spot.fee|default:spot.entry_fee|default:spot.price|default:"未設定" }}
       </div>
     </div>
-  </section>
 
-  <!-- ========= Route Card ========= -->
-  <section class="card">
-    <h2 class="card-title">ルート案内</h2>
+    <a class="btn-box" href="{% url 'spotapp:review_detail' spot.spot_id %}">
+      口コミ
+    </a>
 
+    <div class="box">
+      <div class="box-label">評価</div>
+      {# 平均評価などがあるならここに差し替え #}
+      <div class="box-value">{{ avg_rating|default:"—" }}</div>
+    </div>
+  </div>
+
+  <!-- その他情報 -->
+  <div class="other">
+    <div class="other-title">その他情報</div>
+    <div class="other-body">
+      {{ spot.other_info|default:spot.description|default:"情報はまだありません" }}
+    </div>
+  </div>
+
+  <!-- Map（機能） -->
+  <div class="map-area">
+    <div class="map-title">Map</div>
+
+    <!-- ルート案内 -->
     <div id="route-ui" class="route-ui">
       <div class="route-input">
-        <input id="start" class="input" type="text" placeholder="出発地を入力（ヒットしない場合は住所で入力）">
-
+        <input id="start" class="route-start" type="text" placeholder="出発地を入力（ヒットしない場合は住所で入力）">
         <div class="route-buttons">
-          <button class="btn btn-outline" type="button" onclick="route('car')">🚙 車</button>
-          <button class="btn btn-outline" type="button" onclick="route('foot')">🚶 徒歩</button>
+          <button type="button" class="route-main-btn" onclick="route('car')">🚙 車</button>
+          <button type="button" class="route-main-btn" onclick="route('foot')">🚶 徒歩</button>
         </div>
 
         <div id="route-selector" class="route-selector"></div>
@@ -116,24 +121,18 @@
         <div id="route-roads" class="route-roads"></div>
       </div>
     </div>
-  </section>
 
-  <!-- ========= Map Card ========= -->
-  <section class="card map-card">
     <div class="map-head">
-      <h2 class="card-title">Map</h2>
-      <a class="link" href="https://www.google.com/maps/search/?api=1&query={{ spot.address|urlencode }}" target="_blank">
+      <a class="map-link" href="https://www.google.com/maps/search/?api=1&query={{ spot.address|urlencode }}" target="_blank">
         Googleマップで開く
       </a>
     </div>
 
+    <!-- 地図 -->
     <div id="map" class="map"></div>
+  </div>
 
-    {% if not spot.latitude or not spot.longitude %}
-      <p class="muted map-note">地図情報がありません</p>
-    {% endif %}
-  </section>
-
+  <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
 </div>
 {% endblock %}
 
@@ -142,9 +141,6 @@
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <script>
-  // ======================
-  // 変数
-  // ======================
   var lat = parseFloat("{{ spot.latitude|default:'0' }}");
   var lng = parseFloat("{{ spot.longitude|default:'0' }}");
 
@@ -153,7 +149,6 @@
   let startMarker = null;
   let allRoutes = [];
 
-  // カスタムアイコン
   const startIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
     shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
@@ -163,9 +158,7 @@
     shadowSize: [41, 41]
   });
 
-  // ======================
   // 地図初期化
-  // ======================
   (function initMap(){
     const mapEl = document.getElementById("map");
     if (!mapEl) return;
@@ -179,13 +172,11 @@
 
       L.marker([lat, lng]).addTo(map).bindPopup("{{ spot.spot_name }}");
     } else {
-      mapEl.innerHTML = "<p class='map-empty'>地図情報がありません</p>";
+      mapEl.innerHTML = "<p style='text-align:center; margin: 12px 0; color:#666;'>地図情報がありません</p>";
     }
   })();
 
-  // ======================
   // ルート検索
-  // ======================
   window.route = function(mode) {
     const start = document.getElementById("start").value;
     if (!start) { alert("出発地を入力してください"); return; }
@@ -196,9 +187,7 @@
       .catch(() => alert("出発地が見つかりません"));
   };
 
-  // ======================
   // ルート取得
-  // ======================
   function fetchRoutes(sLat, sLng, mode) {
     const profile = mode === "foot" ? "foot" : "car";
 
@@ -219,7 +208,7 @@
             route.legs[0].steps.forEach(step => {
               const name = step.name || "";
               const ref  = step.ref  || "";
-              if (name.includes("自動車道") || /^E\\d+/.test(ref)) highwayDistance += step.distance;
+              if (name.includes("自動車道") || /^E\d+/.test(ref)) highwayDistance += step.distance;
             });
             const highwayRatio = highwayDistance / route.distance;
             allRoutes.push({ route, type: highwayRatio > 0.3 ? "highway" : "normal", highwayRatio, index });
@@ -233,9 +222,7 @@
       });
   }
 
-  // ======================
   // ルートボタン生成
-  // ======================
   function createRouteButtons(mode) {
     const selectorDiv = document.getElementById("route-selector");
     selectorDiv.innerHTML = "";
@@ -280,9 +267,7 @@
     });
   }
 
-  // ======================
   // ルート描画
-  // ======================
   function drawRoute(route, type, mode) {
     routeLines.forEach(line => map.removeLayer(line));
     routeLines = [];
@@ -293,7 +278,7 @@
     if (mode === "foot") {
       route.legs[0].steps.forEach(step => {
         const name = step.name || "", ref = step.ref || "";
-        const isHighway = name.includes("自動車道") || /^E\\d+/.test(ref);
+        const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
         if (!isHighway) step.geometry.coordinates.forEach(c => coords.push([c[1], c[0]]));
       });
     } else {
@@ -315,26 +300,23 @@
     const minutes = mode === "foot" ? Math.round((distanceKm / 4) * 60) : Math.round(route.duration / 60);
 
     document.getElementById("route-info").innerHTML =
-      `距離: ${distanceKm.toFixed(1)} km　/　時間: ${minutes} 分`;
+      `距離: ${distanceKm.toFixed(1)} km<br>時間: ${minutes} 分`;
 
     map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 20 });
-
     document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  // ======================
-  // 通過道路表示（→で統一）
-  // ======================
+  // 通過道路表示
   function showRoads(route, type, mode) {
     let highways = [], generalRoads = new Set();
 
     route.legs[0].steps.forEach(step => {
       const name = step.name || "", ref = step.ref || "";
       if (mode === "foot") { if (name) generalRoads.add(name); return; }
-      const isHighway = name.includes("自動車道") || /^E\\d+/.test(ref);
+      const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
       if (isHighway) highways.push(name || `高速道路(${ref})`);
       else {
-        if (/^\\d+$/.test(ref)) generalRoads.add(`国道${ref}号`);
+        if (/^\d+$/.test(ref)) generalRoads.add(`国道${ref}号`);
         else if (name.includes("県道")) generalRoads.add(name);
       }
     });
@@ -352,12 +334,10 @@
     document.getElementById("route-roads").innerHTML = html;
   }
 
-  // ======================
   // 住所→緯度経度
-  // ======================
   function getLatLng(address) {
     return new Promise((resolve, reject) => {
-      const hasNumber = /\\d/.test(address);
+      const hasNumber = /\d/.test(address);
       const url = hasNumber
         ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
         : `https://nominatim.openstreetmap.org/search?format=json&countrycodes=jp&limit=1&q=${encodeURIComponent(address)}`;
