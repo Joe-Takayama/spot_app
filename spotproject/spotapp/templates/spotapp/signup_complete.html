@@ -1,37 +1,35 @@
-<head>
-    {% load static %}
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
-    <link href="{% static "css/profile_edit.css" %} " rel="stylesheet">
- 
-</head>
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block title %}新規登録完了{% endblock %}
+
+{% block extra_css %}
+<link href="{% static 'css/signup_complete.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block searchbar %}{% endblock %}
+
 {% block body %}
-<div class="page">
-    <header class="page-header">
-        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+<div class="page signup-done-page">
+  <main class="page-main">
 
-        <div class="user-info">
-            <div class="user-icon">
-                {% if request.user.profile.icon %}
-                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                {% else %}
-                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                {% endif %}
-            </div>
-            <div class="user-name-text">
-                {{ request.user.username }} さん
-            </div>
-        </div>
-    </header>
+    <section class="done-card">
+      <div class="done-icon">
+        {% if request.user.is_authenticated and request.user.profile.icon %}
+          <img src="{{ request.user.profile.icon.url }}" alt="icon">
+        {% else %}
+          <img src="{% static 'img/default_icon.png' %}" alt="icon">
+        {% endif %}
+      </div>
 
-<div style="padding: 30px; text-align:center;">
+      <h2 class="done-title">新規登録が完了しました</h2>
+      <p class="done-sub">トップページへ進めます</p>
+    </section>
 
-    <h2>新規登録が完了しました</h2>
+    <div class="done-actions">
+      <a class="done-btn" href="{% url 'spotapp:index' %}">トップへ戻る</a>
+    </div>
 
-
-    <a href="{% url 'spotapp:index' %}">トップへ戻る</a>
-
+  </main>
 </div>
-</div>
-
-
 {% endblock %}
