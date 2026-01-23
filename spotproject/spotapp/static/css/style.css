@@ -285,3 +285,17 @@ nav {
     text-decoration: none;
 }
 
+/* 検索ボタン */
+.submit {
+    padding: 10px;
+    border: none;
+    color: white;
+    background: #667eea;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.submit:hover {
+    background-color: #4a60d3;
+}

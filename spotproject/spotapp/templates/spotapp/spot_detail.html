@@ -48,11 +48,62 @@
     {% endwith %}
   </div>
 
-  <!-- 住所 + お気に入り（同じ段） -->
-  <div class="row-address-fav">
-    <div class="box box-address">
-      <div class="box-label">住所</div>
-      <div class="box-value">{{ spot.address }}</div>
+        <div class="spot-actions" onclick="event.stopPropagation()">
+            <button
+                    id="fav-btn"
+                    data-url="{% url 'spotapp:favorite_toggle_ajax' spot.spot_id %}"
+                    class="fav-btn"
+            >
+                    {% if is_favorited %}
+                        登録済み
+                    {% else %}
+                        お気に入り登録
+                    {% endif %}
+            </button>
+        </div>
+
+        <h2 class="spot-address">住所<br>{{ spot.address }}</h2>
+        <h2 class="spot-hours">営業時間<br>{{ spot.business_hours }}</h2>
+
+        <div class="spot-detail">
+            <div class="spot-name">
+                <h2>{{ spot.spot_name }}について</h2>
+            </div>
+            <p>{{ spot.explanation }}</p>
+        </div>
+
+        <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
+            レビューを見る
+        </a>
+
+        <!-- ルート案内・時間表示 -->
+        
+        <div id="route-ui">
+            <div class="route-input">
+                <input id="start" type="text" placeholder="出発地を入力（ヒットしない場合は住所で入力）">
+                <div class="route-buttons">
+                    <div class="car">
+                        <button type="button" onclick="route('car')">🚙 車</button>
+                    </div>
+                    <div class="walk">
+                        <button type="button" onclick="route('foot')">🚶 徒歩</button>
+                    </div>
+                </div>
+
+                
+
+                <div id="route-selector" style="margin-top:15px;"></div> <!-- ルート1,2,3のボタン -->
+                <div id="route-info"></div>
+                <div id="route-roads" style="margin-top:10px;"></div>
+            </div>
+        </div>
+        <!-- 地図 -->
+        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
+
+
+        <button type="button" onclick="history.back()">
+            ← 戻る
+        </button>
     </div>
 
     <button

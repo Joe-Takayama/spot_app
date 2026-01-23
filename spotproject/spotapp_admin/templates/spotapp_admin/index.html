@@ -26,12 +26,8 @@
         <span id="prev" class="prev"></span>
         <span id="next" class="next"></span>
         <!-- インジケーター -->
-        <ul class="indicator" id="indicator">
-           {% for photo in slide_photos %}
-                <li class="list"></li>
-           {% endfor %}
-        </ul>
-    </div>
+        <ul class="indicator" id="indicator"></ul>
+</div>
 
     <div class="event_bar">
         <a href="{% url 'spotapp_admin:event_list' %}">イベント一覧</a>
