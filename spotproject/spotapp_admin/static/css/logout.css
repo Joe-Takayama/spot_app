@@ -2,11 +2,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 
 
 .logout-form h2 {
-    margin-left: 150px;
+   text-align: center;
+   margin-bottom: 80px;
 }
 
 .logout-form {

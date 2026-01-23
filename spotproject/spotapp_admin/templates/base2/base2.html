@@ -16,6 +16,8 @@
     <link href="{% static 'css/updatedelete.css' %}" rel="stylesheet">
     <link href="{% static 'css/osirase_detail.css' %}" rel="stylesheet">
     <link href="{% static 'css/spot-list.css' %}" rel="stylesheet">
+    <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 
 <body>
@@ -30,78 +32,11 @@
 
         <!-- 右側 -->
         <div class="right-nav">
-          <div class="Nav-block" id="areaMenu_btn">
-                <button class="Menu_btn" type="button" id="districtBtn">
-                    {{ selected_district_name|default:"地区別" }} ▼
-                </button>
-
-                <ul class="menu_down" id="areaMenu_down">
-                    <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
-                    {% for district in districts %}
-                    <li>
-                        <a href="#"
-                            class="district-item"
-                            data-value="{{ district.district_id }}"
-                            data-label="{{ district.district_name }}">
-                            {{ district.district_name }}
-                        </a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- カテゴリ（プルダウン） -->
-        <div class="Nav-block" id="categoryMenu_btn">
-            <button class="Menu_btn" type="button" id="categoryBtn">
-                {{ selected_category_name|default:"カテゴリ" }} ▼
-            </button>
-
-            <ul class="menu_down" id="categoryMenu_down">
-                <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
-                {% for category in categories %}
-                    <li>
-                        <a href="#"
-                            class="category-item"
-                            data-value="{{ category.category_id }}"
-                            data-label="{{ category.category_name }}">
-                            {{ category.category_name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-            <!-- ここにお知らせ表示を置きたい -->
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn">
-                    お知らせ ▼
-                    {% if request.session.staff_id %}
-                        {% if new_count %}
-                            <span class="new-count">{{ new_count }}</span>
-                        {% endif %}
-                    {% endif %}
-                </button>
-                <ul class="menu_down" class="menu_down anywhere">
-                    {% for o in osirase_list %}
-                        <li>
-                            <a href="{% url 'spotapp_admin:osirase_detail' o.pk %}"
-                                class="{% if o.is_new %}new-osirase{% endif %}">
-                                {{ o.title }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <p>表示できるお知らせがありません。</p>
-                    {% endfor %}
-                </ul>
-            </div>
-
             {% if request.session.staff_id %}
             <!-- 管理者プルダウン -->
             <div class="Nav-block" id="adminMenu_btn">
                 <button class="Menu_btn">管理者 ▼</button>
                 <ul class="menu_down" id="adminMenu_down">
-                    <li><a href="{% url 'spotapp_admin:Registselect' %}">登録</a></li>
-                    <li><a href="{% url 'spotapp_admin:Updel' %}">更新・削除</a></li>
                     <li><a href="{% url 'spotapp_admin:osirase_send'%}">お知らせ送信</a></li>
                     <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
                 </ul>
