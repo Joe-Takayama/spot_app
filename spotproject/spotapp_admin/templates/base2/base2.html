@@ -111,7 +111,7 @@
             {% endif %}
         </div>
     </nav>
-
+{% block shrebar%}
     <form class="search-form" action="{% url 'spotapp_admin:search-result' %}" method="get">
         <input type="text" name="q" id="search"  value="{{ keyword|default:'' }}"placeholder="検索バー（あいまい検索可能）">
         <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
@@ -121,7 +121,7 @@
         <div class="submit">
         </div>
     </form>
-
+{% endblock %}
     <div class="main">
         {% block body %}{% endblock %}
    

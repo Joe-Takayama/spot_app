@@ -1,6 +1,64 @@
 {% extends "base2/base2.html" %}
-{% block title %} 観光地登録完了 {% endblock %}
+<title>{% block title %} 観光地登録完了 {% endblock %}</title>
+{% block shrebar %}{% endblock %}
 {% block body %}
-<h2>観光地登録が完了しました</h2>
-<a href="{% url 'spotapp_admin:index' %}">管理者トップへ戻る</a>
+<div class="regist-complete-wrapper">
+    <h2 class="regist-complete-title">観光地登録が完了しました</h2>
+    <div class="regist-complete-links">
+        <a href="{% url 'spotapp_admin:spot_regist'%}" class="complete-btn">観光地登録へ戻る</a>
+        <a href="{% url 'spotapp_admin:index' %}" class="complete-btn sub">管理者トップへ戻る</a>
+    </div>
+</div>
+<style>
+.regist-complete-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;     /* 横中央 */
+    justify-content: center; /* 縦中央 */
+    text-align: center;
+    min-height: 60vh;        /* 画面中央っぽく見せる */
+}
+
+.regist-complete-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.regist-complete-links {
+    display: flex;
+    gap: 20px;
+}
+
+.regist-complete-links a {
+    color: #fff;
+    font-size: 16px;
+}
+
+/* 共通ボタン */
+.complete-btn {
+    display: inline-block;
+    padding: 14px 28px;
+    border-radius: 8px;
+    background-color: #667eea;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s ease;
+}
+
+/* サブボタン */
+.complete-btn.sub {
+    background-color: #667eea;
+}
+
+/* hover */
+.complete-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    opacity: 0.95;
+}
+</style>
 {% endblock %}

@@ -123,9 +123,22 @@ li {
    イベント一覧バー
 ========================= */
 .event_bar {
+  width: min(900px, 90%);
+  margin: 40px auto 0;
+  padding: 16px 0;
   text-align: center;
-  padding: 12px 5px;
-  margin: 30px 20px 0;
-  background-color: #ffea00;
-  border: solid 3px #333;
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 14px 30px rgba(250,204,21,0.4);
+  transition: transform 0.2s ease;
+}
+
+.event_bar:hover {
+  transform: translateY(-2px);
+}
+
+.event_bar a {
+  text-decoration: none;
 }
