@@ -378,3 +378,52 @@ nav {
     width: min(92vw, 600px);
   }
 }
+/* ===============================
+   ナビ：スマホ最終上書き（縦文字を確殺）
+=============================== */
+@media (max-width: 768px) {
+
+  /* navの中身を必ず折り返し・中央寄せ */
+  nav { 
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+
+  /* 中央メニューは横並び + 折返し */
+  nav .nav-center{
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 8px !important;
+  }
+
+  /* ★ここが本命：ボタンを「横1行」で固定 */
+  nav .btn-home,
+  nav .Menu_btn,
+  nav .user-btn{
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: auto !important;
+    min-width: 120px !important;      /* これで1文字改行が消える */
+    max-width: none !important;
+
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+
+    white-space: nowrap !important;   /* 絶対に折り返さない */
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    line-height: 1.2 !important;
+  }
+
+  /* 検索バーもスマホ幅に収める（idが #search の場合） */
+  #search{
+    width: min(92vw, 420px) !important;
+  }
+}
