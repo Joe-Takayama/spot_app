@@ -1,200 +1,298 @@
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* ホームボタン */
-.btn-home {
-    text-decoration: none;
-    color: #fff;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 15px;
-    font-weight: 700;
-    background: #667eea;
-}
-
-/* ユーザー情報 */
-.user-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-}
-
-/* アイコン */
-.user-icon img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-/* ユーザー名 */
-.user-name-text {
-    font-size: 14px;
-    color: #333;
-}
-
 /* =========================
-   観光地情報
+   (1) 上部ミニナビ
 ========================= */
-.spot-info {
-    max-width: 800px;
-    margin: 40px auto;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.spot-name {
-    text-align: left;
-    padding: 10px;
-}
-
-.spot-actions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px;
-}
-
-.spot-address,
-.spot-hours {
-    text-align: center;
-    padding: 20px;
-}
-
-/* =========================
-   画像表示
-========================= */
-.spot-image {
-    width: 100%;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.photo {
-    width: 100%;
-    height: 350px;
-    overflow: hidden;
-    border-radius: 16px;
-}
-
-.spot-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* =========================
-   ボタン
-========================= */
-.btn {
-    display: block;
-    width: fit-content;
-    margin: 30px auto;
-}
-
-.spot-info button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border-radius: 8px;
-    border: none;
-    background-color: #007BFF;
-    color: white;
-    cursor: pointer;
-    align-self: center; /* ← 修正 */
-}
-
-
-#route-ui {
-  position: static; /* ここをabsoluteからstaticに変更 */
-  z-index: auto;
-  background: white;    
-  padding: 10px;
-  border-radius: 8px;
+.profile-mini-nav{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  padding: 10px 20px;
   width: 100%;
-  max-width: 500px;
-  margin: 20px auto; /* 中央に寄せる */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-  min-height: 200px;
+  box-sizing: border-box;
 }
 
-
-.route-input {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.btn-home{
+  text-decoration: none;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  background: #667eea;
 }
 
-.route-input #start {
-    width: 100%;
-    max-width: 400px;
+.user-info{
+  display:flex;
+  flex-direction: column;
+  align-items:center;
+  gap: 8px;
 }
 
-.route-buttons {
-    display: flex;
-    align-items: center;
-    gap: 20px;
+.user-icon img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.route-buttons button {
-    padding: 8px 12px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 6px;
-    background-color: blue;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s;
+.user-name-text{
+  font-size: 14px;
+  color: #333;
 }
 
-.route-buttons button:hover {
-    background-color: #007BFF;
+/* =========================
+   (2) 詳細ページ全体
+========================= */
+.spot-detail-page{
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
 }
 
-.route-buttons button.active {
-    background-color: green; /* 押されたボタンの色 */
-    color: white;
+/* =========================
+   (3) Hero（写真＋タイトル＋お気に入り）
+========================= */
+.hero{
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 18px;
+  align-items: stretch;
+  margin-top: 16px;
 }
 
-#route-selector {
+.hero-media{
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  background: #f3f4f6;
+}
+
+.hero-img{
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+.hero-body{
   display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-head{
+  display:flex;
+  gap: 12px;
+  align-items:flex-start;
+  justify-content: space-between;
+}
+
+.title{
+  font-size: 32px;
+  line-height: 1.2;
+  margin: 0;
+}
+
+/* =========================
+   (4) クイック情報（住所・営業時間）
+========================= */
+.quick{
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.quick-item{
+  background: #fff;
+  border: 1px solid #e9e9ee;
+  border-radius: 14px;
+  padding: 10px 12px;
+}
+
+.quick-label{
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.quick-value{
+  font-size: 14px;
+  color: #111;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* =========================
+   (5) ボタン共通（base.cssに強い指定があっても崩れにくい）
+========================= */
+.btn{
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  gap: 20px;                    /* ボタン同士の間隔 */
-  margin-top: 15px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-primary{
+  background: #2563eb;
+  color: #fff;
+}
+
+.btn-outline{
+  background: #fff;
+  border-color: #d1d5db;
+  color: #111;
+}
+
+.btn-ghost{
+  background: transparent;
+  border-color: #e5e7eb;
+  color: #111;
+}
+
+.hero-actions{
+  display:flex;
+  gap: 10px;
+  align-items:center;
+  margin-top: 6px;
+}
+
+/* お気に入りボタン（IDは君のまま） */
+#fav-btn{
+  white-space: nowrap;
+}
+
+/* =========================
+   (6) カード共通（ルート/Mapなど）
+========================= */
+.card{
+  background: #fff;
+  border: 1px solid #e9e9ee;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.06);
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.card-title{
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+/* =========================
+   (7) ルートUI（君の機能を見栄えよく）
+========================= */
+.route-ui{
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.route-input{
+  display:flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.input{
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  outline: none;
+}
+
+.input:focus{
+  border-color:#6366f1;
+  box-shadow: 0 0 0 4px rgba(99,102,241,.15);
+}
+
+/* 車/徒歩ボタン */
+.route-buttons{
+  display:flex;
+  gap: 10px;
   flex-wrap: wrap;
 }
 
-#route-selector button {
-  /* リセットしてデフォルトを殺さないように */
-  all: unset;                   /* ← これが大事！ ブラウザのデフォルトを全部リセット */
-  display: inline-block;
-  padding: 10px 24px;
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-  background: #ffffff;
-  border: 1px solid #d0d0d0;
-  border-radius: 8px;
-  cursor: pointer;
-  text-align: center;
-  min-width: 120px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-  transition: all 0.2s ease;
+/* ルート候補ボタン置き場 */
+.route-selector{
+  margin-top: 4px;
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-#route-selector button:hover {
-  background: #f5f5f5;
-  border-color: #bbb;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+/* ルート候補ボタン */
+.route-btn{
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.route-info{
+  margin-top: 2px;
+  font-weight: 800;
+  color: #111;
+}
+
+.route-roads{
+  margin-top: 2px;
+  color: #222;
+  line-height: 1.8;
+  word-break: break-word;
+}
+
+/* =========================
+   (8) Map
+========================= */
+.map-card{ margin-top: 14px; }
+
+.map-head{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.map{
+  height: 400px;
+  width: 100%;
+  border-radius: 14px;
+  background: #eef2f7;
+  overflow: hidden;
+}
+
+.map-empty{
+  text-align:center;
+  margin: 0;
+  padding: 20px 0;
+  color: #666;
+}
+
+.link{
+  color:#2563eb;
+  text-decoration:none;
+  font-weight: 700;
+}
+.link:hover{ text-decoration: underline; }
+
+.muted{ color:#777; }
+
+/* =========================
+   (9) レスポンシブ
+========================= */
+@media (max-width: 900px){
+  .hero{ grid-template-columns: 1fr; }
+  .hero-img{ height: 260px; }
 }
