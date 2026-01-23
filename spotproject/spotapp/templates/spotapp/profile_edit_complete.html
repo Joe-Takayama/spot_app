@@ -7,13 +7,29 @@
 <link href="{% static 'css/profile_edit_complete.css' %}" rel="stylesheet">
 {% endblock %}
 
-{% block searchbar %}{% endblock %}  {# 検索いらないなら消す #}
+{% block searchbar %}{% endblock %}
 
 {% block body %}
 <div class="page profile-edit-done-page">
   <main class="page-main">
-    <h2 class="page-title">プロフィール情報が変更されました</h2>
-    <a class="btn-primary-outline" href="{% url 'spotapp:index' %}">トップへ戻る</a>
+
+    <section class="done-card">
+      <div class="done-icon">
+        {% if request.user.is_authenticated and request.user.profile.icon %}
+          <img src="{{ request.user.profile.icon.url }}" alt="icon">
+        {% else %}
+          <img src="{% static 'img/default_icon.png' %}" alt="icon">
+        {% endif %}
+      </div>
+
+      <h2 class="done-title">プロフィール情報が変更されました</h2>
+      
+    </section>
+
+    <div class="done-actions">
+      <a class="done-btn" href="{% url 'spotapp:index' %}">トップへ戻る</a>
+    </div>
+
   </main>
 </div>
 {% endblock %}
