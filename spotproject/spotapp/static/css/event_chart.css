@@ -111,3 +111,57 @@
   text-align: center;
   color: #777;
 }
+/* =========================
+   スマホ対応（イベント一覧）
+========================= */
+@media (max-width: 768px) {
+
+  .admin-container {
+    padding: 16px 12px 40px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .month-select {
+    gap: 6px;
+    margin-bottom: 18px;
+  }
+
+  .month-btn {
+    padding: 8px 12px; /* 指で押しやすく */
+    font-size: 14px;
+  }
+
+  .event-card {
+    padding: 14px 14px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+  }
+
+  .event-card h3 {
+    font-size: 17px;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .event-card p {
+    font-size: 14px;
+    margin: 5px 0;
+    word-break: break-word; /* 長文/住所で崩れ防止 */
+  }
+
+  .description {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  .detail-link {
+    display: block;          /* 右端に寄せやすい */
+    text-align: right;
+    font-size: 15px;
+    margin-top: 10px;
+  }
+}
