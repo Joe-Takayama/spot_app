@@ -1,6 +1,31 @@
 document.addEventListener("DOMContentLoaded", () => {
+  // ① 全スライド取得
+  let items = Array.from(document.querySelectorAll(".slide-item"));
+
+  // ② Fisher-Yates シャッフルでランダム並び替え
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [items[i], items[j]] = [items[j], items[i]];
+  }
+
+  // ③ 先頭10枚だけ使う
+  items = items.slice(0, 10);
+    
+  // ④ HTML の slide コンテナに10枚だけ入れ直す
   const slide = document.getElementById("slide");
-  const items = document.querySelectorAll(".slide-item");
+  slide.innerHTML = ""; // 一旦クリア
+  items.forEach(item => slide.appendChild(item));
+
+  // ここでインジケーター調整
+  const indicator = document.getElementById("indicator");
+  indicator.innerHTML = ""; // 初期化
+
+  for (let i = 0; i < items.length; i++) {
+    const li = document.createElement("li");
+    li.classList.add("list");
+    indicator.appendChild(li);
+  }
+
   const prev = document.getElementById("prev");
   const next = document.getElementById("next");
   const dots = document.querySelectorAll(".indicator .list");
