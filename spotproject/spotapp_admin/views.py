@@ -243,8 +243,26 @@ class SpotDeleteView(StaffLoginRequiredMixin, View):
 # 観光地一覧画面
 class SpotListView(StaffLoginRequiredMixin, View):
     def get(self, request):
-        spot_list = Spot.objects.order_by('-created_at')
-        return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})
+        district_id = request.GET.get('district')
+        keyword = request.GET.get('q', '').strip()
+
+        spot_list = Spot.objects.all().select_related('district')
+        districts = District.objects.all()
+
+        if district_id:
+            spot_list = spot_list.filter(district_id=district_id)
+
+        if keyword:
+            spot_list = spot_list.filter(spot_name__icontains=keyword)
+        
+        spot_list = spot_list.order_by('district__district_name', 'spot_name')
+
+        return render(request,  'spotapp_admin/spot_update_or_delete.html', {
+            'spot_list': spot_list,
+            'districts': districts,
+            'selected_district': district_id,
+            'keyword': keyword,
+        })
 
 #お知らせ送信画面
 

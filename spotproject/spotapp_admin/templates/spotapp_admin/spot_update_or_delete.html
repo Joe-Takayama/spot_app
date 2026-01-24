@@ -1,11 +1,32 @@
 {% extends "base2/base2.html" %}
 {% block title %} 観光地一覧 {% endblock %}
+
 {% block body %}
-
-
 <h2 class="page-title">観光地一覧</h2>
 
 <div class="table-wrapper">
+    <form method="get" class="filter-form">
+    <input
+        type="text"
+        name="q"
+        placeholder="観光地名で検索"
+        value="{{ keyword|default:'' }}"
+    >
+
+    <select name="district">
+        <option value="">すべての地区</option>
+        {% for district in districts %}
+            <option value="{{ district.district_id }}"
+                {% if district.district_id|stringformat:"s" == selected_district %}selected{% endif %}>
+                {{ district.district_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+        <button type="submit">検索</button>
+    </form>
+
+
     <table class="spot-table">
         <thead>
             <tr>
