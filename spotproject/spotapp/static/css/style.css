@@ -181,15 +181,16 @@ nav {
     object-fit: cover;
 }
 
-.user-name {
-    font-size: 16px;
-    font-weight: bold;
-}
+
 
 .user-menu {
     position: absolute;
     top: 110%;
     right: 0;
+    max-width: 120px;        /* 好きに調整 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     background: #ffffff;
     border: 1px solid #e1e5e9;
