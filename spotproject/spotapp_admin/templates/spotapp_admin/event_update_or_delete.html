@@ -5,6 +5,16 @@
 <h2 class="page-title">イベント一覧</h2>
 
 <div class="table-wrapper">
+    <form method="get" class="filter-form">
+    <input
+        type="text"
+        name="q"
+        placeholder="イベント名で検索"
+        value="{{ keyword|default:'' }}"
+    >
+        <button type="submit">検索</button>
+    </form>
+
     <table class="event-table">
         <thead>
             <tr>

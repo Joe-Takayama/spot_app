@@ -117,7 +117,11 @@ class EventRegistrationView(StaffLoginRequiredMixin, View):
 class EventListView(StaffLoginRequiredMixin, View):
     def get(self, request):
         event_list = Events.objects.order_by('-event_date')
-        return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list})
+        keyword = request.GET.get('q', '').strip()
+
+        if keyword:
+            event_list = event_list.filter(event_name__icontains=keyword)
+        return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list, 'keyword': keyword,})
 
 # イベント更新画面  
 class EventUpdateView(StaffLoginRequiredMixin, View):
@@ -148,7 +152,7 @@ class EventDeleteView(StaffLoginRequiredMixin, View):
         page = get_object_or_404(Events, pk=event_id)
         event_name = page.event_name
         page.delete()
-        return render(request, 'spotapp_admin/event_delete_complete.html', {'event_name': event_name})
+        return render(request, 'spotapp_admin/event_delete_complete.html', {'event_name': event_name,})
     
 # 観光地登録画面
 class SpotRegistrationView(StaffLoginRequiredMixin, View):

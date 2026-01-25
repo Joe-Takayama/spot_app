@@ -12,7 +12,6 @@
                 {{ review.comment }}<br>
                 <small>{{ review.posted_at|date:"Y/m/d" }}</small>
     
-
                 {% if user.is_authenticated and review.user == user %}
                     <form method="post" action="{% url 'spotapp:review_delete' review.review_id %}">
                         {% csrf_token %}
@@ -20,7 +19,6 @@
                     </form>
                 {% endif %}
             </div>
-
         {% empty %}
             <p>まだレビューはありません</p>
         {% endfor %}

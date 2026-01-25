@@ -4,14 +4,14 @@
 {% block title %}観光地詳細{% endblock %}
 
 {% block extra_css %}
-  <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 {% endblock %}
 {# ===== ナビを最小構成に差し替え ===== #}
 {% block nav %}
 <nav class="profile-mini-nav">
-  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+<a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
 
   <div class="user-info">
     <div class="user-icon">
