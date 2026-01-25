@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import IndexView, LoginView, LogoutView, RegistselectView, UpdelView, EventRegistrationView, EventListView, EventUpdateView, EventDeleteView,SpotRegistrationView,SpotUpdateView,SpotDeleteView,SpotListView,OsiraseView, SpotSearchView, OsiraseDetailView
+from .views import IndexView, LoginView, LogoutView, EventRegistrationView, EventListView, EventUpdateView, EventDeleteView,SpotRegistrationView,SpotUpdateView,SpotDeleteView,SpotListView,OsiraseView, OsiraseDetailView
  
 app_name = 'spotapp_admin'
 urlpatterns = [
@@ -9,10 +9,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name="login"),
     # ログアウト画面
     path('logout/', LogoutView.as_view(), name="logout"),
-    # 登録選択画面
-    path('Registselect/',RegistselectView.as_view(),name='Registselect'),
-    #更新削除選択画面
-    path('Updel/', UpdelView.as_view(),name='Updel'),
     # イベント一覧
     path('event_list/', EventListView.as_view(), name='event_list'),
     # イベント登録画面
@@ -33,6 +29,4 @@ urlpatterns = [
     path('osirase/send/',OsiraseView.as_view(),name='osirase_send'),
     #お知らせ詳細
     path('osirase/<int:pk>/', OsiraseDetailView.as_view(), name='osirase_detail'),
-    #観光地検索結果画面
-    path('spot/result/', SpotSearchView.as_view(), name="search-result"),
 ]
