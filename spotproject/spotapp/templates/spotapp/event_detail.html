@@ -32,8 +32,8 @@
         <div class="info-row">
             <span class="info-label">住所</span>
             <span class="info-value">
-                {% if spot and spot.address %}
-                    {{ spot.address }}
+                {% if event.address %}
+                    {{ event.address }}
                 {% else %}
                     未登録
                 {% endif %}
@@ -43,10 +43,10 @@
         <div class="info-row">
             <span class="info-label">営業時間</span>
             <span class="info-value">
-                {% if spot and spot.business_hours %}
-                    {{ spot.business_hours }}
+                {% if event.event_time %}
+                    {{ event.event_time }}
                 {% else %}
-                    〜
+                    未登録
                 {% endif %}
             </span>
         </div>
@@ -67,8 +67,6 @@
             <span class="info-value">
                 {% if event.venue %}
                     {{ event.venue }}
-                {% elif spot %}
-                    {{ spot.spot_name }}
                 {% else %}
                     未登録
                 {% endif %}
@@ -76,8 +74,13 @@
         </div>
 
         <div class="info-row">
-            <span class="info-label">入場料</span>
-            <span class="info-value">（今後DB追加）</span>
+            <span class="info-label">主催者</span>
+            <span class="info-value"></span>
+            {% if event.organizer %}
+                {{ event.organizer }}
+            {% else %}
+                未登録
+            {% endif %}
         </div>
 
         <div class="info-row">
