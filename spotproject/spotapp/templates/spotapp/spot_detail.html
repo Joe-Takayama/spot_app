@@ -344,6 +344,87 @@
                 }).catch(() => reject());
         });
     }
+
+    // 表示範囲を bbox として取得
+    const bbox = map.getBounds();
+
+    // Overpass API クエリ（restaurant / hotel / guest_house / convenience）
+    const query = `
+    [out:json];
+    (
+    // restaurant / fast_food
+    node["amenity"~"restaurant|fast_food"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    way["amenity"~"restaurant|fast_food"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    relation["amenity"~"restaurant|fast_food"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+
+    // hotel / guest_house
+    node["tourism"~"hotel|guest_house"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    way["tourism"~"hotel|guest_house"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    relation["tourism"~"hotel|guest_house"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+
+    // convenience
+    node["shop"="convenience"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    way["shop"="convenience"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    relation["shop"="convenience"](${bbox.getSouth()},${bbox.getWest()},${bbox.getNorth()},${bbox.getEast()});
+    );
+    out center;
+    `;
+
+    // アイコン定義
+    const icons = {
+    restaurant: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=fzBbztlzr6xk&format=png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    }),
+    hotel: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=AVe9YeyAXTql&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    }),
+    convenience: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=pmzAHWwbZBIP&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+    })
+    };
+
+    fetch("https://overpass-api.de/api/interpreter", {
+    method: "POST",
+    body: query
+    })
+    .then(res => res.json())
+    .then(data => {
+        const geojson = osmtogeojson(data);
+
+    L.geoJSON(geojson, {
+    pointToLayer: (feature, latlng) => {
+        const tags = feature.properties.tags || feature.properties || {};
+
+        let icon = icons.restaurant;
+
+        if (tags.amenity === "restaurant" || tags.amenity === "fast_food") {
+        icon = icons.restaurant;
+        } else if (tags.tourism === "hotel" || tags.tourism === "guest_house") {
+        icon = icons.hotel;
+        } else if (tags.shop === "convenience") {
+        icon = icons.convenience;
+        }
+
+        return L.marker(latlng, { icon });
+    },
+
+    onEachFeature: (feature, layer) => {
+        const tags = feature.properties.tags || {};
+        const name = tags.name || "名称不明";
+    }
+    }).addTo(map);
+
+    })
+    .catch(err => console.error(err));
 </script>
 
 
@@ -353,4 +434,5 @@
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/osmtogeojson/osmtogeojson.js"></script>
 {% endblock %}
