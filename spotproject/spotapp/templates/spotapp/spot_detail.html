@@ -344,6 +344,111 @@
                 }).catch(() => reject());
         });
     }
+
+    // ======================
+    // 周辺施設表示
+    // ======================    
+    // 1. 初回ロード時に広い範囲を取得する関数
+    function loadOverpassData() {
+    // 現在の表示範囲
+    const bbox = map.getBounds();
+
+    // 拡大倍率（2〜5 くらいが現実的）
+    const expand = 3;
+
+    // 中心座標
+    const center = bbox.getCenter();
+
+    // 緯度・経度の差分を拡大
+    const latDiff = (bbox.getNorth() - bbox.getSouth()) / 2 * expand;
+    const lngDiff = (bbox.getEast() - bbox.getWest()) / 2 * expand;
+
+    // 拡大後の bbox
+    const bigBbox = {
+        south: center.lat - latDiff,
+        west: center.lng - lngDiff,
+        north: center.lat + latDiff,
+        east: center.lng + lngDiff
+    };
+
+    // Overpass API クエリ
+    const query = `
+    [out:json];
+    (
+        // restaurant / fast_food
+        node["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+
+        // hotel / guest_house
+        node["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+
+        // convenience
+        node["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+    );
+    out center;
+    `;
+
+    // アイコン定義
+    const icons = {
+        restaurant: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=fzBbztlzr6xk&format=png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        }),
+        hotel: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=AVe9YeyAXTql&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        }),
+        convenience: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=pmzAHWwbZBIP&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        })
+    };
+
+    // マーカーをまとめるレイヤー
+    const markerLayer = L.layerGroup().addTo(map);
+
+    // Overpass API 実行
+    fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        body: query
+    })
+        .then(res => res.json())
+        .then(data => {
+        const geojson = osmtogeojson(data);
+
+        L.geoJSON(geojson, {
+            pointToLayer: (feature, latlng) => {
+            const tags = feature.properties.tags || feature.properties || {};
+            let icon = icons.restaurant;
+
+            if (tags.amenity === "restaurant" || tags.amenity === "fast_food") {
+                icon = icons.restaurant;
+            } else if (tags.tourism === "hotel" || tags.tourism === "guest_house") {
+                icon = icons.hotel;
+            } else if (tags.shop === "convenience") {
+                icon = icons.convenience;
+            }
+
+            return L.marker(latlng, { icon });
+            }
+        }).addTo(markerLayer);
+        })
+        .catch(err => console.error(err));
+    }
+
+    // 2. ページ読み込み時に 1 回だけ実行
+    loadOverpassData();
 </script>
 
 
@@ -353,4 +458,5 @@
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script src="https://unpkg.com/osmtogeojson/osmtogeojson.js"></script>
 {% endblock %}
