@@ -168,12 +168,139 @@
   color: #555;
 }
 
-/* スマホ */
+/* =========================
+   ファイル選択をボタン風に（見た目統一）
+========================= */
+
+/* input[type=file] の中身を整える */
+.profile-edit-page input[type="file"]{
+  padding: 10px;
+  font-size: 14px;
+}
+
+/* Chrome/Edge */
+.profile-edit-page input[type="file"]::file-selector-button{
+  background: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  margin-right: 10px;
+  box-shadow: 0 8px 18px rgba(74,144,226,0.28);
+}
+.profile-edit-page input[type="file"]::file-selector-button:hover{
+  opacity: 0.92;
+}
+
+/* Safari(古いWebKit) */
+.profile-edit-page input[type="file"]::-webkit-file-upload-button{
+  background: #4a90e2;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+  margin-right: 10px;
+  box-shadow: 0 8px 18px rgba(74,144,226,0.28);
+}
+.profile-edit-page input[type="file"]::-webkit-file-upload-button:hover{
+  opacity: 0.92;
+}
+
+/* =========================
+   プロフィール編集：見た目を締める上書きセット
+========================= */
+
+/* 全体：縦の余白を少し締める */
+.profile-edit-page{
+  padding: 18px 14px 40px;
+}
+
+/* タイトル：デカすぎ→ちょうど良く */
+.profile-edit-page .page-title{
+  font-size: clamp(20px, 4.6vw, 26px);
+  margin: 6px 0 10px;
+  letter-spacing: 0.02em;
+}
+
+/* カード：少し締めて “完成品感” */
+.profile-edit-page .form-card{
+  padding: 22px 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.07);
+}
+
+/* ラベル：詰めて読みやすく */
+.profile-edit-page .form-group label{
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+
+/* 入力欄：高さを統一＆見た目キレイに */
+.profile-edit-page input[type="text"],
+.profile-edit-page input[type="file"]{
+  padding: 12px 12px;
+  border-radius: 14px;
+}
+
+/* ファイル入力：横幅いっぱいをやめて、スッキリ */
+.profile-edit-page input[type="file"]{
+  background: #fbfcff;
+  border: 1px solid rgba(0,0,0,0.14);
+}
+
+/* ファイルボタン：今の青に合わせて “ボタン感” 強化 */
+.profile-edit-page input[type="file"]::file-selector-button{
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.profile-edit-page input[type="file"]::-webkit-file-upload-button{
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+/* 送信ボタン：ちょい小さくして締める */
+.profile-edit-page .btn-primary{
+  width: min(520px, 100%);
+  margin-top: 12px;
+  padding: 13px 18px;
+  box-shadow: 0 10px 22px rgba(74,144,226,0.28);
+}
+
+/* パスワード変更：主役じゃないので “控えめ” に */
+.profile-edit-page .btn-primary-outline{
+  margin-top: 10px;
+  padding: 12px 18px;
+  border-width: 2px;
+  opacity: 0.92;
+}
+
+/* 戻る：ボタン感を消してリンクっぽく */
+.profile-edit-page .link-back{
+  margin-top: 8px;
+  color: #666;
+}
+
+/* ===== スマホ：さらに締める ===== */
 @media (max-width: 480px){
-  .profile-edit-page .form-card{
-    padding: 22px 18px;
+  .profile-mini-nav{
+    padding: 10px 12px;
   }
-  .profile-edit-page .page-title{
-    font-size: 22px;
+
+  .profile-edit-page .page-main{
+    padding-top: 16px;
+    gap: 12px;
+  }
+
+  .profile-edit-page .form-card{
+    padding: 18px 14px;
+  }
+
+  .profile-edit-page .btn-primary,
+  .profile-edit-page .btn-primary-outline{
+    width: 100%;
   }
 }
