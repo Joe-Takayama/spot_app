@@ -50,12 +50,13 @@
 }
 
 .main-photo-box img {
-    width: 100%;
-    height: auto;
-    max-height: 380px;
-    object-fit: cover;
+    width: 100%;          /* 横幅いっぱいに表示 */
+    height: auto;         /* 高さは自動調整 */
+    max-height: 380px;    /* 上限は必要に応じて */
+    object-fit: contain;   /* ← ここを cover → contain に変更 */
     border-radius: 10px;
 }
+
 
 .main-photo-box p {
     color: #777;

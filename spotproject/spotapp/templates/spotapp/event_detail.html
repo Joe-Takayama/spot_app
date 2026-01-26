@@ -19,8 +19,8 @@
 
     {# メイン画像：観光地の1枚目を流用（なければメッセージ） #}
     <div class="main-photo-box">
-        {% if spot and spot.spot_photos.first %}
-            <img src="{{ spot.spot_photos.first.image.url }}" alt="{{ spot.spot_name }}">
+        {% if event.event_photos.all %}
+            <img src="{{ event.event_photos.first.image.url }}" alt="{{ event.event_name }}">
         {% else %}
             <p>イベント写真がありません</p>
         {% endif %}

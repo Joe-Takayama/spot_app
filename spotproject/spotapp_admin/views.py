@@ -126,21 +126,30 @@ class EventListView(StaffLoginRequiredMixin, View):
 # イベント更新画面  
 class EventUpdateView(StaffLoginRequiredMixin, View):
     def get(self, request, event_id):
-        page = get_object_or_404(Events, pk=event_id)
-        event_form = EventCreateForm(instance=page)
-        event_photo = PhotoForm(instance=page)
-        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': event_photo, 'page': page})
+        event = get_object_or_404(Events, pk=event_id)
+        event_form = EventCreateForm(instance=event)
+
+        first_photo= event.event_photos.first()
+        photo_form = PhotoForm(instance=first_photo)
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'event': event})
     
     def post(self, request, event_id):
-        page = get_object_or_404(Events, pk=event_id)
-        event_form = EventCreateForm(request.POST, request.FILES, instance=page)
-        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+        event = get_object_or_404(Events, pk=event_id)
+        event_form = EventCreateForm(request.POST, request.FILES, instance=event)
+
+        first_photo = event.event_photos.first()
+        photo_form = PhotoForm(request.POST, request.FILES, instance=first_photo)
 
         if event_form.is_valid() and photo_form.is_valid():
             event_form.save()
-            photo_form.save()
+            if first_photo:
+                photo_form.save()
+            else:
+                new_photo = photo_form.save(commit=False)
+                new_photo.event = event
+                new_photo.save()
             return render(request, 'spotapp_admin/event_update_complete.html')
-        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'page': page})
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'event': event})
 
 # イベント削除確認画面
 class EventDeleteView(StaffLoginRequiredMixin, View):

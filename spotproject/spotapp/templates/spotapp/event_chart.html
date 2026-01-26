@@ -48,7 +48,7 @@
       </p>
 
       <p class="description">
-        {{ event.details }}
+        {{ event.details|truncatechars:50 }}
       </p>
 
       <a href="{% url 'spotapp:event_detail' event.event_id %}"
