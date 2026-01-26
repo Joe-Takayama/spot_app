@@ -108,8 +108,12 @@ class Events(models.Model):
     spot_id = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True, blank=True)
     # 開催日
     event_date = models.DateField(verbose_name="開催日")
+    # 開催時間
+    event_time = models.CharField(max_length=255, verbose_name="開催時間")
     # 会場
     venue = models.CharField(max_length=255, verbose_name="会場")
+    # 住所
+    address = models.CharField(max_length=255, verbose_name="住所")
     # 詳細
     details = models.TextField(max_length=2000, verbose_name="詳細情報")
     # 主催者

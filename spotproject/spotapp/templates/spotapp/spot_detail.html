@@ -80,7 +80,7 @@
             <div class="spot-name">
                 <h2>{{ spot.spot_name }}について</h2>
             </div>
-            <p>{{ spot.explanation }}</p>
+            <p>{{ spot.explanation|linebreaksbr|urlize  }}</p>
         </div>
 
         <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
