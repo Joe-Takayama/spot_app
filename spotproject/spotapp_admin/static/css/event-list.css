@@ -65,3 +65,9 @@
     color: #999;
     margin-right: 6px;
 }
+
+.event-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
