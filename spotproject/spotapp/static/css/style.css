@@ -316,23 +316,23 @@ nav {
     flex: 0 0 auto;
   }
 
-  /* 中央だけ「折り返し」させて2段にする */
+  /* 中央だけ：grid 2列でキッチリ揃える */
   .nav-center{
-    flex: 1 1 auto;
-    display: flex;
-    flex-wrap: wrap;                /* ←これが本体 */
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
+    justify-content: center;
     min-width: 0;
   }
 
-  /* ボタンが縦書き化しないように + 2列っぽく並ぶ幅に */
+  /* ボタン見た目をスマホ用に少しコンパクトに */
   .nav-center .Menu_btn{
+    width: 100%;
     white-space: nowrap;
     word-break: keep-all;
-    flex: 0 0 calc(50% - 10px);     /* 2列（=2段になる） */
+    padding: 10px 8px;     /* 横paddingを減らすと綺麗 */
+    font-size: 14px;
     text-align: center;
-    padding: 10px 12px;
     box-sizing: border-box;
   }
 
@@ -355,6 +355,12 @@ nav {
     height: 48px;
   }
   .user-name{
+    font-size: 14px;
+  }
+  
+    /* ホームボタンも少しコンパクトに */    
+  .btn-home{
+    padding: 10px 14px;
     font-size: 14px;
   }
 }
