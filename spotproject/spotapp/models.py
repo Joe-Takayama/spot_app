@@ -106,10 +106,11 @@ class Events(models.Model):
     event_name = models.CharField(max_length=255, verbose_name="イベント名称")
     # 観光地ID
     spot_id = models.ForeignKey(Spot, on_delete=models.CASCADE, null=True, blank=True)
-    # 開催日
-    event_date = models.DateField(verbose_name="開催日")
+    # 開催期間
+    event_start = models.DateField(verbose_name="開催日", null=True, blank=True)
+    event_end = models.DateField(verbose_name="終了日", null=True, blank=True)
     # 開催時間
-    event_time = models.CharField(max_length=255, verbose_name="開催時間")
+    event_time = models.CharField(max_length=255, verbose_name="開催時間", null=True, blank=True)
     # 会場
     venue = models.CharField(max_length=255, verbose_name="会場")
     # 住所
