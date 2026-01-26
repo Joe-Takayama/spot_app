@@ -31,7 +31,9 @@
     <div class="event-card">
       <h3>{{ event.event_name }}</h3>
 
-      <p>📅 {{ event.event_date|date:"Y年m月d日" }}</p>
+      <p>
+        📅 {{ event.event_start|date:"Y年n月j日" }} 〜 {{ event.event_end|date:"Y年n月j日" }}
+      </p>
 
       <p>
         📍

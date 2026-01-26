@@ -21,13 +21,16 @@ class StaffForm(ModelForm):
 class EventCreateForm(ModelForm):
     class Meta:
         model = Events
-        fields = ['event_name', 'event_date', 'event_time', 'address', 'venue', 'details', 'organizer']
+        fields = ['event_name', 'event_start','event_end', 'event_time', 'address', 'venue', 'details', 'organizer']
         widgets = {
             'event_name': TextInput(attrs={
                 'placeholder': 'イベント名称を入力してください'
             }),
-            'event_date': TextInput(attrs={
-                'placeholder': '日時を入力してください'
+            'event_start': TextInput(attrs={
+                'placeholder': '開催日を入力してください'
+            }),
+            'event_end': TextInput(attrs={
+                'placeholder': '終了日を入力してください'
             }),
             'event_time': TextInput(attrs={
                 'placeholder': '時間を入力してください'
