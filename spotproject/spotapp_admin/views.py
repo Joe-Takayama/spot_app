@@ -116,7 +116,7 @@ class EventRegistrationView(StaffLoginRequiredMixin, View):
 # イベント一覧画面
 class EventListView(StaffLoginRequiredMixin, View):
     def get(self, request):
-        event_list = Events.objects.order_by('-event_start')
+        event_list = Events.objects.order_by('event_start')
         keyword = request.GET.get('q', '').strip()
 
         if keyword:
