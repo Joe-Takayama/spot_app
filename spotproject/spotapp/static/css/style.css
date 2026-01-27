@@ -303,12 +303,18 @@ nav {
 
 /* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
 @media (max-width: 768px){
+        /* 余白を少し削って情報量UP */
+  .page-container{ padding: 0 8px; }
+  .page{ width: 100%; margin: 0; padding: 0; }
+
 
   /* nav自体は横並びのまま（崩さない） */
   nav{
+    padding: 6px 10px;
+    min-height: 64px;
     flex-direction: row;            /* 念のため固定 */
     align-items: center;
-    gap: 12px;
+    gap: 10px;
   }
 
   /* 左・右は固定幅のまま */
@@ -320,9 +326,10 @@ nav {
   .nav-center{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
+    gap: 8px;
     justify-content: center;
     min-width: 0;
+
   }
 
   /* ボタン見た目をスマホ用に少しコンパクトに */
@@ -330,8 +337,8 @@ nav {
     width: 100%;
     white-space: nowrap;
     word-break: keep-all;
-    padding: 10px 8px;     /* 横paddingを減らすと綺麗 */
-    font-size: 14px;
+    padding: 10px 10px;
+    font-size: 13px;
     text-align: center;
     box-sizing: border-box;
   }
@@ -351,8 +358,8 @@ nav {
 
   /* ユーザーアイコンは小さめ（スペース確保） */
   .user-icon img{
-    width: 48px;
-    height: 48px;
+    width: 44px;
+    height: 44px;
   }
   .user-name{
     font-size: 14px;
@@ -360,7 +367,19 @@ nav {
   
     /* ホームボタンも少しコンパクトに */    
   .btn-home{
-    padding: 10px 14px;
-    font-size: 14px;
+    padding: 10px 12px;
+    font-size: 13px;
   }
+
+    /* 検索バーは100%で自然に */
+ #search{
+    width: 100%;
+    max-width: none;
+    margin: 10px auto 8px;
+    padding: 10px 12px;
+  }
+
+  .submit{ margin-top: 6px; }
+
+
 }
