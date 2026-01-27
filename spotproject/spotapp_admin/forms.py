@@ -27,10 +27,10 @@ class EventCreateForm(ModelForm):
                 'placeholder': 'イベント名称を入力してください'
             }),
             'event_start': TextInput(attrs={
-                'placeholder': '開催日を入力してください'
+                'placeholder': '開催日を入力してください(記入方法:yyyy-mm-dd)'
             }),
             'event_end': TextInput(attrs={
-                'placeholder': '終了日を入力してください'
+                'placeholder': '終了日を入力してください(記入方法:yyyy-mm-dd)'
             }),
             'event_time': TextInput(attrs={
                 'placeholder': '時間を入力してください'
