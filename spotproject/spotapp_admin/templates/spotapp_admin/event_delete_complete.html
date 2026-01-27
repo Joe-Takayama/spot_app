@@ -1,6 +1,11 @@
 {% extends "base2/base2.html" %}
 {% block title %} イベント削除完了 {% endblock %}
 {% block body %}
-<h2>イベント削除が完了しました</h2>
-<a href="{% url 'spotapp_admin:index' %}">管理者トップへ戻る</a>
+<div class="complete">
+    <h2>イベント削除が完了しました</h2>
+    <div class="menu">
+        <a href="{% url 'spotapp_admin:index' %}" class="btn">管理者トップへ戻る</a>
+        <a href="{% url 'spotapp_admin:event_list' %}" class="btn">イベント一覧へ</a>
+    </div>
+</div>
 {% endblock %}
