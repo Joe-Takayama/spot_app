@@ -141,3 +141,14 @@ form button {
   border: 1px solid #ddd;
   transition: all 0.2s ease;
 }
+.event-count{
+ display: inline-block;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  background: #f1f3f5;
+  color: #333;
+  border: 1px solid #ddd;
+  transition: all 0.2s ease;
+}
