@@ -2,6 +2,10 @@
 {% block title %} お知らせ送信完了 {% endblock %}
 {% block body %}
 
-<h2>お知らせ送信が完了しました</h2>
-<a href="{% url 'spotapp_admin:index' %}">管理者トップへ戻る</a>
+<div class="complete">
+    <h2>お知らせ送信が完了しました</h2>
+    <div class="menu">
+        <a href="{% url 'spotapp_admin:index' %}" class="btn">管理者トップへ戻る</a>
+    </div>
+</div>
 {% endblock  %}
