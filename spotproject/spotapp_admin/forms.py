@@ -102,6 +102,12 @@ class OsiraseForm(forms.ModelForm):
     class Meta:
         model = Osirase
         fields = ["title", "body"]
+
+        labels = {
+            "title" : "件名",
+            "body" : "お知らせ内容",
+        }
+
         widgets = {
             "title": forms.TextInput(attrs={
                 "placeholder": "題名を入力",
