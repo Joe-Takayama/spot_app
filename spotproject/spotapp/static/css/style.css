@@ -428,3 +428,16 @@ nav {
 
 
 }
+/* ===== お知らせだけ：PC(ホバーできる端末)は hover で開閉 ===== */
+@media (hover: hover) and (pointer: fine){
+
+  /* お知らせブロックにマウスが乗ってる間は表示 */
+  #osiraseMenu_btn:hover > #osirase_down{
+    display: flex;
+  }
+
+  /* hover中にメニューへ移動しても閉じないように */
+  #osiraseMenu_btn{
+    position: relative;
+  }
+}
