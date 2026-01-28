@@ -122,7 +122,8 @@
             </div>
             {% else %}
                 <a href="{% url 'spotapp:signup' %}" class="user-btn">
-                    新規登録<br>ログイン
+                    <span class="pc-only">新規登録 / ログイン</span>
+                    <span class="sp-only">新規登録<br>ログイン</span>
                 </a>
             {% endif %}
         </div>

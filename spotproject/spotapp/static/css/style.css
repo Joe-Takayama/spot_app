@@ -301,6 +301,10 @@ nav {
     background-color: #4a60d3;
 }
 
+/* PCでは1行表示 */
+.pc-only{ display:inline; }
+.sp-only{ display:none; }
+
 /* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
 @media (max-width: 768px){
         /* 余白を少し削って情報量UP */
@@ -406,6 +410,21 @@ nav {
   }
 
   .submit{ margin-top: 6px; }
+/* スマホでは2行表示 */
+  .pc-only{ display:none; }
+  .sp-only{ display:inline; }
+
+  /* ついで：ボタン内の文字がはみ出さないように */
+.user-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;   /* PCは改行させない */
+}
+
+
 
 
 }
