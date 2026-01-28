@@ -1,99 +1,91 @@
-body{
-  font-family: "Noto Sans JP", sans-serif;
-  background: #ffffff;
-}
-
-.page{
+/* ===== レイアウト ===== */
+.review-list {
+  max-width: 800px;
+  margin: 40px auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch; /* ← ここ大事：横幅をちゃんと使う */
+  gap: 18px;
+  padding: 0 16px;
 }
 
-.review-list{
-  width: 100%;
-  max-width: 720px;
-  padding: 40px 20px;
+.spot-name {
   text-align: center;
-}
-
-.spot-name{
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 800;
-  margin-bottom: 30px;
+  margin: 0 0 10px;
 }
 
-.review-card{
-  background: #fff;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+/* ===== レビューカード ===== */
+.review {
+  width: 100%;
+  padding: 18px 18px;
+  border-radius: 12px;
+  background: #f9f9f9;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
   text-align: left;
+  line-height: 1.6;
 }
 
-.review-rating{
-  font-weight: 700;
-}
-
-.review-comment{
-  margin: 10px 0;
-}
-
-.review-date{
-  font-size: 13px;
+.review small {
+  display: inline-block;
+  margin-top: 6px;
   color: #666;
 }
 
-.btn-delete{
-  margin-top: 10px;
-  padding: 6px 14px;
+/* ===== 削除ボタン ===== */
+.delete-btn {
+  margin-top: 12px;
+  padding: 10px 18px;
+  border-radius: 10px;
   border: none;
-  border-radius: 6px;
-  background: #2563eb;
+  background-color: #007BFF;
   color: #fff;
   cursor: pointer;
-}
-
-/* もっと見る（アウトライン） */
-.more-link{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 10px 20px;
-  margin: 18px auto 8px;
-  border-radius: 999px;
-  border: 1px solid #2563eb;
-  color: #2563eb;
   font-weight: 700;
-  text-decoration: none;
-
-  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-  transition: background .15s ease, transform .08s ease;
 }
 
-.more-link:hover{
-  background: rgba(37,99,235,0.08);
+/* ===== 下のボタン（投稿・戻る） ===== */
+.review-list button,
+.review-list .btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto;          /* 中央 */
+  padding: 12px 22px;
+  border-radius: 10px;
+  border: none;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+/* ===== もっと見る（アウトライン） ===== */
+.more-link {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  margin: 0 auto; /* 中央 */
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 1px solid #007BFF;
+  background: #fff;
+  color: #007BFF;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  transition: transform .08s ease, background .15s ease;
+}
+
+.more-link:hover {
+  background: rgba(0, 123, 255, 0.08);
   transform: translateY(-1px);
 }
 
-.btn-primary{
-  display: inline-block;
-  margin-top: 14px;
-  padding: 12px 26px;
-  background: #2563eb;
-  color: #fff;
-  border-radius: 10px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.btn-back{
-  margin-top: 14px;
-  padding: 10px 22px;
-  border-radius: 10px;
-  border: none;
-  background: #2563eb;
-  color: #fff;
-  font-weight: 700;
-  cursor: pointer;
+.more-link:active {
+  transform: translateY(0);
 }

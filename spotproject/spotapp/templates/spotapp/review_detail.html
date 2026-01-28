@@ -1,50 +1,43 @@
 {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>レビュー詳細</title>
-  <link href="{% static 'css/review_detail.css' %}" rel="stylesheet">
-</head>
-<body>
+<link href="{% static 'css/review_detail.css' %}" rel="stylesheet">
 
 <div class="page">
+  {% block body %}
   <div class="review-list">
-
     <h1 class="spot-name">{{ spot.spot_name }}</h1>
 
+    {# views から渡した reviews を使う #}
     {% for review in reviews %}
-      <div class="review-card">
-        <div class="review-rating">★{{ review.rating }}</div>
-        <div class="review-comment">{{ review.comment }}</div>
-        <div class="review-date">{{ review.posted_at|date:"Y/m/d" }}</div>
+      <div class="review">
+        <strong>★{{ review.rating }}</strong><br>
+        {{ review.comment }}<br>
+        <small>{{ review.posted_at|date:"Y/m/d" }}</small>
 
         {% if user.is_authenticated and review.user == user %}
           <form method="post" action="{% url 'spotapp:review_delete' review.review_id %}">
             {% csrf_token %}
-            <button type="submit" class="btn-delete">削除</button>
+            <button type="submit" class="delete-btn">削除</button>
           </form>
         {% endif %}
       </div>
     {% empty %}
-      <p class="empty-text">まだレビューはありません</p>
+      <p>まだレビューはありません</p>
     {% endfor %}
 
+    {# もっと見る（3件以上あるときだけ） #}
     {% if has_more %}
-      <a href="{% url 'spotapp:review_detail' spot.spot_id %}?all=1"
-         class="more-link">
+      <a href="{% url 'spotapp:review_detail' spot.spot_id %}?all=1" class="more-link">
         もっと見る（全{{ total_reviews }}件）
       </a>
     {% endif %}
 
-    <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn-primary">
+    <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
       レビューを投稿する
     </a>
 
-    <button onclick="history.back()" class="btn-back">← 戻る</button>
-
+    <button type="button" onclick="history.back()">
+      ← 戻る
+    </button>
   </div>
+  {% endblock %}
 </div>
-
-</body>
-</html>
