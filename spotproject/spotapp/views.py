@@ -11,6 +11,7 @@ from spotapp_admin.models import Osirase
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 
 from .forms import (
     ProfileEditForm,
@@ -371,6 +372,7 @@ def favorite_toggle_ajax(request, spot_id):
 class EventListView(View):
     def get(self, request):
         month = request.GET.get("month")  # ← 追加
+        page_number = request.GET.get("page", 1)
 
         event_list = Events.objects.order_by("event_start")
 
@@ -378,8 +380,13 @@ class EventListView(View):
         if month:
             event_list = event_list.filter(event_start__month=month)
 
+        # ページネーション
+        paginator = Paginator(event_list, 7)
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            "event_list": event_list,
+            "event_list": page_obj,
+            "page_obj": page_obj,
             "months": range(1, 13),
             "selected_month": month,  # ← 追加
         }
