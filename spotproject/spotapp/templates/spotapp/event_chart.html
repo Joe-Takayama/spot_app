@@ -13,13 +13,13 @@
 
   <!-- 🔹 月ボタン -->
   <div class="month-select">
-    <a href="{% url 'spotapp:event_chart' %}"
+    <a href="{% url 'spotapp:event_chart' %}?page=1"
        class="month-btn {% if not selected_month %}active{% endif %}">
       ALL
     </a>
 
     {% for m in months %}
-      <a href="?month={{ m }}"
+      <a href="?month={{ m }}&page=1"
          class="month-btn {% if selected_month == m|stringformat:'s' %}active{% endif %}">
         {{ m }}月
       </a>
@@ -61,4 +61,26 @@
   {% endfor %}
 
 </div>
+
+<!-- ページネーション -->
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination">
+
+  {% if page_obj.has_previous %}
+    <a href="?{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ page_obj.previous_page_number }}">
+      ←前のページへ
+    </a>
+  {% endif %}
+
+  <span>
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+  </span>
+
+  {% if page_obj.has_next %}
+    <a href="?{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ page_obj.next_page_number }}">
+      次のページへ→
+    </a>
+  {% endif %}
+</div>
+{% endif %}
 {% endblock %}
