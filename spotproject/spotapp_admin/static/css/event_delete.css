@@ -40,3 +40,10 @@
 .btn-no:hover {
     background-color: #0055cc;
 }
+
+.event_delete-container {
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center;     /* 縦方向中央 */
+    height: 100vh;           /* 画面全体の高さ */
+}

@@ -22,6 +22,11 @@
         {% empty %}
             <p>まだレビューはありません</p>
         {% endfor %}
+        
+        <a href="{% url 'spotapp:review_create' spot.spot_id %}" class="btn">
+            レビューを投稿する
+        </a>
+        
 
         <button type="button" onclick="history.back()">
             ← 戻る

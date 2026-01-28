@@ -27,10 +27,10 @@ class EventCreateForm(ModelForm):
                 'placeholder': 'イベント名称を入力してください'
             }),
             'event_start': TextInput(attrs={
-                'placeholder': '開催日を入力してください'
+                'placeholder': '開催日を入力してください(記入方法:yyyy-mm-dd)'
             }),
             'event_end': TextInput(attrs={
-                'placeholder': '終了日を入力してください'
+                'placeholder': '終了日を入力してください(記入方法:yyyy-mm-dd)'
             }),
             'event_time': TextInput(attrs={
                 'placeholder': '時間を入力してください'
@@ -102,12 +102,18 @@ class OsiraseForm(forms.ModelForm):
     class Meta:
         model = Osirase
         fields = ["title", "body"]
+
+        labels = {
+            "title" : "件名",
+            "body" : "お知らせ内容",
+        }
+
         widgets = {
-            "題名": forms.TextInput(attrs={
+            "title": forms.TextInput(attrs={
                 "placeholder": "題名を入力",
                 "maxlength": "50"
             }),
-            "お知らせ内容": forms.Textarea(attrs={
+            "body": forms.Textarea(attrs={
                 "placeholder": "お知らせする内容を入力してください",
                 "maxlength": "200",  # ← これを追加
                 "rows": 5

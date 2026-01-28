@@ -372,7 +372,7 @@ class EventListView(View):
     def get(self, request):
         month = request.GET.get("month")  # ← 追加
 
-        event_list = Events.objects.order_by("-event_start")
+        event_list = Events.objects.order_by("event_start")
 
         # 🔹 月指定があれば絞り込み
         if month:
