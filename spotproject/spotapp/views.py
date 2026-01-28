@@ -296,10 +296,22 @@ class ReviewDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
 
+        show_all = request.GET.get("all") == "1"
+
+        qs = spot.review_set.order_by("-posted_at")
+        total = qs.count()
+
+        reviews = qs if show_all else qs[:2]
+        has_more = (not show_all) and (total > 2)
+
         return render(request, "spotapp/review_detail.html", {
             "spot": spot,
-            "reviews": spot.review_set.all()
+            "reviews": reviews,
+            "has_more": has_more,
+            "show_all": show_all,
+            "total_reviews": total,
         })
+
 
 
 #レビュー消去用
