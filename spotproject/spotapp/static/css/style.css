@@ -306,7 +306,32 @@ nav {
         /* 余白を少し削って情報量UP */
   .page-container{ padding: 0 8px; }
   .page{ width: 100%; margin: 0; padding: 0; }
+  
+   /* ボタン全体を小さく */
+  .btn-home,
+  .Menu_btn,
+  .user-btn{
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
 
+  .nav-right{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* 中央のgridを少し詰める */
+  .nav-center{
+    gap: 6px;
+  }
+
+  /* ログインボタンは中身を2行にしたいので高さ調整 */
+  .user-btn{
+    line-height: 1.15;
+    text-align: center;
+  }
 
   /* nav自体は横並びのまま（崩さない） */
   nav{
@@ -314,6 +339,7 @@ nav {
     min-height: 64px;
     flex-direction: row;            /* 念のため固定 */
     align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
   }
 
