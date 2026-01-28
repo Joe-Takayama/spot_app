@@ -227,3 +227,57 @@
     border-bottom: 1px solid #999;
     box-sizing: border-box;
 }
+
+/* ===== スマホで横はみ出し防止（詳細ページ） ===== */
+.spot-info,
+.spot-image,
+.spot-actions,
+#route-ui,
+.spot-detail{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* paddingがある要素は “中身込みで100%” にする */
+.spot-image,
+.spot-actions{
+  padding: 12px;        /* 20pxだと狭幅でキツいので縮める */
+}
+
+/* 画像の高さ：スマホは固定350だとデカすぎ＆崩れやすい */
+@media (max-width: 768px){
+  .photo{ height: 220px; }
+}
+
+/* route の入力やボタンがはみ出さない */
+.route-input #start{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.route-buttons{
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ★犯人になりがちな all: unset 対策
+   → 横はみ出しを絶対させない */
+#route-selector{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#route-selector button{
+  all: unset;                 /* ここは残してOK */
+  box-sizing: border-box;     /* ←追加：これ必須 */
+  display: inline-flex;       /* ←安定 */
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;            /* ←追加：はみ出し禁止 */
+  white-space: nowrap;
+}
