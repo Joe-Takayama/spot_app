@@ -301,12 +301,41 @@ nav {
     background-color: #4a60d3;
 }
 
+/* PCでは1行表示 */
+.pc-only{ display:inline; }
+.sp-only{ display:none; }
+
 /* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
 @media (max-width: 768px){
         /* 余白を少し削って情報量UP */
   .page-container{ padding: 0 8px; }
   .page{ width: 100%; margin: 0; padding: 0; }
+  
+   /* ボタン全体を小さく */
+  .btn-home,
+  .Menu_btn,
+  .user-btn{
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
 
+  .nav-right{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* 中央のgridを少し詰める */
+  .nav-center{
+    gap: 6px;
+  }
+
+  /* ログインボタンは中身を2行にしたいので高さ調整 */
+  .user-btn{
+    line-height: 1.15;
+    text-align: center;
+  }
 
   /* nav自体は横並びのまま（崩さない） */
   nav{
@@ -314,6 +343,7 @@ nav {
     min-height: 64px;
     flex-direction: row;            /* 念のため固定 */
     align-items: center;
+    flex-wrap: wrap;
     gap: 10px;
   }
 
@@ -380,6 +410,21 @@ nav {
   }
 
   .submit{ margin-top: 6px; }
+/* スマホでは2行表示 */
+  .pc-only{ display:none; }
+  .sp-only{ display:inline; }
+
+  /* ついで：ボタン内の文字がはみ出さないように */
+.user-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;   /* PCは改行させない */
+}
+
+
 
 
 }
