@@ -281,14 +281,21 @@
         });
     });
     // ------------------------
-// ナビのプルダウン：クリックで開閉（hover禁止）
-// ------------------------
+    // ナビのプルダウン：基本クリック
+    // ただし「お知らせ」は PC=hover / スマホ=click
+    // ------------------------
     const navBlocks = document.querySelectorAll(".Nav-block");
+    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     navBlocks.forEach(block => {
     const btn = block.querySelector(".Menu_btn");
     const down = block.querySelector(".menu_down");
     if (!btn || !down) return;
+
+    const isOsirase = (block.id === "osiraseMenu_btn");
+
+    // PCでお知らせは hover で開くので click 制御しない
+    if (isOsirase && canHover) return;
 
     btn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -302,21 +309,7 @@
         block.classList.toggle("open");
     });
 
-    // メニュー内クリックは閉じない（項目選択を優先）
     down.addEventListener("click", (e) => e.stopPropagation());
-    });
-
-    // 何も入力・選択しないで検索ボタンを押したときは全部クリア
-    document.getElementById('searchForm').addEventListener("submit", function(e) {
-        const keyword = document.getElementById('search').value.trim();
-        const district = document.getElementById('search_district').value.trim();
-        const category = document.getElementById('search_category').value.trim();
-
-        // すべて空なら送信させない
-        if (!keyword && !district && !category) {
-            e.preventDefault();
-            alert('検索条件を1つ以上指定してください。');
-        }
     });
 
 
