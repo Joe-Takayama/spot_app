@@ -7,7 +7,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
-from spotapp_admin.models import Osirase
+
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -22,8 +22,8 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot , Profile, Favorite, Category, District
-from spotapp_admin.models import Photo
+from .models import Events, Review, Spot , Profile, Favorite, Category, District, OsiraseRead
+from spotapp_admin.models import Photo, Osirase
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -532,6 +532,15 @@ def osirase_list(request):
 class NewsDetailView(View):
     def get(self, request, pk):
         news = get_object_or_404(Osirase, pk=pk)
+
+        if request.user.is_authenticated:
+            OsiraseRead.objects.get_or_create(user=request.user, osirase=news)
+        else:
+            read_ids = set(request.session.get("osirase_read_ids", []))
+            read_ids.add(news.pk)
+            request.session["osirase_read_ids"] = list(read_ids)
+            request.session.modified = True
+
         return render(request, "spotapp/news_detail.html", {"news": news})
         # ------------------------
 # as_view() の定義

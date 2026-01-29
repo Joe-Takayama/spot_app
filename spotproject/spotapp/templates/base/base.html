@@ -75,8 +75,14 @@
        
 
 
-             <div class="Nav-block" id="osiraseMenu_btn">
-                <button class="Menu_btn">お知らせ ▼</button>
+            <div class="Nav-block" id="osiraseMenu_btn">
+                <button class="Menu_btn">
+                    お知らせ ▼
+                    {% if osirase_new_count %}
+                        <span class="new-badge">{{ osirase_new_count }}</span>
+                    {% endif %}
+
+                </button>
             
             <ul  id="osirase_down" class="menu_down anywhere">
                 {% for o in osirase_list %}
