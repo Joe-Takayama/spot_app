@@ -1,0 +1,69 @@
+.home-btn {
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+.home-btn a {
+    background-color: #0077cc;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    transition: all 0.5s ease;
+}
+
+.home-btn a:hover {
+    background-color: #0055cc;
+}
+
+.event_registration-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.event_registration-form h2 {
+    text-align: center;
+}
+
+.event_registration-form {
+    background-color: #fff;
+    padding: 20px 30px;
+    width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.event_registration-form input {
+    width: 100%;                   
+    padding: 12px;                 
+    border-radius: 6px;            
+    border: 1px solid #bbb;        /* 上下左右に1px・グレーの枠線を追加 */
+    margin-bottom: 10px;           /* 下に18pxの余白を追加（次の入力欄との距離） */
+}
+
+label[for="id_details"] {
+    display: block !important;
+    margin: 20px 0 8px 0 !important;
+    font-size: 16px !important;
+    color: #333 !important;
+}
+
+.event_registration-form button {
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: #0077cc;
+    color: white;
+    transition: all 0.5s ease;
+}
+
+.event_registration-form button:hover {
+    background-color: #0055cc;
+    transition: all 0.5s ease;
+}
+
+.submit {
+    cursor: pointer;
+}

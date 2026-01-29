@@ -1,0 +1,91 @@
+*, body, ul {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ 
+/* =========================
+   管理メニュー
+========================= */
+
+.menu-container {
+  width: min(1100px, 95%);
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-box {
+  display: flex;
+  height: 320px;
+  gap: 24px;
+}
+
+/* 左右2分割 */
+.spot-box,
+.event-box {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+  padding: 24px;
+}
+
+/* 見出し */
+.menu-title {
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border-bottom: 2px solid rgba(255,255,255,0.7);
+  padding-bottom: 6px;
+}
+
+/* ボタン */
+.menu-btn {
+  display: block;
+  margin: 10px 0;
+  padding: 12px 40px;
+  background: #fff;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #333;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  transition: transform 0.2s ease;
+}
+
+.menu-btn:hover {
+  transform: translateY(-2px);
+}
+
+ 
+/* =========================
+   イベント一覧バー
+========================= */
+.event_bar {
+  width: min(900px, 90%);
+  margin: 40px auto 0;
+  padding: 16px 0;
+  text-align: center;
+  background: linear-gradient(135deg, #facc15, #f59e0b);
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 14px 30px rgba(250,204,21,0.4);
+  transition: transform 0.2s ease;
+}
+
+.event_bar:hover {
+  transform: translateY(-2px);
+}
+
+.event_bar a {
+  text-decoration: none;
+}

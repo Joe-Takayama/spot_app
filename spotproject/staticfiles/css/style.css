@@ -1,0 +1,577 @@
+/* ===============================
+   ベース設定
+   =============================== */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: #ffffff;
+}
+
+/* ===============================
+   ナビバー（全幅）
+   =============================== */
+nav {
+    width: 100%;
+    min-height: 80px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e1e5e9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+
+    padding: 10px 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1000;
+}
+
+.nav-left,
+.nav-right {
+    flex: 0 0 auto;
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+/* ===============================
+   中央幅コンテナ（★幅の基準）
+   =============================== */
+.page-container {
+    width: 100%;
+    max-width: 1300px;     /* ← 幅はここだけで決める */
+    margin: 0 auto;
+    padding: 0 25px;
+    box-sizing: border-box;
+}
+
+/* ===============================
+   検索バー
+   =============================== */
+#search {
+    width: 80%;
+    max-width: 600px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin: 20px auto;
+    display: block;
+}
+
+/* ===============================
+   ホーム・共通ボタン
+   =============================== */
+.btn-home,
+.Menu_btn,
+.user-btn {
+    background: #667eea;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.btn-home:hover,
+.Menu_btn:hover,
+.user-btn:hover {
+    opacity: 0.85;
+}
+
+/* ===============================
+   ドロップダウン（地区・カテゴリ）
+   =============================== */
+.Nav-block {
+    position: relative;
+}
+
+.menu_down {
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    min-width: 160px;
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: none;
+    flex-direction: column;
+    z-index: 2000;
+}
+
+/* .Nav-block:hover > .menu_down {
+    display: flex;
+} */
+ 
+ /* ✅ JSで open クラスが付いたときだけ表示 */
+.Nav-block.open > .menu_down {
+    display: flex;
+}
+
+
+.menu_down li a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #333;
+}
+
+.menu_down li a:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
+
+.menu_down#osirase_down {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  transform: translateX(-60%);
+  width: clamp(300px, 50vw, 600px);
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.menu_down#osirase_down.anywhere{
+    overflow-wrap: anywhere;
+}
+
+
+/* ===============================
+   ユーザー情報・メニュー
+   =============================== */
+.user-menu-wrapper {
+    position: relative;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+
+.user-icon img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+
+.user-menu {
+    position: absolute;
+    top: 110%;
+    right: 0;
+    max-width: 120px;        /* 好きに調整 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    background: #ffffff;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    display: none;
+    flex-direction: column;
+    z-index: 3000;
+}
+
+.user-menu li a {
+    display: block;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: #333;
+}
+
+.user-menu li a:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
+.user-menu-btn{
+  background:none;
+  border:none;
+  padding:0;
+  margin:0;
+  font:inherit;
+  color:inherit;
+  cursor:pointer;
+  width:100%;
+  text-align:left;
+}
+
+/* ✅ ログアウト(button)をプロフィール(a)と同じ見た目にする（現状崩さない） */
+.user-menu li form {
+    margin: 0;               /* formの余白でズレるの防止 */
+}
+
+.user-menu li .user-menu-btn {
+    display: block;
+    padding: 12px 18px;      /* ← .user-menu li a と同じ */
+    width: 100%;
+    text-decoration: none;
+    color: #333;
+    background: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font: inherit;
+}
+
+/* hoverもaと同じ */
+.user-menu li .user-menu-btn:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+.user-menu li .user-menu-btn.logout { color: #d33; }
+.user-menu li .user-menu-btn.logout:hover { background: #fff1f1; color:#d33; }
+
+/* ===== ユーザーメニュー折り返し対策 ===== */
+.user-menu{
+    min-width: 160px;
+}
+
+.user-menu li a,
+.user-menu li .user-menu-btn{
+    white-space: nowrap;
+    word-break: keep-all;
+    overflow-wrap: normal;
+}
+
+/* ===============================
+   フッター（最下部）
+   =============================== */
+.footer {
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    padding: 20px 0;
+    border-top: 1px solid #ccc;
+    background: #fafafa;
+    font-size: 14px;
+}
+
+.footer a {
+    color: #4a60d3;
+    text-decoration: none;
+}
+
+/* 検索ボタン */
+.submit {
+    padding: 10px;
+    border: none;
+    color: white;
+    background: #667eea;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .3s ease;
+}
+
+.submit:hover {
+    background-color: #4a60d3;
+}
+
+.Menu_btn{ position: relative; }
+
+/* お知らせボタン内の NEW バッジ */
+.osirase-btn{
+  position: relative;
+  padding-right: 52px; /* NEW分のスペース確保（必要なら調整） */
+}
+
+.new-badge{
+  position: absolute;
+  top: 6px;
+  right: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+
+  padding: 4px 6px;
+  border-radius: 999px;
+
+  background: #ff4d4f;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* 地区別：項目に色バー（強化版） */
+#areaMenu_down a.district-item{
+  position: relative;
+  display: block;
+  padding: 12px 16px 12px 26px; /* 左にバー分を確保 */
+  color: #111;                  /* 通常文字 */
+}
+
+/* 左の色バー */
+#areaMenu_down a.district-item::before{
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 65%;
+  border-radius: 999px;
+  background: var(--district-color, #64748b);
+}
+
+/* hover：背景を薄く＋文字色も地区色に */
+#areaMenu_down a.district-item:hover{
+  background: color-mix(in srgb, var(--district-color, #64748b) 14%, #fff);
+  color: var(--district-color, #667eea);
+}
+
+/* 「地区別」（デフォルト）はバー無しにしたいなら */
+#areaMenu_down a.district-item[data-label="地区別"]::before{
+  display: none;
+}
+#areaMenu_down a.district-item[data-label="地区別"]{
+  padding-left: 16px;
+}
+
+#districtBtn{
+  border: 2px solid var(--district-color, transparent);
+  background: color-mix(in srgb, var(--district-color, #667eea) 25%, #667eea);
+}
+
+#categoryMenu_down .category-item{
+  position: relative;
+  padding-left: 18px;
+}
+
+/* カテゴリの色バー追加 */
+#categoryMenu_down .category-item::before{
+  content:"";
+  position:absolute;
+  left:8px;
+  top:50%;
+  transform:translateY(-50%);
+  width:6px;
+  height:70%;
+  border-radius:999px;
+  background: var(--category-color, #64748b);
+}
+
+#categoryMenu_down .category-item:hover{
+  background: color-mix(in srgb, var(--category-color, #64748b) 12%, #fff);
+}
+
+#categoryBtn{
+  border: 2px solid var(--category-color, transparent);
+  background: color-mix(in srgb, var(--category-color, #667eea) 25%, #667eea);
+}
+
+
+
+
+/* PCでは1行表示 */
+.pc-only{ display:inline; }
+.sp-only{ display:none; }
+
+/* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
+@media (max-width: 768px){
+        /* 余白を少し削って情報量UP */
+  .page-container{ padding: 0 8px; }
+  .page{ width: 100%; margin: 0; padding: 0; }
+  
+   /* ボタン全体を小さく */
+  .btn-home,
+  .Menu_btn,
+  .user-btn{
+    padding: 8px 10px;
+    font-size: 12px;
+    border-radius: 10px;
+  }
+
+  .nav-right{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* 中央のgridを少し詰める */
+  .nav-center{
+    gap: 6px;
+  }
+
+  /* ログインボタンは中身を2行にしたいので高さ調整 */
+  .user-btn{
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  /* nav自体は横並びのまま（崩さない） */
+  nav{
+    padding: 6px 10px;
+    min-height: 64px;
+    flex-direction: row;            /* 念のため固定 */
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* 左・右は固定幅のまま */
+  .nav-left, .nav-right{
+    flex: 0 0 auto;
+  }
+
+  /* 中央だけ：grid 2列でキッチリ揃える */
+  .nav-center{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    justify-content: center;
+    min-width: 0;
+
+  }
+
+  /* ボタン見た目をスマホ用に少しコンパクトに */
+  .nav-center .Menu_btn{
+    width: 100%;
+    white-space: nowrap;
+    word-break: keep-all;
+    padding: 10px 10px;
+    font-size: 13px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  /* ▼ ドロップダウン位置（スマホで画面外に飛ばないように） */
+  .Nav-block{ position: relative; }
+  .Nav-block .menu_down{
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90vw, 320px);
+  }
+
+  /* お知らせのtransformはスマホでは無効化（画面外に飛ぶ原因） */
+  #osirase_down{
+    transform: translateX(-50%);
+  }
+
+  /* ユーザーアイコンは小さめ（スペース確保） */
+  .user-icon img{
+    width: 44px;
+    height: 44px;
+  }
+  .user-name{
+    font-size: 14px;
+  }
+  
+    /* ホームボタンも少しコンパクトに */    
+  .btn-home{
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+    /* 検索バーは100%で自然に */
+ #search{
+    width: 100%;
+    max-width: none;
+    margin: 10px auto 8px;
+    padding: 10px 12px;
+  }
+
+  .submit{ margin-top: 6px; }
+/* スマホでは2行表示 */
+  .pc-only{ display:none; }
+  .sp-only{ display:inline; }
+
+  /* ついで：ボタン内の文字がはみ出さないように */
+.user-btn{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.15;
+  white-space: nowrap;   /* PCは改行させない */
+}
+
+
+
+
+}
+/* ===== お知らせだけ：PC(ホバーできる端末)は hover で開閉 ===== */
+@media (hover: hover) and (pointer: fine){
+
+  /* お知らせブロックにマウスが乗ってる間は表示 */
+  #osiraseMenu_btn:hover > #osirase_down{
+    display: flex;
+  }
+
+  /* hover中にメニューへ移動しても閉じないように */
+  #osiraseMenu_btn{
+    position: relative;
+  }
+}
+
+/* ===============================
+   地区選択によるテーマカラー（追加）
+   =============================== */
+
+/* 背景が変わる対象（スライダー外枠想定） */
+#sliderBg{
+  transition: background 0.35s ease;
+}
+
+/* デフォルト（地区別） */
+#sliderBg.area-default{
+  background: linear-gradient(90deg, #6a8cff, #59c7ff);
+}
+
+/* 県北 */
+#sliderBg.area-north{
+  background: linear-gradient(90deg, #4f7cff, #7aa8ff);
+}
+
+/* 県南 */
+#sliderBg.area-south{
+  background: linear-gradient(90deg, #ff6b6b, #ffb3b3);
+}
+
+/* 県東 */
+#sliderBg.area-east{
+  background: linear-gradient(90deg, #34d399, #86efac);
+}
+
+/* 県西 */
+#sliderBg.area-west{
+  background: linear-gradient(90deg, #fb923c, #fdba74);
+}
+
+/* 県央 */
+#sliderBg.area-center{
+  background: linear-gradient(90deg, #a78bfa, #c4b5fd);
+}
