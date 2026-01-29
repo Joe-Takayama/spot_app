@@ -7,7 +7,8 @@
 /* 表全体を中央に */
 .table-wrapper {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* テーブル本体 */
@@ -64,4 +65,32 @@
 .disabled {
     color: #999;
     margin-right: 6px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px; /* テーブルとの距離 */
+}
+
+.filter-form input[type="text"] {
+    width: 220px;
+    padding: 6px 8px;
+}
+
+.filter-form select {
+    padding: 6px 8px;
+}
+
+.filter-form button {
+    padding: 6px 14px;
+    cursor: pointer;
+}
+
+.no-data {
+    text-align: center;
+    margin-top: 40px;
+    color: #666;
+    font-size: 1.1rem;
 }

@@ -19,22 +19,24 @@ class StaffForm(ModelForm):
 
 # イベント登録フォーム
 class EventCreateForm(ModelForm):
-    # Spot を選ぶプルダウン（ラベルも付けとくと親切）
-    spot_id = forms.ModelChoiceField(
-        queryset=Spot.objects.all(),
-        label="紐づける観光地",
-        required=False,  # 必須にしたければ True に
-    )
-
     class Meta:
         model = Events
-        fields = ['event_name', 'event_date', 'venue', 'details', 'organizer', 'spot_id']
+        fields = ['event_name', 'event_start','event_end', 'event_time', 'address', 'venue', 'details', 'organizer']
         widgets = {
             'event_name': TextInput(attrs={
                 'placeholder': 'イベント名称を入力してください'
             }),
-            'event_date': TextInput(attrs={
-                'placeholder': '日時を入力してください'
+            'event_start': TextInput(attrs={
+                'placeholder': '開催日を入力してください(記入方法:yyyy-mm-dd)'
+            }),
+            'event_end': TextInput(attrs={
+                'placeholder': '終了日を入力してください(記入方法:yyyy-mm-dd)'
+            }),
+            'event_time': TextInput(attrs={
+                'placeholder': '時間を入力してください'
+            }),
+            'address': TextInput(attrs={
+                'placeholder': '住所を入力してください'
             }),
             'venue': TextInput(attrs={
                 'placeholder': '会場を入力してください'
@@ -100,6 +102,12 @@ class OsiraseForm(forms.ModelForm):
     class Meta:
         model = Osirase
         fields = ["title", "body"]
+
+        labels = {
+            "title" : "件名",
+            "body" : "お知らせ内容",
+        }
+
         widgets = {
             "title": forms.TextInput(attrs={
                 "placeholder": "題名を入力",

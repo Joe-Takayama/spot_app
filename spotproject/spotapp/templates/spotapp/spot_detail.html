@@ -4,14 +4,14 @@
 {% block title %}観光地詳細{% endblock %}
 
 {% block extra_css %}
-  <link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<link href="{% static 'css/spot_detail.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 {% endblock %}
 
 {% block nav %}
 <nav class="profile-mini-nav">
-  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+<a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
 
   <div class="user-info">
     <div class="user-icon">
@@ -69,7 +69,7 @@
             <div class="spot-name">
                 <h2>{{ spot.spot_name }}について</h2>
             </div>
-            <p>{{ spot.explanation }}</p>
+            <p>{{ spot.explanation|linebreaksbr|urlize  }}</p>
         </div>
 
         <a href="{% url 'spotapp:review_detail' spot.spot_id %}"class="btn">
@@ -185,11 +185,347 @@
 
   <button type="button" class="back-btn" onclick="history.back()">← 戻る</button>
 </div>
+
+
+<script>
+    var lat = parseFloat("{{ spot.latitude|default:'0' }}");
+    var lng = parseFloat("{{ spot.longitude|default:'0' }}");
+
+    let map;
+    let routeLines = [];
+    let startMarker = null;
+    let allRoutes = [];
+
+    // カスタムアイコン
+    const startIcon = L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // ======================
+    // 地図初期化
+    // ======================
+    if (lat !== 0 && lng !== 0) {
+        map = L.map('map').setView([lat, lng], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker([lat, lng])
+            .addTo(map)
+            .bindPopup("{{ spot.spot_name }}");
+    } else {
+        document.getElementById("map").innerHTML =
+            "<p style='text-align:center;'>地図情報がありません</p>";
+    }
+
+    // ======================
+    // ルート検索
+    // ======================
+    window.route = function(mode) {
+        const start = document.getElementById("start").value;
+        if (!start) { alert("出発地を入力してください"); return; }
+
+        getLatLng(start)
+            .then(([sLat, sLng]) => fetchRoutes(sLat, sLng, mode))
+            .catch(() => alert("出発地が見つかりません"));
+    };
+
+    // ======================
+    // ルート取得
+    // ======================
+    function fetchRoutes(sLat, sLng, mode) {
+        const profile = mode === "foot" ? "foot" : "car";
+
+        fetch(`https://router.project-osrm.org/route/v1/${profile}/${sLng},${sLat};${lng},${lat}?alternatives=true&overview=full&geometries=geojson&steps=true`)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.routes || data.routes.length === 0) { alert("ルートが見つかりません"); return; }
+
+                allRoutes = [];
+
+                if (mode === "foot") {
+                    data.routes.forEach((route, index) => {
+                        allRoutes.push({ route, type: "foot", index });
+                    });
+                } else {
+                    data.routes.forEach((route, index) => {
+                        let highwayDistance = 0;
+                        route.legs[0].steps.forEach(step => {
+                            const name = step.name || "";
+                            const ref  = step.ref  || "";
+                            if (name.includes("自動車道") || /^E\d+/.test(ref)) highwayDistance += step.distance;
+                        });
+                        const highwayRatio = highwayDistance / route.distance;
+                        allRoutes.push({ route, type: highwayRatio > 0.3 ? "highway" : "normal", highwayRatio, index });
+                    });
+                    allRoutes.sort((a,b) => a.highwayRatio - b.highwayRatio);
+                }
+
+                createRouteButtons(mode);
+                drawRoute(allRoutes[0].route, allRoutes[0].type, mode);
+                showRoads(allRoutes[0].route, allRoutes[0].type, mode);
+            });
+    }
+
+    // ======================
+    // ルートボタン生成
+    // ======================
+    function createRouteButtons(mode) {
+        const selectorDiv = document.getElementById("route-selector");
+        selectorDiv.innerHTML = "";
+
+        if (mode === "foot") {
+            allRoutes.forEach((item, i) => {
+                const btn = document.createElement("button");
+                btn.classList.add("route-btn");
+                btn.innerText = allRoutes.length > 1 ? `徒歩ルート${i+1}` : "徒歩ルート";
+                btn.onclick = () => {
+                    drawRoute(item.route, "foot", mode);
+                    showRoads(item.route, "foot", mode);
+                };
+                selectorDiv.appendChild(btn);
+            });
+            return;
+        }
+
+        const highways = allRoutes.filter(r => r.type === "highway");
+        const normals  = allRoutes.filter(r => r.type === "normal");
+
+        highways.forEach((item, i) => {
+            const btn = document.createElement("button");
+            btn.innerText = highways.length === 1 ? "高速ルート" : `高速ルート${i+1}`;
+            btn.onclick = () => {
+                drawRoute(item.route, "highway", mode);
+                showRoads(item.route, "highway", mode);
+            };
+            selectorDiv.appendChild(btn);
+        });
+
+        normals.forEach((item, i) => {
+            const btn = document.createElement("button");
+            btn.innerText = normals.length === 1 ? "一般道ルート" : `一般道ルート${i+1}`;
+            btn.onclick = () => {
+                drawRoute(item.route, "normal", mode);
+                showRoads(item.route, "normal", mode);
+            };
+            selectorDiv.appendChild(btn);
+        });
+    }
+
+    // ======================
+    // ルート描画
+    // ======================
+    function drawRoute(route, type, mode) {
+        routeLines.forEach(line => map.removeLayer(line));
+        routeLines = [];
+
+        if (startMarker) { map.removeLayer(startMarker); startMarker = null; }
+
+        let coords = [];
+        if (mode === "foot") {
+            route.legs[0].steps.forEach(step => {
+                const name = step.name || "", ref = step.ref || "";
+                const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
+                if (!isHighway) step.geometry.coordinates.forEach(c => coords.push([c[1], c[0]]));
+            });
+        } else {
+            coords = route.geometry.coordinates.map(c => [c[1], c[0]]);
+        }
+
+        const lineStyle = {
+            color: type === "highway" ? "#007bff" : type === "normal" ? "green" : "blue",
+            weight: 5,
+            dashArray: type === "foot" ? "8, 8" : null
+        };
+
+        const line = L.polyline(coords, lineStyle).addTo(map);
+        routeLines.push(line);
+
+        startMarker = L.marker(coords[0], {icon: startIcon}).addTo(map).bindPopup("出発地");
+
+        const distanceKm = route.distance / 1000;
+        const minutes = mode === "foot" ? Math.round((distanceKm / 4) * 60) : Math.round(route.duration / 60);
+
+        document.getElementById("route-info").innerHTML =
+            `距離: ${distanceKm.toFixed(1)} km<br>時間: ${minutes} 分`;
+
+        map.fitBounds(line.getBounds(), { padding: [50, 50], maxZoom: 20 });
+
+        document.getElementById("map").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // ======================
+    // 通過道路表示（→で統一）
+    // ======================
+    function showRoads(route, type, mode) {
+        let highways = [], generalRoads = new Set();
+
+        route.legs[0].steps.forEach(step => {
+            const name = step.name || "", ref = step.ref || "";
+            if (mode === "foot") { if (name) generalRoads.add(name); return; }
+            const isHighway = name.includes("自動車道") || /^E\d+/.test(ref);
+            if (isHighway) highways.push(name || `高速道路(${ref})`);
+            else {
+                if (/^\d+$/.test(ref)) generalRoads.add(`国道${ref}号`);
+                else if (name.includes("県道")) generalRoads.add(name);
+            }
+        });
+
+        let html = "通過道路:<br>";
+        if (mode === "foot") {
+            html += `<strong>徒歩ルート</strong><br>${[...generalRoads].slice(0,10).join(" → ")}`;
+        } else {
+            if (type === "highway" && highways.length)
+                html += `<strong>高速道路</strong><br>${[...new Set(highways)].join(" → ")}`;
+            if ((type === "normal" || type === "general") && generalRoads.size)
+                html += `<strong>一般道</strong><br>${[...generalRoads].join(" → ")}`;
+        }
+
+        document.getElementById("route-roads").innerHTML = html;
+    }
+
+    // ======================
+    // 住所→緯度経度
+    // ======================
+    function getLatLng(address) {
+        return new Promise((resolve, reject) => {
+            const hasNumber = /\d/.test(address);
+            const url = hasNumber
+                ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
+                : `https://nominatim.openstreetmap.org/search?format=json&countrycodes=jp&limit=1&q=${encodeURIComponent(address)}`;
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) reject();
+                    let lat, lng;
+                    if (hasNumber) { lat = data[0].geometry.coordinates[1]; lng = data[0].geometry.coordinates[0]; }
+                    else { lat = data[0].lat; lng = data[0].lon; }
+                    resolve([lat, lng]);
+                }).catch(() => reject());
+        });
+    }
+
+    // ======================
+    // 周辺施設表示
+    // ======================    
+    // 1. 初回ロード時に広い範囲を取得する関数
+    function loadOverpassData() {
+    // 現在の表示範囲
+    const bbox = map.getBounds();
+
+    // 拡大倍率（2〜5 くらいが現実的）
+    const expand = 3;
+
+    // 中心座標
+    const center = bbox.getCenter();
+
+    // 緯度・経度の差分を拡大
+    const latDiff = (bbox.getNorth() - bbox.getSouth()) / 2 * expand;
+    const lngDiff = (bbox.getEast() - bbox.getWest()) / 2 * expand;
+
+    // 拡大後の bbox
+    const bigBbox = {
+        south: center.lat - latDiff,
+        west: center.lng - lngDiff,
+        north: center.lat + latDiff,
+        east: center.lng + lngDiff
+    };
+
+    // Overpass API クエリ
+    const query = `
+    [out:json];
+    (
+        // restaurant / fast_food
+        node["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["amenity"~"restaurant|fast_food"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+
+        // hotel / guest_house
+        node["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["tourism"~"hotel|guest_house"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+
+        // convenience
+        node["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        way["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+        relation["shop"="convenience"](${bigBbox.south},${bigBbox.west},${bigBbox.north},${bigBbox.east});
+    );
+    out center;
+    `;
+
+    // アイコン定義
+    const icons = {
+        restaurant: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=fzBbztlzr6xk&format=png',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        }),
+        hotel: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=AVe9YeyAXTql&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        }),
+        convenience: L.icon({
+        iconUrl: 'https://img.icons8.com/?size=100&id=pmzAHWwbZBIP&format=png&color=000000',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+        })
+    };
+
+    // マーカーをまとめるレイヤー
+    const markerLayer = L.layerGroup().addTo(map);
+
+    // Overpass API 実行
+    fetch("https://overpass-api.de/api/interpreter", {
+        method: "POST",
+        body: query
+    })
+        .then(res => res.json())
+        .then(data => {
+        const geojson = osmtogeojson(data);
+
+        L.geoJSON(geojson, {
+            pointToLayer: (feature, latlng) => {
+            const tags = feature.properties.tags || feature.properties || {};
+            let icon = icons.restaurant;
+
+            if (tags.amenity === "restaurant" || tags.amenity === "fast_food") {
+                icon = icons.restaurant;
+            } else if (tags.tourism === "hotel" || tags.tourism === "guest_house") {
+                icon = icons.hotel;
+            } else if (tags.shop === "convenience") {
+                icon = icons.convenience;
+            }
+
+            return L.marker(latlng, { icon });
+            }
+        }).addTo(markerLayer);
+        })
+        .catch(err => console.error(err));
+    }
+
+    // 2. ページ読み込み時に 1 回だけ実行
+    loadOverpassData();
+</script>
+
+
+
+
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<<<<<<< HEAD
 
 <script>
   var lat = parseFloat("{{ spot.latitude|default:'0' }}");
@@ -406,4 +742,7 @@
     });
   }
 </script>
+=======
+<script src="https://unpkg.com/osmtogeojson/osmtogeojson.js"></script>
+>>>>>>> main
 {% endblock %}

@@ -19,8 +19,8 @@
 
     {# メイン画像：観光地の1枚目を流用（なければメッセージ） #}
     <div class="main-photo-box">
-        {% if spot and spot.spot_photos.first %}
-            <img src="{{ spot.spot_photos.first.image.url }}" alt="{{ spot.spot_name }}">
+        {% if event.event_photos.all %}
+            <img src="{{ event.event_photos.first.image.url }}" alt="{{ event.event_name }}">
         {% else %}
             <p>イベント写真がありません</p>
         {% endif %}
@@ -32,8 +32,8 @@
         <div class="info-row">
             <span class="info-label">住所</span>
             <span class="info-value">
-                {% if spot and spot.address %}
-                    {{ spot.address }}
+                {% if event.address %}
+                    {{ event.address }}
                 {% else %}
                     未登録
                 {% endif %}
@@ -43,10 +43,10 @@
         <div class="info-row">
             <span class="info-label">営業時間</span>
             <span class="info-value">
-                {% if spot and spot.business_hours %}
-                    {{ spot.business_hours }}
+                {% if event.event_time %}
+                    {{ event.event_time }}
                 {% else %}
-                    〜
+                    未登録
                 {% endif %}
             </span>
         </div>
@@ -54,10 +54,10 @@
         <div class="info-row">
             <span class="info-label">開催日</span>
             <span class="info-value">
-                {% if event.event_date %}
-                    {{ event.event_date|date:"Y年n月j日" }}
+                {% if event.event_start and event.event_end %}
+                    {{ event.event_start|date:"Y年n月j日" }} ～ {{ event.event_end|date:"Y年n月j日" }}
                 {% else %}
-                    未登録
+                未登録
                 {% endif %}
             </span>
         </div>
@@ -67,8 +67,6 @@
             <span class="info-value">
                 {% if event.venue %}
                     {{ event.venue }}
-                {% elif spot %}
-                    {{ spot.spot_name }}
                 {% else %}
                     未登録
                 {% endif %}
@@ -76,8 +74,13 @@
         </div>
 
         <div class="info-row">
-            <span class="info-label">入場料</span>
-            <span class="info-value">（今後DB追加）</span>
+            <span class="info-label">主催者</span>
+            <span class="info-value"></span>
+            {% if event.organizer %}
+                {{ event.organizer }}
+            {% else %}
+                未登録
+            {% endif %}
         </div>
 
         <div class="info-row">

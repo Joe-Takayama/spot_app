@@ -7,10 +7,11 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
-from spotapp_admin.models import Osirase
+
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 
 from .forms import (
     ProfileEditForm,
@@ -21,8 +22,8 @@ from .forms import (
 
 )
 
-from .models import Events, Review, Spot , Profile, Favorite, Category, District
-from spotapp_admin.models import Photo
+from .models import Events, Review, Spot , Profile, Favorite, Category, District, OsiraseRead
+from spotapp_admin.models import Photo, Osirase
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -295,10 +296,22 @@ class ReviewDetailView(View):
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
 
+        show_all = request.GET.get("all") == "1"
+
+        qs = spot.review_set.order_by("-posted_at")
+        total = qs.count()
+
+        reviews = qs if show_all else qs[:2]
+        has_more = (not show_all) and (total > 2)
+
         return render(request, "spotapp/review_detail.html", {
             "spot": spot,
-            "reviews": spot.review_set.all()
+            "reviews": reviews,
+            "has_more": has_more,
+            "show_all": show_all,
+            "total_reviews": total,
         })
+
 
 
 #レビュー消去用
@@ -371,15 +384,21 @@ def favorite_toggle_ajax(request, spot_id):
 class EventListView(View):
     def get(self, request):
         month = request.GET.get("month")  # ← 追加
+        page_number = request.GET.get("page", 1)
 
-        event_list = Events.objects.order_by("-event_date")
+        event_list = Events.objects.order_by("event_start")
 
         # 🔹 月指定があれば絞り込み
         if month:
-            event_list = event_list.filter(event_date__month=month)
+            event_list = event_list.filter(event_start__month=month)
+
+        # ページネーション
+        paginator = Paginator(event_list, 7)
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            "event_list": event_list,
+            "event_list": page_obj,
+            "page_obj": page_obj,
             "months": range(1, 13),
             "selected_month": month,  # ← 追加
         }
@@ -513,6 +532,15 @@ def osirase_list(request):
 class NewsDetailView(View):
     def get(self, request, pk):
         news = get_object_or_404(Osirase, pk=pk)
+
+        if request.user.is_authenticated:
+            OsiraseRead.objects.get_or_create(user=request.user, osirase=news)
+        else:
+            read_ids = set(request.session.get("osirase_read_ids", []))
+            read_ids.add(news.pk)
+            request.session["osirase_read_ids"] = list(read_ids)
+            request.session.modified = True
+
         return render(request, "spotapp/news_detail.html", {"news": news})
         # ------------------------
 # as_view() の定義

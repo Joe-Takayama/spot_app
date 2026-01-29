@@ -48,86 +48,7 @@ from django.utils import timezone
 #ホーム画面
 class IndexView(View):
     def get(self, request):
-        slide_photos = (
-            Photo.objects
-            .select_related('spot')
-            .filter(spot__isnull=False)
-            .order_by('-uploaded_at')
-        )
-
-        return render(request, 'spotapp_admin/index.html',{'slide_photos': slide_photos})
-    
-
-#登録選択画面
-class RegistselectView(StaffLoginRequiredMixin, View):
-    def get(self, request):
-        return render(request,'spotapp_admin/Registrationselection.html')
-    
-    
-#更新削除選択画面
-class UpdelView(StaffLoginRequiredMixin, View):
-    def get(self,request):
-        return render(request,'spotapp_admin/updatedelete.html')
-    
-# 観光地検索結果画面
-class SpotSearchView(StaffLoginRequiredMixin, View):
-    def get(self, request):
-        keyword = request.GET.get('q')
-
-        category_id = request.GET.get('category', '').strip()
-        district_id = request.GET.get('district', '').strip()
-
-        spots = Spot.objects.annotate(
-    avg_rating=Avg('review__rating')
-).prefetch_related(
-            Prefetch(
-                'spot_photos',
-                queryset=Photo.objects.order_by('uploaded_at')
-            )
-)
-        if keyword:
-            spots = spots.filter(spot_name__icontains=keyword)
-        
-        # カテゴリ絞り込み
-        if category_id:
-            spots = spots.filter(category_id=category_id)
-
-        # 地区絞り込み
-        if district_id:
-            spots = spots.filter(district_id=district_id)
-
-            # ▼ ボタン表記用の「名前」を作る
-        selected_category_name = "カテゴリ"
-        selected_district_name = "地区別"
-
-        if category_id:
-            c = Category.objects.filter(category_id=category_id).first()
-            if c:
-                selected_category_name = c.category_name
-
-        if district_id:
-            d = District.objects.filter(district_id=district_id).first()
-            if d:
-                selected_district_name = d.district_name
-
-
-
-        return render(request, 'spotapp_admin/search-result.html', {
-            'keyword': keyword,
-            'spots': spots,
-
-            # プルダウン用
-            'categories': Category.objects.all(),
-            'districts': District.objects.all(),
-
-            # 選択保持
-            'selected_category': category_id,
-            'selected_district': district_id,
-
-            # ボタン表記保持（追加）
-            "selected_category_name": selected_category_name,
-            "selected_district_name": selected_district_name,
-        })
+        return render(request, 'spotapp_admin/index.html')
 
 
 # ログイン画面
@@ -195,27 +116,40 @@ class EventRegistrationView(StaffLoginRequiredMixin, View):
 # イベント一覧画面
 class EventListView(StaffLoginRequiredMixin, View):
     def get(self, request):
-        event_list = Events.objects.order_by('-event_date')
-        return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list})
+        event_list = Events.objects.order_by('event_start')
+        keyword = request.GET.get('q', '').strip()
+
+        if keyword:
+            event_list = event_list.filter(event_name__icontains=keyword)
+        return render(request, 'spotapp_admin/event_update_or_delete.html', {'event_list': event_list, 'keyword': keyword,})
 
 # イベント更新画面  
 class EventUpdateView(StaffLoginRequiredMixin, View):
     def get(self, request, event_id):
-        page = get_object_or_404(Events, pk=event_id)
-        event_form = EventCreateForm(instance=page)
-        event_photo = PhotoForm(instance=page)
-        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': event_photo, 'page': page})
+        event = get_object_or_404(Events, pk=event_id)
+        event_form = EventCreateForm(instance=event)
+
+        first_photo= event.event_photos.first()
+        photo_form = PhotoForm(instance=first_photo)
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'event': event})
     
     def post(self, request, event_id):
-        page = get_object_or_404(Events, pk=event_id)
-        event_form = EventCreateForm(request.POST, request.FILES, instance=page)
-        photo_form = PhotoForm(request.POST, request.FILES, instance=page)
+        event = get_object_or_404(Events, pk=event_id)
+        event_form = EventCreateForm(request.POST, request.FILES, instance=event)
+
+        first_photo = event.event_photos.first()
+        photo_form = PhotoForm(request.POST, request.FILES, instance=first_photo)
 
         if event_form.is_valid() and photo_form.is_valid():
             event_form.save()
-            photo_form.save()
+            if first_photo:
+                photo_form.save()
+            else:
+                new_photo = photo_form.save(commit=False)
+                new_photo.event = event
+                new_photo.save()
             return render(request, 'spotapp_admin/event_update_complete.html')
-        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'page': page})
+        return render(request, 'spotapp_admin/event_update.html', {'event_form': event_form, 'photo_form': photo_form, 'event': event})
 
 # イベント削除確認画面
 class EventDeleteView(StaffLoginRequiredMixin, View):
@@ -227,7 +161,7 @@ class EventDeleteView(StaffLoginRequiredMixin, View):
         page = get_object_or_404(Events, pk=event_id)
         event_name = page.event_name
         page.delete()
-        return render(request, 'spotapp_admin/event_delete_complete.html', {'event_name': event_name})
+        return render(request, 'spotapp_admin/event_delete_complete.html', {'event_name': event_name,})
     
 # 観光地登録画面
 class SpotRegistrationView(StaffLoginRequiredMixin, View):
@@ -322,8 +256,26 @@ class SpotDeleteView(StaffLoginRequiredMixin, View):
 # 観光地一覧画面
 class SpotListView(StaffLoginRequiredMixin, View):
     def get(self, request):
-        spot_list = Spot.objects.order_by('-created_at')
-        return render(request, 'spotapp_admin/spot_update_or_delete.html', {'spot_list': spot_list})
+        district_id = request.GET.get('district')
+        keyword = request.GET.get('q', '').strip()
+
+        spot_list = Spot.objects.all().select_related('district')
+        districts = District.objects.all()
+
+        if district_id:
+            spot_list = spot_list.filter(district_id=district_id)
+
+        if keyword:
+            spot_list = spot_list.filter(spot_name__icontains=keyword)
+        
+        spot_list = spot_list.order_by('district__district_name', 'spot_name')
+
+        return render(request,  'spotapp_admin/spot_update_or_delete.html', {
+            'spot_list': spot_list,
+            'districts': districts,
+            'selected_district': district_id,
+            'keyword': keyword,
+        })
 
 #お知らせ送信画面
 

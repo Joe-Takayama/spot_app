@@ -3,10 +3,16 @@
 {% block title %} お知らせ送信フォーム {% endblock %}
 {% block body %}
 <style>
+
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* お知らせ送信フォーム全体 */
 .osirase {
     height: 100%;
-    max-width: 80%;
     margin: 0px auto;
     background: #fff;
     padding: 30px 30px;
@@ -20,20 +26,22 @@
 
 /* 入力欄 */
 .osirase input[type="text"]{
-    width:  70%;
+    width:  100%;
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
     transition: border-color 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
 }
 .osirase textarea {
-    width: 95%;
+    width: 100%;
     padding: 10px 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 15px;
     transition: border-color 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
 }
 
 
@@ -64,11 +72,13 @@
     background: #a7b6f9;;
 }
 </style>
-<form class="osirase" action="{% url 'spotapp_admin:osirase_send' %}" method="POST">
-    {% csrf_token %}   <!-- POSTを使う際使用  -->
-    {{ form.as_p }}
-    <button type="submit">送信</button>
-</form>
+<div class="form-container">
+    <form class="osirase" action="{% url 'spotapp_admin:osirase_send' %}" method="POST">
+        {% csrf_token %}   <!-- POSTを使う際使用  -->
+        {{ form.as_p }}
+        <button type="submit">送信</button>
+    </form>
+</div>
 {% endblock %}
 
 <script>

@@ -1,33 +1,59 @@
 {% extends "base2/base2.html" %}
 {% block title %} 観光地一覧 {% endblock %}
+
 {% block body %}
-
-
 <h2 class="page-title">観光地一覧</h2>
 
+
 <div class="table-wrapper">
-    <table class="spot-table">
-        <thead>
-            <tr>
-                <th>観光地名称</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for spots in spot_list %}
-                <tr>
-                    <td>{{ spots.spot_name }}</td>
-                    <td class="action">
-                        {% if spots.spot_id %}
-                            <a href="{% url 'spotapp_admin:spot_update' spots.spot_id %}">更新</a>
-                        {% else %}
-                            <span class="disabled">更新不可</span>
-                        {% endif %}
-                            <a href="{% url 'spotapp_admin:spot_delete' spots.spot_id %}">削除</a>
-                    </td>
-                </tr>
+    <form method="get" class="filter-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="観光地名で検索"
+            value="{{ keyword|default:'' }}"
+        >
+
+        <select name="district">
+            <option value="">すべての地区</option>
+            {% for district in districts %}
+                <option value="{{ district.district_id }}"
+                    {% if district.district_id|stringformat:"s" == selected_district %}selected{% endif %}>
+                    {{ district.district_name }}
+                </option>
             {% endfor %}
-        </tbody>
-    </table>
+        </select>
+
+        <button type="submit">検索</button>
+        <p class="spot-count">{{ spot_list|length }}</p>
+    </form>
+
+    {% if spot_list %}
+        <table class="spot-table">
+            <thead>
+                <tr>
+                    <th>観光地名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for spots in spot_list %}
+                    <tr>
+                        <td>{{ spots.spot_name }}</td>
+                        <td class="action">
+                            <a href="{% url 'spotapp_admin:spot_update' spots.spot_id %}">更新</a>
+                            <a href="{% url 'spotapp_admin:spot_delete' spots.spot_id %}">削除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        {% if keyword or selected_district %}
+            <p class="no-data">検索条件に一致する観光地がありません</p>
+        {% else %}
+            <p class="no-data">観光地情報がありません</p>
+        {% endif %}
+    {% endif %}
 </div>
 {% endblock %}

@@ -4,15 +4,12 @@
 </head>
 
 {% block body %}
-
 <div class="review-container">
 
     <form method="POST" action="">
         {% csrf_token %}
-
         <div class="rating-wrapper">
-
-            <span class="rating-label bad">悪い</span>
+            <h1 class="rating-label bad">悪い</h1>
 
             <div class="star-rating">
                 <input type="radio" id="star5" name="rating" value="5">
@@ -31,16 +28,15 @@
                 <label for="star1">★</label>
             </div>
 
-            <span class="rating-label good">良い</span>
-
+            <h1 class="rating-label good">良い</h1>
         </div>
 
         <textarea name="comment" placeholder="感想やレビューを書く" required></textarea>
         <button type="submit">投稿</button>
-    </form>
-</div>
-<button type="button" onclick="history.back()">
+
+        <button type="button" onclick="history.back()">
             ← 戻る
         </button>
-
+    </form>
+</div>
 {% endblock %}

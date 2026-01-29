@@ -11,7 +11,7 @@
 
 /* カード枠 */
 .form-card {
-    width: min(720px, 92vw);
+    
     max-width: 720px;
     padding: 36px;
     margin: 0 auto 24px auto;
