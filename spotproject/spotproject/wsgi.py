@@ -14,7 +14,7 @@ from django.core.wsgi import get_wsgi_application
 # ★ ここが重要
 os.environ.setdefault(
     'DJANGO_SETTINGS_MODULE',
-    'spotproject.spotproject.settings'
+    'spotproject.settings'
 )
 
 application = get_wsgi_application()
