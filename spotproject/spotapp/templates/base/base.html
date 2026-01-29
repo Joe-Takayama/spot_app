@@ -53,9 +53,9 @@
                 {% for category in categories %}
                     <li>
                         <a href="#"
-                            class="category-item"
-                            data-value="{{ category.category_id }}"
-                            data-label="{{ category.category_name }}">
+                           class="category-item"
+                           data-value="{{ category.category_id }}"
+                           data-label="{{ category.category_name }}">
                             {{ category.category_name }}
                         </a>
                     </li>
@@ -63,112 +63,58 @@
             </ul>
         </div>
 
+        <div class="Nav-block osirase-block" id="osirase_btn">
+            <button class="Menu_btn" type="button" id="osiraseBtn">
+                お知らせ ▼
+            </button>
 
-            <!-- ログインしなきゃ表示できない奴 -->
-            {% if user.is_authenticated %}
-            <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn nav-fav">
-                お気に入り一覧
-            </a>
-            {% else %}
-                
-            {% endif %}
-       
-
-
-            <div class="Nav-block" id="osiraseMenu_btn">
-                <button class="Menu_btn">
-                    お知らせ ▼
-                    {% if osirase_new_count %}
-                        <span class="new-badge">{{ osirase_new_count }}</span>
-                    {% endif %}
-
-                </button>
-            
-            <ul  id="osirase_down" class="menu_down anywhere">
-                {% for o in osirase_list %}
-                    <li>
-                        <a href="{% url 'spotapp:news_detail' o.pk %}">
-                            {{ o.title }}
-                        </a>
-                    </li>
-                {% empty %}
-                    <li>表示できるお知らせがありません。</li>
-                {% endfor %}
+            <ul class="menu_down" id="osirase_down">
+                <li><a href="{% url 'spotapp:about' %}">サイトについて</a></li>
+                <li><a href="{% url 'spotapp:contact' %}">お問い合わせ</a></li>
             </ul>
-            </div>
+        </div>
         </div>
 
         <div class="nav-right">
-            {% if user.is_authenticated %}
-            <div class="user-menu-wrapper">
-
-                <div class="user-info" id="userMenuBtn">
-                    <div class="user-icon">
-                        {% if request.user.profile.icon %}
-                            <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                        {% else %}
-                            <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                        {% endif %}
-                    </div>
-   
+            {% if request.user.is_authenticated %}
+            <button type="button" class="user-btn" id="userMenuBtn">
+                <div class="user-icon">
+                    {% if request.user.profile.icon %}
+                        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                    {% else %}
+                        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                    {% endif %}
                 </div>
+                <div class="user-name-text">{{ request.user.username }} さん</div>
+            </button>
 
-                <ul class="user-menu" id="userMenu">
-                    <li><a href="{% url 'spotapp:profile' %}">プロフィール</a></li>
-
-                    <li>
-                        <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
-                            {% csrf_token %}
-                            <button type="submit" class="user-menu-btn logout">ログアウト</button>
-
-                        </form>
-                    </li>
-                </ul>
-
+            <div class="user-menu" id="userMenu">
+                <a href="{% url 'users:profile' %}">プロフィール</a>
+                <a href="{% url 'users:password_change' %}">パスワード変更</a>
+                <a href="{% url 'users:logout' %}">ログアウト</a>
             </div>
             {% else %}
-                <a href="{% url 'spotapp:signup' %}" class="user-btn">
-                    <span class="pc-only">新規登録 / ログイン</span>
-                    <span class="sp-only">新規登録<br>ログイン</span>
-                </a>
+                <a href="{% url 'users:login' %}" class="user-btn">ログイン</a>
             {% endif %}
         </div>
     </nav>
     {% endblock %}
 
-
-
-
-    <!-- 検索バー -->
     {% block searchbar %}
-    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
-        <input type="text" name="q" id="search" value="{{ keyword|default:'' }}" placeholder="検索バー（あいまい検索可能）">
+    <div class="searchbar">
+        <form method="get" action="{% url 'spotapp:spot_search' %}" class="search-form">
+            <input type="text" name="q" placeholder="検索" class="search-input" value="{{ request.GET.q|default:'' }}">
 
-        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
-        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
+            <input type="hidden" id="search_district" name="district" value="{{ request.GET.district|default:'' }}">
+            <input type="hidden" id="search_category" name="category" value="{{ request.GET.category|default:'' }}">
 
-        <button type="submit" class="submit">検索</button>
-    </form>
-
-
-    {% endblock %}
-
-    <!-- ★ 中央幅の基準 -->
-    <div class="page-container">
-        {% block body %}
-        {% endblock %}
+            <button type="submit" class="search-btn">検索</button>
+        </form>
     </div>
-
-
-        <!-- フッター -->
-    {% block footer %}
-    <footer class="footer">
-        <span>&copy; E班</span>
-        <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
-    </footer>
     {% endblock %}
 
-    {% block script %}
+    {% block body %}{% endblock %}
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
 
@@ -234,30 +180,65 @@
             return;
         }
 
-
         const data = await res.json();
-        btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
 
-        // お気に入り一覧ページなら解除時に行を消す
-        if (data.favorited === false) {
-          const item = btn.closest(".favorite-item");
-          if (item) item.remove();
-        }
+        // 表示更新（ボタン文言）
+        if (data.favorited === true) btn.textContent = "お気に入り解除";
+        else btn.textContent = "お気に入り登録";
+
       } catch (err) {
-        console.error(err);
+        console.log(err);
+        alert("favorite通信エラー");
       } finally {
         btn.disabled = false;
       }
-    }, true); // capture
+    });
 
     // ------------------------
-    // 地区・カテゴリ選択（検索はしない）
+    // 検索バー（地区/カテゴリ）とナビの連動
     // ------------------------
     const districtHidden = document.getElementById("search_district");
     const categoryHidden = document.getElementById("search_category");
 
     const districtBtn = document.getElementById("districtBtn");
     const categoryBtn = document.getElementById("categoryBtn");
+
+    // ------------------------
+    // 地区別ボタンの色を「県北/県南/県央/県東/県西」で切り替え
+    // ------------------------
+    function districtClassFromLabel(label) {
+      if (!label) return "";
+      if (label.includes("県北")) return "district-north";
+      if (label.includes("県南")) return "district-south";
+      if (label.includes("県央")) return "district-central";
+      if (label.includes("県東")) return "district-east";
+      if (label.includes("県西")) return "district-west";
+      return "";
+    }
+
+    function applyDistrictColor(label) {
+      if (!districtBtn) return;
+      // 既存の district-* を全部外す
+      districtBtn.classList.remove(
+        "district-north",
+        "district-south",
+        "district-central",
+        "district-east",
+        "district-west"
+      );
+
+      const cls = districtClassFromLabel(label);
+      if (cls) districtBtn.classList.add(cls);
+    }
+
+    function setSelectedDistrictInMenu(value) {
+      // value が空なら「地区別」を選択状態に
+      document.querySelectorAll(".district-item").forEach(a => {
+        const v = a.dataset.value || "";
+        if ((value || "") === v) a.classList.add("is-selected");
+        else a.classList.remove("is-selected");
+      });
+    }
 
     // 地区
     document.querySelectorAll(".district-item").forEach(a => {
@@ -270,8 +251,21 @@
 
         if (districtHidden) districtHidden.value = val;
         if (districtBtn) districtBtn.textContent = `${label} ▼`;
+
+        // ★追加：色を切り替え
+        applyDistrictColor(label);
+
+        // ★追加：メニュー内の選択状態
+        setSelectedDistrictInMenu(val);
         });
     });
+
+    // 初期表示でも反映（SSRで selected_district_name が入ってる想定）
+    if (districtBtn) {
+      const initialLabel = districtBtn.textContent.replace("▼", "").trim();
+      applyDistrictColor(initialLabel);
+      if (districtHidden) setSelectedDistrictInMenu(districtHidden.value);
+    }
 
     // カテゴリ
     document.querySelectorAll(".category-item").forEach(a => {
@@ -286,6 +280,7 @@
         if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
         });
     });
+
     // ------------------------
     // ナビのプルダウン：基本クリック
     // ただし「お知らせ」は PC=hover / スマホ=click
@@ -294,34 +289,35 @@
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     navBlocks.forEach(block => {
-    const btn = block.querySelector(".Menu_btn");
-    const down = block.querySelector(".menu_down");
-    if (!btn || !down) return;
+      const btn = block.querySelector(".Menu_btn");
+      if (!btn) return;
 
-    const isOsirase = (block.id === "osiraseMenu_btn");
+      const isOsirase = (block.id === "osirase_btn");
 
-    // PCでお知らせは hover で開くので click 制御しない
-    if (isOsirase && canHover) return;
+      if (isOsirase && canHover) {
+        // PC：hoverで開閉
+        block.addEventListener("mouseenter", () => block.classList.add("open"));
+        block.addEventListener("mouseleave", () => block.classList.remove("open"));
+      } else {
+        // スマホ or 通常：clickで開閉
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
 
-    btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+          // 他のプルダウン閉じる
+          navBlocks.forEach(b => { if (b !== block) b.classList.remove("open"); });
 
-        // 他のNav-blockは閉じる
-        navBlocks.forEach(b => {
-        if (b !== block) b.classList.remove("open");
+          block.classList.toggle("open");
         });
-
-        block.classList.toggle("open");
+      }
     });
 
-    down.addEventListener("click", (e) => e.stopPropagation());
+    // ナビ外クリックで閉じる（user menu が無いページでも閉じる）
+    document.addEventListener("click", function() {
+      document.querySelectorAll(".Nav-block.open").forEach(b => b.classList.remove("open"));
     });
 
-
-});
+  });
 </script>
-{% endblock %}
 
     </body>
     </html>
