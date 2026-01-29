@@ -1,53 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // ===========================
-  // 地区選択で背景色変更（追加）
-  // ===========================
-  const sliderBg = document.getElementById("sliderBg");
-
-  function applyDistrictTheme(label) {
-    if (!sliderBg) return;
-
-    sliderBg.classList.remove(
-      "area-default",
-      "area-north",
-      "area-south",
-      "area-east",
-      "area-west",
-      "area-center"
-    );
-
-    if (!label || label === "地区別") {
-      sliderBg.classList.add("area-default");
-      return;
-    }
-
-    if (label.includes("県北")) sliderBg.classList.add("area-north");
-    else if (label.includes("県南")) sliderBg.classList.add("area-south");
-    else if (label.includes("県東")) sliderBg.classList.add("area-east");
-    else if (label.includes("県西")) sliderBg.classList.add("area-west");
-    else if (label.includes("県央")) sliderBg.classList.add("area-center");
-    else sliderBg.classList.add("area-default");
-  }
-
-  // ナビの地区クリックで色だけ変える（既存の検索hidden更新等はbase側に任せる）
-  document.querySelectorAll(".district-item").forEach((a) => {
-    a.addEventListener("click", (e) => {
-      // base.html側でpreventDefaultしててもOK。ここでは邪魔しない
-      const label = a.dataset.label || a.textContent.trim() || "地区別";
-      applyDistrictTheme(label);
-    });
-  });
-
-  // 初期反映（ボタン表示から色を決める）
-  const districtBtn = document.getElementById("districtBtn");
-  if (districtBtn) {
-    const initLabel = districtBtn.textContent.replace("▼", "").trim();
-    applyDistrictTheme(initLabel);
-  }
-
-  // ===========================
   // ① 全スライド取得
-  // ===========================
   let items = Array.from(document.querySelectorAll(".slide-item"));
 
   // ② Fisher-Yates シャッフルでランダム並び替え
@@ -58,11 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ③ 先頭10枚だけ使う
   items = items.slice(0, 10);
-
+    
   // ④ HTML の slide コンテナに10枚だけ入れ直す
   const slide = document.getElementById("slide");
   slide.innerHTML = ""; // 一旦クリア
-  items.forEach((item) => slide.appendChild(item));
+  items.forEach(item => slide.appendChild(item));
 
   // ここでインジケーター調整
   const indicator = document.getElementById("indicator");
@@ -131,6 +83,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  updateSlide(); // 初期表示
+  updateSlide();   // 初期表示
   startAutoPlay();
 });

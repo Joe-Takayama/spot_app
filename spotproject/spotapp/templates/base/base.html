@@ -1,19 +1,21 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{%  block title %}メニューHTML{% endblock %}</title>
-    <!--共通css-->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <!--テンプレごとのcss-->
-    {% block extra_css %} {% endblock %}
-    {% block extra_js %}{% endblock %}
-</head>
-<body>
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{%  block title %}メニューHTML{% endblock %}</title>
+        <!--共通css-->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <!--テンプレごとのcss-->
+        {% block extra_css %} {% endblock %}
+        {% block extra_js %}{% endblock %}
 
-    <!-- ナビ -->
+    </head>
+    <body>
+
+
+            <!-- ナビ -->
     {% block nav %}
     <nav>
         <div class="nav-left">
@@ -31,9 +33,9 @@
                     {% for district in districts %}
                     <li>
                         <a href="#"
-                           class="district-item"
-                           data-value="{{ district.district_id }}"
-                           data-label="{{ district.district_name }}">
+                            class="district-item"
+                            data-value="{{ district.district_id }}"
+                            data-label="{{ district.district_name }}">
                             {{ district.district_name }}
                         </a>
                     </li>
@@ -41,25 +43,26 @@
                 </ul>
             </div>
 
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn" type="button" id="categoryBtn">
-                    {{ selected_category_name|default:"カテゴリ" }} ▼
-                </button>
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn" type="button" id="categoryBtn">
+                {{ selected_category_name|default:"カテゴリ" }} ▼
+            </button>
 
-                <ul class="menu_down" id="categoryMenu_down">
-                    <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
-                    {% for category in categories %}
-                        <li>
-                            <a href="#"
-                               class="category-item"
-                               data-value="{{ category.category_id }}"
-                               data-label="{{ category.category_name }}">
-                                {{ category.category_name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+            <ul class="menu_down" id="categoryMenu_down">
+                <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
+                {% for category in categories %}
+                    <li>
+                        <a href="#"
+                            class="category-item"
+                            data-value="{{ category.category_id }}"
+                            data-label="{{ category.category_name }}">
+                            {{ category.category_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
 
             <!-- ログインしなきゃ表示できない奴 -->
             {% if user.is_authenticated %}
@@ -67,7 +70,10 @@
                 お気に入り一覧
             </a>
             {% else %}
+                
             {% endif %}
+       
+
 
             <div class="Nav-block" id="osiraseMenu_btn">
                 <button class="Menu_btn">
@@ -75,19 +81,20 @@
                     {% if osirase_new_count %}
                         <span class="new-badge">{{ osirase_new_count }}</span>
                     {% endif %}
-                </button>
 
-                <ul id="osirase_down" class="menu_down anywhere">
-                    {% for o in osirase_list %}
-                        <li>
-                            <a href="{% url 'spotapp:news_detail' o.pk %}">
-                                {{ o.title }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <li>表示できるお知らせがありません。</li>
-                    {% endfor %}
-                </ul>
+                </button>
+            
+            <ul  id="osirase_down" class="menu_down anywhere">
+                {% for o in osirase_list %}
+                    <li>
+                        <a href="{% url 'spotapp:news_detail' o.pk %}">
+                            {{ o.title }}
+                        </a>
+                    </li>
+                {% empty %}
+                    <li>表示できるお知らせがありません。</li>
+                {% endfor %}
+            </ul>
             </div>
         </div>
 
@@ -103,6 +110,7 @@
                             <img src="{% static 'img/default_icon.png' %}" alt="icon">
                         {% endif %}
                     </div>
+   
                 </div>
 
                 <ul class="user-menu" id="userMenu">
@@ -112,6 +120,7 @@
                         <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
                             {% csrf_token %}
                             <button type="submit" class="user-menu-btn logout">ログアウト</button>
+
                         </form>
                     </li>
                 </ul>
@@ -127,6 +136,9 @@
     </nav>
     {% endblock %}
 
+
+
+
     <!-- 検索バー -->
     {% block searchbar %}
     <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
@@ -137,6 +149,8 @@
 
         <button type="submit" class="submit">検索</button>
     </form>
+
+
     {% endblock %}
 
     <!-- ★ 中央幅の基準 -->
@@ -145,7 +159,8 @@
         {% endblock %}
     </div>
 
-    <!-- フッター -->
+
+        <!-- フッター -->
     {% block footer %}
     <footer class="footer">
         <span>&copy; E班</span>
@@ -156,31 +171,6 @@
     {% block script %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-
-    // ========================
-    // 地区選択で背景色変更（追加）
-    // ========================
-    const sliderBg = document.getElementById("sliderBg");
-
-    function applyDistrictTheme(label){
-      if (!sliderBg) return;
-
-      sliderBg.classList.remove(
-        "area-default","area-north","area-south","area-east","area-west","area-center"
-      );
-
-      if (!label || label === "地区別") {
-        sliderBg.classList.add("area-default");
-        return;
-      }
-
-      if (label.includes("県北")) sliderBg.classList.add("area-north");
-      else if (label.includes("県南")) sliderBg.classList.add("area-south");
-      else if (label.includes("県東")) sliderBg.classList.add("area-east");
-      else if (label.includes("県西")) sliderBg.classList.add("area-west");
-      else if (label.includes("県央")) sliderBg.classList.add("area-center");
-      else sliderBg.classList.add("area-default");
-    }
 
     // ------------------------
     // ユーザーメニュー
@@ -244,6 +234,7 @@
             return;
         }
 
+
         const data = await res.json();
         btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
 
@@ -279,9 +270,6 @@
 
         if (districtHidden) districtHidden.value = val;
         if (districtBtn) districtBtn.textContent = `${label} ▼`;
-
-        // ★ 地区に応じて背景色変更（追加）
-        applyDistrictTheme(label);
         });
     });
 
@@ -298,13 +286,6 @@
         if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
         });
     });
-
-    // ★ 初期表示の地区名で背景色反映（追加）
-    if (districtBtn) {
-      const initLabel = districtBtn.textContent.replace("▼", "").trim();
-      applyDistrictTheme(initLabel);
-    }
-
     // ------------------------
     // ナビのプルダウン：基本クリック
     // ただし「お知らせ」は PC=hover / スマホ=click
@@ -313,33 +294,34 @@
     const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
     navBlocks.forEach(block => {
-      const btn = block.querySelector(".Menu_btn");
-      const down = block.querySelector(".menu_down");
-      if (!btn || !down) return;
+    const btn = block.querySelector(".Menu_btn");
+    const down = block.querySelector(".menu_down");
+    if (!btn || !down) return;
 
-      const isOsirase = (block.id === "osiraseMenu_btn");
+    const isOsirase = (block.id === "osiraseMenu_btn");
 
-      // PCでお知らせは hover で開くので click 制御しない
-      if (isOsirase && canHover) return;
+    // PCでお知らせは hover で開くので click 制御しない
+    if (isOsirase && canHover) return;
 
-      btn.addEventListener("click", (e) => {
+    btn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
 
         // 他のNav-blockは閉じる
         navBlocks.forEach(b => {
-          if (b !== block) b.classList.remove("open");
+        if (b !== block) b.classList.remove("open");
         });
 
         block.classList.toggle("open");
-      });
-
-      down.addEventListener("click", (e) => e.stopPropagation());
     });
 
-  });
+    down.addEventListener("click", (e) => e.stopPropagation());
+    });
+
+
+});
 </script>
 {% endblock %}
 
-</body>
-</html>
+    </body>
+    </html>
