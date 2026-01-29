@@ -228,16 +228,7 @@
     box-sizing: border-box;
 }
 
-/* ===== スマホで横はみ出し防止（詳細ページ） ===== */
-.spot-info,
-.spot-image,
-.spot-actions,
-#route-ui,
-.spot-detail{
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
+
 
 /* paddingがある要素は “中身込みで100%” にする */
 .spot-image,
@@ -248,7 +239,19 @@
 /* 画像の高さ：スマホは固定350だとデカすぎ＆崩れやすい */
 @media (max-width: 768px){
   .photo{ height: 220px; }
+
+  /* ===== スマホで横はみ出し防止（詳細ページ） ===== */
+    .spot-info,
+    .spot-image,
+    .spot-actions,
+    #route-ui,
+    .spot-detail{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
+
+
 
 /* route の入力やボタンがはみ出さない */
 .route-input #start{
@@ -280,4 +283,6 @@
   justify-content: center;
   max-width: 100%;            /* ←追加：はみ出し禁止 */
   white-space: nowrap;
+
+    }
 }
