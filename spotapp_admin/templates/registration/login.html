@@ -1,0 +1,29 @@
+{% load static %}
+    <head>
+        <link rel="stylesheet", href="{% static 'css/login.css' %}">
+        <title>{% block title %} ログイン {% endblock %}</title>
+    </head>
+{% block body %}
+
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
+
+<div class="login-container">
+    <div class="login-form">
+        <h2>ログイン</h2>
+            <form method="post", action="{% url 'spotapp_admin:login' %}">
+                {% csrf_token %}
+                {{ form.as_p}}
+                <button type="submit">ログイン</button>
+            </form>
+            {% if messages %}
+                <ul style="color: red;">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

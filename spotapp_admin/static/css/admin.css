@@ -1,0 +1,136 @@
+.home-btn {
+    margin-left: 5px;
+}
+
+.home-btn a {
+    display: inline-block;
+    background-color: #667eea;
+    border-radius: 8px;
+    color: white;
+    text-decoration: none;
+    border: none;
+    padding: 12px 20px;
+    transition: all 0.5s ease;
+}
+
+.home-btn a:hover {
+    background-color: #5a6fd8;
+    transition: 0.5s;
+}
+
+
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    position: relative;  /* nav を基準にする */
+    align-items: center;
+}
+
+
+.Nav-block {
+    text-align: center;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+}
+
+.Menu_btn {
+    padding: 12px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.Menu_btn:hover {
+    background: #5a6fd8;
+}
+
+/* ドロップダウンメニュー本体 */
+.menu_down {
+    display: none;           /* 最初は非表示 */
+    position: absolute;
+    top: 100%;               /* ボタンのすぐ下 */
+    left: 0;
+    width: 160px;        /* 必要に応じて調整 */
+    max-height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: white;
+    border: 1px solid #e1e5e9;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 8px 0;
+    margin: 4px 0 0 0;
+    list-style: none;
+}
+
+/* 表示状態 */
+.Nav-block.active .menu_down {
+    display: block;
+}
+
+.menu_down li {
+    padding: 0;
+    list-style: none;
+    margin-bottom: 10px;
+}
+
+.menu_down a,
+.menu_down div,
+.menu_down strong {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+}
+
+.menu_down a:hover,
+.menu_down div:hover {
+    background: #f8f9fa;
+    color: #667eea;
+}
+
+.menu_down#osirase_down {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 600px;        /* 目的の固定幅 */
+  max-width: 90vw;     /* 画面外にはみ出し防止 */
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.menu_down#osirase_down.anywhere{
+    overflow-wrap: anywhere;
+}
+
+
+
+
+footer {
+    margin-top: 20px;
+}
+
+#search{
+    text-align: center;
+    width: 80%;
+    padding: 8px 16px;
+    background: #fff;
+    border-radius: 5px;
+    margin: 5% 0%;
+}
+
+.footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    border-top:solid 3px #333;
+}
+        

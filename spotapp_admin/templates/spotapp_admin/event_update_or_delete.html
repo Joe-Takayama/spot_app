@@ -1,0 +1,50 @@
+{% extends "base2/base2.html" %}
+{% block title %} イベント一覧 {% endblock %}
+{% block body %}
+
+<h2 class="page-title">イベント一覧</h2>
+
+<div class="event-form">
+    <form method="get" class="filter-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="イベント名で検索"
+            value="{{ keyword|default:'' }}"
+        >
+        <button type="submit">検索</button>
+        <p class="event-count">{{ event_list|length }}</p>
+    </form>
+</div>
+
+{% if event_list %}
+    <div class="table-wrapper">
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>イベント名称</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for events in event_list %}
+                    <tr>
+                        <td>{{ events.event_name }}</td>
+                        <td class="actions">
+                            {% if events.event_id %}
+                                <a href="{% url 'spotapp_admin:event_update' events.event_id %}" class="btn update">更新</a>
+                            {% else %}
+                                <span class="disabled">更新不可</span>
+                            {% endif %}
+                                <a href="{% url 'spotapp_admin:event_delete' events.event_id %}" class="btn delete">削除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p class="no-data">イベント情報がありません</p>
+{% endif %}
+
+{% endblock %}

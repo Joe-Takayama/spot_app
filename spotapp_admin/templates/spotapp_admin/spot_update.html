@@ -1,0 +1,138 @@
+{% load static %}
+<head>
+    <link href="{% static 'css/spot_update.css' %}" rel="stylesheet">
+    <title>{% block title %} 観光地更新 {% endblock %}</title>
+</head>
+
+{% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
+<div class="spot_update-container">
+    <div class="spot_update-form">
+        <h2>観光地更新</h2>
+        
+        <div class="image-gallery">
+            {% if page.photos.all %}
+                <p class="gallery-title">現在の写真</div>
+                <div class="gallery">
+                    {% for photo in page.photos.all %}
+                        <div class="photo-item">
+                            <img src="{{ photo.image.url }}" alt="観光地写真">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <br>
+        <form method="post" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_update' page.pk %}">
+            <div class="form-box">
+                {% csrf_token %}
+
+                {{ spot_form.spot_name.label_tag }}
+                {{ spot_form.spot_name }}
+
+                {{ spot_form.address.label_tag }}
+                {{ spot_form.address }}
+                <button type="button" id="search-address" style="margin:10px 0;">
+                    住所から地図表示
+                </button>
+
+                {{ spot_form.business_hours.label_tag }}
+                {{ spot_form.business_hours }}
+
+                {{ spot_form.explanation.label_tag }}
+                {{ spot_form.explanation }}
+
+                {{ spot_form.category.label_tag }}
+                {{ spot_form.category }}
+
+                {{ spot_form.district.label_tag }}
+                {{ spot_form.district }}
+
+                {{ photo_form.image.label_tag }}
+                {{ photo_form.image }}
+
+                <div id="map" style="width:100%; height:350px; margin-top:20px;"></div>
+                {{ spot_form.latitude }}
+                {{ spot_form.longitude }}
+
+
+            <button type="submit">更新</button>
+            </div>
+        </form>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    </div>
+</div>
+<a href="{% url 'spotapp_admin:spot_list' %}">観光地一覧に戻る</a>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const latInput = document.getElementById("id_latitude");
+    const lngInput = document.getElementById("id_longitude");
+
+    if (!latInput || !lngInput) {
+        console.error("緯度経度inputが見つからない");
+        return;
+    }
+
+    const lat = latInput.value ? parseFloat(latInput.value) : 35.681236;
+    const lng = lngInput.value ? parseFloat(lngInput.value) : 139.767125;
+
+    const map = L.map('map').setView([lat, lng], 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+
+    marker.on('dragend', function () {
+        const pos = marker.getLatLng();
+        latInput.value = pos.lat;
+        lngInput.value = pos.lng;
+    });
+
+    const searchBtn = document.getElementById("search-address");
+    if (!searchBtn) return;
+
+    searchBtn.addEventListener("click", function(){
+
+        const input = document.getElementById("id_address");
+        if(!input || !input.value.trim()){
+            alert("住所を入力してください");
+            return;
+        }
+
+        const address = "日本 " + input.value;
+
+        fetch(
+            `https://nominatim.openstreetmap.org/search` +
+            `?format=json&limit=1&accept-language=ja&countrycodes=jp&q=${encodeURIComponent(address)}`
+        )
+        .then(res => res.json())
+        .then(data => {
+            if(!data || data.length === 0){
+                alert("場所が見つかりません");
+                return;
+            }
+
+            const lat = parseFloat(data[0].lat);
+            const lng = parseFloat(data[0].lon);
+
+            map.setView([lat, lng], 16);
+            marker.setLatLng([lat, lng]);
+
+            latInput.value = lat;
+            lngInput.value = lng;
+        })
+        .catch(() => alert("検索エラーが発生しました"));
+    });
+
+});
+</script>>
+{% endblock %}
+

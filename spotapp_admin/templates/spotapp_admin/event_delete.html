@@ -1,0 +1,17 @@
+{% extends "base2/base2.html" %}
+{% block title %} イベント削除 {% endblock %}
+{% block body %}
+<div class="event_delete-container">
+    <div class="event_delete-form">
+        <h2>このイベントを削除しますか?</h2>
+        <p>イベント名: {{ page.event_name }}</p>
+        <div class="delete-buttons">
+            <form method="POST", action="{% url 'spotapp_admin:event_delete' page.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-yes">はい</button>
+            </form>
+            <a href="{% url 'spotapp_admin:event_list' %}" class="btn-no">いいえ</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

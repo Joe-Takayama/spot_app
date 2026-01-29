@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} ホーム {% endblock %}</title>
+    <link href="{% static 'css/admin.css' %}" rel="stylesheet">
+    <link href="{% static 'css/logout.css' %}" rel="stylesheet">
+    <link href="{% static 'css/event_delete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/index2.css' %}" rel="stylesheet">
+    <link href="{% static 'css/base2.css' %}" rel="stylesheet">
+    <link href="{% static 'css/search-result.css' %}" rel="stylesheet">
+    <link href="{% static 'css/event-list.css' %}" rel="stylesheet">
+    <link href="{% static 'css/registration.css' %}" rel="stylesheet">
+    <link href="{% static 'css/updatedelete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/osirase_detail.css' %}" rel="stylesheet">
+    <link href="{% static 'css/spot-list.css' %}" rel="stylesheet">
+    <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
+    <link href="{% static 'css/event_delete_complete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/event_registration_complete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/event_update_complete.css' %}" rel="stylesheet">
+    <link href="{% static 'css/osirase_complete.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+
+    <nav>
+        <!-- 左側 -->
+        <div class="left-nav">
+            <div class="home-btn">
+                <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+            </div>
+        </div>
+
+        <!-- 右側 -->
+        <div class="right-nav">
+            {% if request.session.staff_id %}
+            <!-- 管理者プルダウン -->
+            <div class="Nav-block" id="adminMenu_btn">
+                <button class="Menu_btn">管理者 ▼</button>
+                <ul class="menu_down" id="adminMenu_down">
+                    <li><a href="{% url 'spotapp_admin:osirase_send'%}">お知らせ送信</a></li>
+                    <li><a href="{% url 'spotapp_admin:logout' %}">ログアウト</a></li>
+                </ul>
+            </div>
+            {% else %}
+                <a href="{% url 'spotapp_admin:login' %}" class="login-link">ログイン</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="main">
+        {% block body %}{% endblock %}
+    </div>
+
+    <footer class="footer">
+        <span>&copy; E班</span>
+    </footer>
+
+    <script src="{% static 'js/admin.js' %}"></script>
+    <script src="{% static 'js/base2.js' %}"></script>
+
+</body>
+</html>

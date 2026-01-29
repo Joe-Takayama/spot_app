@@ -1,0 +1,150 @@
+{% load static %}
+<head>
+    <link href="{% static 'css/spot_regist.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>{% block title %} 観光地登録 {% endblock %}</title>
+</head>
+
+{% block body %}
+<div class="home-btn">
+    <a href="{% url 'spotapp_admin:index' %}">ホーム</a>
+</div>
+
+<div class="spot_registration-container">
+  <div class="spot_registration-form">
+        <h2>観光地登録</h2>
+
+      <form class="form-box" method="POST" enctype="multipart/form-data" action="{% url 'spotapp_admin:spot_registration' %}">
+
+        {% if spot_form.errors %}
+            <div class="error">
+                {{ spot_form.errors }}
+            </div>
+        {% endif %}
+
+        {% if photo_form.errors %}
+            <div class="error">
+                {{ photo_form.errors }}
+            </div>
+        {% endif %}
+        
+      {% csrf_token %}
+
+      {{ spot_form.spot_name }}
+      {{ spot_form.address }}
+        <button type="button" id="search-address" style="margin:10px 0;">
+            住所から地図表示
+        </button>
+
+      {{ spot_form.business_hours }}
+      {{ spot_form.explanation }}
+ 
+    <div class="form-section">
+        <p>地区を選択してください</p>
+        {{ spot_form.district }}
+    </div>
+     <!-- 🌍 ここに地図を追加 -->
+      <p>地図で場所を選択してください</p>
+      <div id="map" style="height:350px; margin-bottom:15px;"></div>
+
+      {{ spot_form.latitude }}
+      {{ spot_form.longitude }}
+    <div class="form-section category-list">
+        <p>カテゴリーを選択してください</p>
+        {{ spot_form.category }}
+    </div>
+      <p>写真を登録してください</p>
+      {{ photo_form.image }}
+
+      <button type="submit">登録</button>
+      </form>
+  </div>
+</div>
+
+<!-- JSはここ -->
+
+
+<!-- Leaflet本体 -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const map = L.map('map').setView([35.681236, 139.767125], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let marker = null;
+
+    map.on('click', function(e){
+        if(marker){
+            marker.setLatLng(e.latlng);
+        } else {
+            marker = L.marker(e.latlng).addTo(map);
+        }
+        document.getElementById("id_latitude").value = e.latlng.lat;
+        document.getElementById("id_longitude").value = e.latlng.lng;
+    });
+
+    // 住所・施設名検索
+    document.getElementById("search-address").addEventListener("click", function(){
+
+        const input = document.getElementById("id_address");
+        if(!input || !input.value.trim()){
+            alert("住所を入力してください");
+            return;
+        }
+
+        const address = input.value;
+        const hasNumber = /\d/.test(address);
+
+        const url = hasNumber
+            ? `https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(address)}`
+            : `https://nominatim.openstreetmap.org/search?format=json&limit=1&accept-language=ja&countrycodes=jp&q=${encodeURIComponent("日本 " + address)}`;
+        
+        fetch(url)
+        .then(res => res.json())
+        .then(data => {
+
+            if(!data || data.length === 0) {
+                alert("場所が見つかりません。住所を詳しく入力してください");
+                return;
+            }
+
+            let lat, lng;
+
+            if (hasNumber) {
+                // 国土地理院[lng, lat]
+                lat = data[0].geometry.coordinates[1];
+                lng = data[0].geometry.coordinates[0];
+            } else {
+                //オープンストリーム
+                lat = data[0].lat;
+                lng = data[0].lon;
+            }
+
+            lat = parseFloat(lat);
+            lng = parseFloat(lng);
+
+            map.setView([lat, lng], 16);
+
+            if(marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+
+            document.getElementById("id_latitude").value = lat;
+            document.getElementById("id_longitude").value = lng;
+        })
+        .catch(()=> {
+            alert("検索エラーが発生しました");
+        });
+    });
+
+});
+</script>
+
+{% endblock %}

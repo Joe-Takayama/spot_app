@@ -1,0 +1,49 @@
+.event_delete-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.delete-buttons {
+    margin-top: 30px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.btn-yes {
+    background-color: #0077cc;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.5s ease;
+}
+
+.btn-yes:hover {
+    background-color: #0055cc;
+}
+
+.btn-no {
+    background-color: #0077cc;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    transition: all 0.5s ease;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.5s ease;
+}
+
+.btn-no:hover {
+    background-color: #0055cc;
+}
+
+.event_delete-container {
+    display: flex;
+    justify-content: center; /* 横方向中央 */
+    align-items: center;     /* 縦方向中央 */
+    height: 100vh;           /* 画面全体の高さ */
+}

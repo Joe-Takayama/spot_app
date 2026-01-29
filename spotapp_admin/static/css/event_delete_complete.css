@@ -1,0 +1,13 @@
+.complete {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transform: translateY(-80px);
+    height: 100vh;
+}
+
+.complete.menu {
+    display: flex;
+    align-items: center;
+}

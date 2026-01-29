@@ -1,0 +1,39 @@
+/* --- ダイアログ全体 --- */
+.confirm-box {
+    width: 400px;
+    margin: 60px auto;
+    padding: 50px 20px;
+    background: #fff;
+    text-align: center;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    font-family: "Yu Gothic", "Hiragino Kaku Gothic ProN", sans-serif;
+}
+
+/* --- 問いかけテキスト --- */
+.confirm-text {
+    font-size: 20px;
+    margin-bottom: 40px;
+}
+
+/* --- ボタン並び --- */
+.confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+/* --- はい／いいえボタン --- */
+.confirm-btn {
+    padding: 12px 28px;
+    border: 2px solid #cfcfcf;
+    border-radius: 15px;
+    background: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.confirm-btn:hover {
+    background: #f2f2f2;
+}
