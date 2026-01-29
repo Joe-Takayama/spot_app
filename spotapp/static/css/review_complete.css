@@ -1,0 +1,98 @@
+/* =========================
+   レビュー投稿完了（このページだけ）
+========================= */
+
+.review-done-page{
+  width: min(1100px, 95vw);
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  box-sizing: border-box;
+}
+
+.review-done-page .page-main{
+  display: grid;
+  gap: 18px;
+  justify-items: center;
+  padding-top: 40px;
+}
+
+/* 中央カード */
+.review-done-page .done-card{
+  width: min(760px, 92vw);
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+  padding: 30px 24px;
+  text-align: center;
+}
+
+.review-done-page .done-icon{
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 14px;
+  border-radius: 999px;
+  background: #f4f6ff;
+  border: 2px solid rgba(0,0,0,0.06);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.review-done-page .done-icon img{
+  width: 92%;
+  height: 92%;
+  object-fit: cover;
+  border-radius: 999px;
+}
+
+.review-done-page .done-title{
+  margin: 6px 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.review-done-page .done-sub{
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 700;
+}
+
+/* 下の横長ボタン */
+.review-done-page .done-actions{
+  width: min(760px, 92vw);
+  display: grid;
+  justify-items: center;
+}
+
+.review-done-page .done-btn{
+  width: min(520px, 90%);
+  display: block;
+  text-align: center;
+  padding: 14px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 800;
+  color: #fff;
+  background: #4a90e2;
+  box-shadow: 0 10px 26px rgba(74,144,226,0.35);
+}
+
+.review-done-page .done-btn:hover{
+  opacity: 0.92;
+}
+
+/* スマホ */
+@media (max-width: 480px){
+  .review-done-page .done-card{
+    padding: 24px 18px;
+  }
+  .review-done-page .done-title{
+    font-size: 20px;
+  }
+  .review-done-page .done-icon{
+    width: 104px;
+    height: 104px;
+  }
+}
