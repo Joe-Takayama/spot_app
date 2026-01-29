@@ -146,3 +146,12 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'profile'):
         instance.profile.save()
+        
+# お知らせ既読管理モデル
+class OsiraseRead(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    osirase = models.ForeignKey("spotapp_admin.Osirase", on_delete=models.CASCADE)
+    read_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("user", "osirase")

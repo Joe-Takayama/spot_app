@@ -301,6 +301,31 @@ nav {
     background-color: #4a60d3;
 }
 
+.Menu_btn{ position: relative; }
+
+/* お知らせボタン内の NEW バッジ */
+.osirase-btn{
+  position: relative;
+  padding-right: 52px; /* NEW分のスペース確保（必要なら調整） */
+}
+
+.new-badge{
+  position: absolute;
+  top: 6px;
+  right: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+
+  padding: 4px 6px;
+  border-radius: 999px;
+
+  background: #ff4d4f;
+  color: #fff;
+  white-space: nowrap;
+}
+
 /* PCでは1行表示 */
 .pc-only{ display:inline; }
 .sp-only{ display:none; }

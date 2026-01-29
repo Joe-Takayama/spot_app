@@ -72,6 +72,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 "spotapp_admin.context_processors.osirase_nav",
                 "spotapp.context_processors.common_nav_data",
+                'spotapp.context_processors.osirase_common',
 
             ],
         },
