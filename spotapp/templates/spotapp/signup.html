@@ -1,0 +1,49 @@
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+
+{% block body %}
+
+<!-- ホームへ戻る -->
+<div class="home-btn">
+    <a href="{% url 'spotapp:index' %}">ホーム</a>
+</div>
+
+<!-- ログインしてるなら右上にプロフィール -->
+{% if request.user.is_authenticated %}
+<div class="user-info-right">
+    <div class="user-icon">
+        {% if request.user.profile.icon %}
+            <img src="{{ request.user.profile.icon.url }}" alt="icon">
+        {% else %}
+            <img src="{% static 'img/default_icon.png' %}" alt="icon">
+        {% endif %}
+    </div>
+    <p>{{ request.user.username }} さん</p>
+</div>
+{% endif %}
+
+<!-- 中央の新規登録フォーム -->
+<div class="signup-form">
+
+    <h2 class="signup-title">ユーザー新規登録</h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Django form の内容（username / email / password） -->
+        {{ form.as_p }}
+
+        <button type="submit">登録</button>
+    </form>
+
+    <div class="signup-login">
+        <a href="{% url 'spotapp:index' %}" class="back-link">← 戻る</a>
+        <a href="{% url 'spotapp:login' %}" class="login-link">ログインはこちら →</a>
+    </div>
+</div>
+
+{% endblock %}

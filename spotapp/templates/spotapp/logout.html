@@ -1,0 +1,33 @@
+<head>
+    {% load static %}
+    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <link href="{% static "css/profile_edit.css" %} " rel="stylesheet">
+ 
+</head>
+{% block body %}
+<div class="page">
+    <header class="page-header">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+        <div class="user-info">
+            <div class="user-icon">
+                {% if request.user.profile.icon %}
+                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                {% else %}
+                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                {% endif %}
+            </div>
+            <div class="user-name-text">
+                {{ request.user.username }} さん
+            </div>
+        </div>
+    </header>
+<h2>ログアウト</h2>
+<form method="POST" action="{% url 'spotapp:logout' %}">
+    {% csrf_token %}
+    <button type="submit">ログアウト</button>
+</form>
+
+<a href="{% url 'spotapp:index' %}" class="link-back">← 戻る</a>
+</div>
+{% endblock %}
