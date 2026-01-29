@@ -1,0 +1,86 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block title %}イベント一覧{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/event_chart.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="admin-container">
+
+  <h2 class="page-title">イベント一覧</h2>
+
+  <!-- 🔹 月ボタン -->
+  <div class="month-select">
+    <a href="{% url 'spotapp:event_chart' %}?page=1"
+       class="month-btn {% if not selected_month %}active{% endif %}">
+      ALL
+    </a>
+
+    {% for m in months %}
+      <a href="?month={{ m }}&page=1"
+         class="month-btn {% if selected_month == m|stringformat:'s' %}active{% endif %}">
+        {{ m }}月
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- ◆ イベント一覧 -->
+  {% for event in event_list %}
+    <div class="event-card">
+      <h3>{{ event.event_name }}</h3>
+
+      <p>
+        📅 {{ event.event_start|date:"Y年n月j日" }} 〜 {{ event.event_end|date:"Y年n月j日" }}
+      </p>
+
+      <p>
+        📍
+        {% if event.spot_id %}
+          <a href="{% url 'spotapp:spot_detail' event.spot_id.spot_id %}"
+             class="event-spot-link">
+            {{ event.spot_id.spot_name }}
+          </a>
+        {% else %}
+          {{ event.venue }}
+        {% endif %}
+      </p>
+
+      <p class="description">
+        {{ event.details|truncatechars:50 }}
+      </p>
+
+      <a href="{% url 'spotapp:event_detail' event.event_id %}"
+         class="detail-link">
+        詳細を見る →
+      </a>
+    </div>
+  {% empty %}
+    <p>この月のイベントはありません。</p>
+  {% endfor %}
+
+</div>
+
+<!-- ページネーション -->
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="pagination">
+
+  {% if page_obj.has_previous %}
+    <a href="?{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ page_obj.previous_page_number }}">
+      ←前のページへ
+    </a>
+  {% endif %}
+
+  <span>
+    {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+  </span>
+
+  {% if page_obj.has_next %}
+    <a href="?{% if selected_month %}month={{ selected_month }}&{% endif %}page={{ page_obj.next_page_number }}">
+      次のページへ→
+    </a>
+  {% endif %}
+</div>
+{% endif %}
+{% endblock %}
