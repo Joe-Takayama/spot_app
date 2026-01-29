@@ -5,6 +5,7 @@ db.sqlite3-journal
 spotapp_admin/media/spotapp_admin/photos/
 spotapp_admin/media/profile_icons/
 spotapp_admin/media
+media/
 
 # 仮想環境
 venv/
