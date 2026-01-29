@@ -11,6 +11,10 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'spotproject.settings')
+# ★ ここが重要
+os.environ.setdefault(
+    'DJANGO_SETTINGS_MODULE',
+    'spotproject.settings'
+)
 
 application = get_asgi_application()
