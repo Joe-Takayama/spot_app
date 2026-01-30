@@ -1,41 +1,56 @@
+{% extends "base/base.html" %}
 {% load static %}
 
-<head>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
-</head>
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+{% endblock %}
+
+{% block nav %}
+<nav class="profile-mini-nav">
+  <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
+
+  {% if request.user.is_authenticated %}
+  <div class="user-info">
+    <div class="user-icon">
+      {% if request.user.profile.icon %}
+        <img src="{{ request.user.profile.icon.url }}" alt="icon">
+      {% else %}
+        <img src="{% static 'img/default_icon.png' %}" alt="icon">
+      {% endif %}
+    </div>
+    <div class="user-name-text">
+      {{ request.user.username }} さん
+    </div>
+  </div>
+  {% endif %}
+</nav>
+{% endblock %}
+
+{% block searchbar %}{% endblock %}
+{% block footer %}{% endblock %}
 
 {% block body %}
-
-<div class="home-btn">
-    <a href="{% url 'spotapp:index' %}">ホーム</a>
-</div>
-
-<!-- ログインフォーム -->
 <div class="signup-form">
 
-    <h2 class="signup-title">ログイン</h2>
+  <h2 class="signup-title">ログイン</h2>
 
-    <form method="post">
-        {% csrf_token %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ログイン</button>
+  </form>
 
-        {{ form.as_p }}
+  <div class="signup-login">
+    <a href="{% url 'spotapp:signup' %}" class="signup-link">新規登録はこちら →</a>
+  </div>
 
-        <button type="submit">ログイン</button>
-    </form>
+  {% if messages %}
+    <ul class="auth-messages">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 
-    <div class="signup-login">
-        <a href="{% url 'spotapp:signup' %}" class="signup-link">新規登録はこちら →</a>
-    </div>
-
-    <!-- エラーのメッセージを表示 -->
-    {% if messages %}
-        <ul style="color:red; list-style:none; padding:0;">
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 </div>
-
 {% endblock %}
