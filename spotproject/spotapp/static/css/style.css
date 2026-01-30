@@ -147,7 +147,7 @@ nav {
 .menu_down#osirase_down {
   position: absolute;
   top: 110%;
-  left: 0;
+  
   transform: translateX(-60%);
   width: clamp(300px, 50vw, 600px);
   box-sizing: border-box;
@@ -326,79 +326,12 @@ nav {
   white-space: nowrap;
 }
 
-/* 地区別：項目に色バー（強化版） */
-#areaMenu_down a.district-item{
-  position: relative;
-  display: block;
-  padding: 12px 16px 12px 26px; /* 左にバー分を確保 */
-  color: #111;                  /* 通常文字 */
-}
-
-/* 左の色バー */
-#areaMenu_down a.district-item::before{
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 65%;
-  border-radius: 999px;
-  background: var(--district-color, #64748b);
-}
-
-/* hover：背景を薄く＋文字色も地区色に */
-#areaMenu_down a.district-item:hover{
-  background: color-mix(in srgb, var(--district-color, #64748b) 14%, #fff);
-  color: var(--district-color, #667eea);
-}
-
-/* 「地区別」（デフォルト）はバー無しにしたいなら */
-#areaMenu_down a.district-item[data-label="地区別"]::before{
-  display: none;
-}
-#areaMenu_down a.district-item[data-label="地区別"]{
-  padding-left: 16px;
-}
-
-#districtBtn{
-  border: 2px solid var(--district-color, transparent);
-  background: color-mix(in srgb, var(--district-color, #667eea) 25%, #667eea);
-}
-
-#categoryMenu_down .category-item{
-  position: relative;
-  padding-left: 18px;
-}
-
-/* カテゴリの色バー追加 */
-#categoryMenu_down .category-item::before{
-  content:"";
-  position:absolute;
-  left:8px;
-  top:50%;
-  transform:translateY(-50%);
-  width:6px;
-  height:70%;
-  border-radius:999px;
-  background: var(--category-color, #64748b);
-}
-
-#categoryMenu_down .category-item:hover{
-  background: color-mix(in srgb, var(--category-color, #64748b) 12%, #fff);
-}
-
-#categoryBtn{
-  border: 2px solid var(--category-color, transparent);
-  background: color-mix(in srgb, var(--category-color, #667eea) 25%, #667eea);
-}
-
-
-
-
 /* PCでは1行表示 */
 .pc-only{ display:inline; }
 .sp-only{ display:none; }
+
+
+
 
 /* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
 @media (max-width: 768px){
@@ -476,10 +409,10 @@ nav {
     width: min(90vw, 320px);
   }
 
-  /* お知らせのtransformはスマホでは無効化（画面外に飛ぶ原因） */
-  #osirase_down{
-    transform: translateX(-50%);
+  .Nav-block.open > #osirase_down{
+    display: flex !important;
   }
+
 
   /* ユーザーアイコンは小さめ（スペース確保） */
   .user-icon img{
@@ -520,6 +453,12 @@ nav {
 }
 
 
+  .menu_down#osirase_down li a{
+    padding: 14px 16px;
+  }
+
+
+
 
 
 }
@@ -535,43 +474,37 @@ nav {
   #osiraseMenu_btn{
     position: relative;
   }
+
+  
 }
 
 /* ===============================
-   地区選択によるテーマカラー（追加）
+   ✅スマホ：お知らせだけは画面固定で確実に中央表示
+   （ログイン/未ログイン差・left:50%指定を全部潰す）
    =============================== */
+@media (max-width: 768px){
+  #osirase_down{
+    position: fixed !important;
 
-/* 背景が変わる対象（スライダー外枠想定） */
-#sliderBg{
-  transition: background 0.35s ease;
+    /* ←これが重要：左右を決めて画面内に固定 */
+    left: 12px !important;
+    right: 12px !important;
+    top: 78px !important;
+
+    width: auto !important;
+
+    /* ←Nav-block .menu_down の left:50% / transform を完全に殺す */
+    transform: none !important;
+
+    margin: 0 !important;
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 99999 !important;
+  }
 }
 
-/* デフォルト（地区別） */
-#sliderBg.area-default{
-  background: linear-gradient(90deg, #6a8cff, #59c7ff);
-}
 
-/* 県北 */
-#sliderBg.area-north{
-  background: linear-gradient(90deg, #4f7cff, #7aa8ff);
-}
 
-/* 県南 */
-#sliderBg.area-south{
-  background: linear-gradient(90deg, #ff6b6b, #ffb3b3);
-}
 
-/* 県東 */
-#sliderBg.area-east{
-  background: linear-gradient(90deg, #34d399, #86efac);
-}
-
-/* 県西 */
-#sliderBg.area-west{
-  background: linear-gradient(90deg, #fb923c, #fdba74);
-}
-
-/* 県央 */
-#sliderBg.area-center{
-  background: linear-gradient(90deg, #a78bfa, #c4b5fd);
-}

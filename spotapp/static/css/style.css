@@ -147,7 +147,7 @@ nav {
 .menu_down#osirase_down {
   position: absolute;
   top: 110%;
-  left: 0;
+  
   transform: translateX(-60%);
   width: clamp(300px, 50vw, 600px);
   box-sizing: border-box;
@@ -330,6 +330,9 @@ nav {
 .pc-only{ display:inline; }
 .sp-only{ display:none; }
 
+
+
+
 /* ===== スマホ時：ナビはそのまま、中央だけ2段にする ===== */
 @media (max-width: 768px){
         /* 余白を少し削って情報量UP */
@@ -406,10 +409,10 @@ nav {
     width: min(90vw, 320px);
   }
 
-  /* お知らせのtransformはスマホでは無効化（画面外に飛ぶ原因） */
-  #osirase_down{
-    transform: translateX(-50%);
+  .Nav-block.open > #osirase_down{
+    display: flex !important;
   }
+
 
   /* ユーザーアイコンは小さめ（スペース確保） */
   .user-icon img{
@@ -450,6 +453,12 @@ nav {
 }
 
 
+  .menu_down#osirase_down li a{
+    padding: 14px 16px;
+  }
+
+
+
 
 
 }
@@ -465,4 +474,37 @@ nav {
   #osiraseMenu_btn{
     position: relative;
   }
+
+  
 }
+
+/* ===============================
+   ✅スマホ：お知らせだけは画面固定で確実に中央表示
+   （ログイン/未ログイン差・left:50%指定を全部潰す）
+   =============================== */
+@media (max-width: 768px){
+  #osirase_down{
+    position: fixed !important;
+
+    /* ←これが重要：左右を決めて画面内に固定 */
+    left: 12px !important;
+    right: 12px !important;
+    top: 78px !important;
+
+    width: auto !important;
+
+    /* ←Nav-block .menu_down の left:50% / transform を完全に殺す */
+    transform: none !important;
+
+    margin: 0 !important;
+    max-height: 60vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 99999 !important;
+  }
+}
+
+
+
+
