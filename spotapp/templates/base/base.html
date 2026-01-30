@@ -318,9 +318,22 @@
     down.addEventListener("click", (e) => e.stopPropagation());
     });
 
+    const searchForm = document.getElementById("searchForm");
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (e) {
+            const districtVal = document.getElementById("search_district")?.value || "";
+            const categoryVal = document.getElementById("search_category")?.value || "";
+            const keywordVal = document.getElementById("search")?.value.trim() || "";
 
+            if (!districtVal && !categoryVal && !keywordVal) {
+                e.preventDefault(); // フォーム送信を止める
+                alert("検索するには地区・カテゴリかキーワードを入力してください");
+            }
+        });
+    }
 });
 </script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
 
     </body>
