@@ -1,0 +1,96 @@
+/* タイトル */
+.page-title {
+    text-align: center;
+    margin: 30px 0 20px;
+}
+
+/* 表全体を中央に */
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* テーブル本体 */
+.spot-table {
+    width: 80%;
+    max-width: 800px;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* ヘッダー */
+.spot-table th {
+    background-color: #f0f2f5;
+    padding: 12px;
+    text-align: left;
+    font-weight: bold;
+}
+
+
+/* セル */
+.spot-table td {
+    padding: 12px;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* 操作列 */
+.actions {
+    white-space: nowrap;
+}
+
+/* リンク */
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-right: 6px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.btn.update {
+    background: #4caf50;
+    color: #fff;
+}
+
+.btn.delete {
+    background: #f44336;
+    color: #fff;
+}
+
+.disabled {
+    color: #999;
+    margin-right: 6px;
+}
+
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px; /* テーブルとの距離 */
+}
+
+.filter-form input[type="text"] {
+    width: 220px;
+    padding: 6px 8px;
+}
+
+.filter-form select {
+    padding: 6px 8px;
+}
+
+.filter-form button {
+    padding: 6px 14px;
+    cursor: pointer;
+}
+
+.no-data {
+    text-align: center;
+    margin-top: 40px;
+    color: #666;
+    font-size: 1.1rem;
+}

@@ -1,0 +1,288 @@
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ホームボタン */
+.btn-home {
+    text-decoration: none;
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 700;
+    background: #667eea;
+}
+
+/* ユーザー情報 */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+/* アイコン */
+.user-icon img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* ユーザー名 */
+.user-name-text {
+    font-size: 14px;
+    color: #333;
+}
+
+/* =========================
+   観光地情報
+========================= */
+.spot-info {
+    max-width: 800px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.spot-name {
+    text-align: left;
+    padding: 10px;
+}
+
+.spot-actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.spot-address,
+.spot-hours {
+    text-align: center;
+    padding: 20px;
+}
+
+/* =========================
+   画像表示
+========================= */
+.spot-image {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.photo {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.spot-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* =========================
+   ボタン
+========================= */
+.btn {
+    display: block;
+    width: fit-content;
+    margin: 30px auto;
+}
+
+.spot-info button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    cursor: pointer;
+    align-self: center; /* ← 修正 */
+}
+
+
+#route-ui {
+  position: static; /* ここをabsoluteからstaticに変更 */
+  z-index: auto;
+  background: white;    
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  margin: 20px auto; /* 中央に寄せる */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  min-height: 200px;
+}
+
+
+.route-input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.route-input #start {
+    width: 100%;
+    max-width: 400px;
+}
+
+.route-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.route-buttons button {
+    padding: 8px 12px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: blue;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.route-buttons button:hover {
+    background-color: #007BFF;
+}
+
+.route-buttons button.active {
+    background-color: green; /* 押されたボタンの色 */
+    color: white;
+}
+
+#route-selector {
+  display: flex;
+  justify-content: center;
+  gap: 20px;                    /* ボタン同士の間隔 */
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+#route-selector button {
+  /* リセットしてデフォルトを殺さないように */
+  all: unset;                   /* ← これが大事！ ブラウザのデフォルトを全部リセット */
+  display: inline-block;
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  background: #ffffff;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  min-width: 120px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+}
+
+#route-selector button:hover {
+  background: #f5f5f5;
+  border-color: #bbb;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.spot-detail {
+    width: 100%;
+    background-color: #eee;
+    border: 1px solid #999;
+    display: flex;
+    flex-direction: column;
+}
+
+.spot-detail .spot-name {
+    padding: 8px 12px;
+    margin: 0;
+    border-bottom: 1px solid #999;
+    font-weight: bold;
+}
+
+.spot-detail p {
+    width: 100%;
+    padding: 12px 16px;
+    background-color: #fff;
+    line-height: 1.8;
+    color: #333;
+    margin: 0;
+    border-top: 1px solid #999; 
+    border-left: 1px solid #999;
+    border-right: 1px solid #999;
+    border-bottom: 1px solid #999;
+    box-sizing: border-box;
+}
+
+
+
+/* paddingがある要素は “中身込みで100%” にする */
+.spot-image,
+.spot-actions{
+  padding: 12px;        /* 20pxだと狭幅でキツいので縮める */
+}
+
+/* 画像の高さ：スマホは固定350だとデカすぎ＆崩れやすい */
+@media (max-width: 768px){
+  .photo{ height: 220px; }
+
+  /* ===== スマホで横はみ出し防止（詳細ページ） ===== */
+    .spot-info,
+    .spot-image,
+    .spot-actions,
+    #route-ui,
+    .spot-detail{
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+
+/* route の入力やボタンがはみ出さない */
+.route-input #start{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.route-buttons{
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ★犯人になりがちな all: unset 対策
+   → 横はみ出しを絶対させない */
+#route-selector{
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#route-selector button{
+  all: unset;                 /* ここは残してOK */
+  box-sizing: border-box;     /* ←追加：これ必須 */
+  display: inline-flex;       /* ←安定 */
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;            /* ←追加：はみ出し禁止 */
+  white-space: nowrap;
+
+    }
+}
