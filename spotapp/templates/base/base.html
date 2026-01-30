@@ -182,7 +182,9 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ユーザーメニュー
+    // ===========================
+    // ユーザーメニュー（右上）
+    // ===========================
     const menuBtn = document.getElementById("userMenuBtn");
     const menu = document.getElementById("userMenu");
 
@@ -191,43 +193,96 @@ document.addEventListener("DOMContentLoaded", function () {
             e.stopPropagation();
             menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
         });
-
-        document.addEventListener("click", function () {
-            menu.style.display = "none";
-            document.querySelectorAll(".Nav-block.open")
-                .forEach(b => b.classList.remove("open"));
-        });
     }
 
-    // 地区・カテゴリ
+    // ===========================
+    // ナビのプルダウン制御（地区・カテゴリ・お知らせ）
+    // ===========================
+    const navBlocks = document.querySelectorAll(".Nav-block");
+
+    navBlocks.forEach(block => {
+        const btn = block.querySelector(".Menu_btn");
+        const down = block.querySelector(".menu_down");
+        if (!btn || !down) return;
+
+        btn.addEventListener("click", e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            // 他のプルダウンを閉じる
+            navBlocks.forEach(b => {
+                if (b !== block) b.classList.remove("open");
+            });
+
+            // 自分を開閉
+            block.classList.toggle("open");
+        });
+
+        // メニュー内クリックでは閉じない
+        down.addEventListener("click", e => e.stopPropagation());
+    });
+
+    // 画面クリックで全部閉じる
+    document.addEventListener("click", function () {
+        if (menu) menu.style.display = "none";
+        navBlocks.forEach(b => b.classList.remove("open"));
+    });
+
+    // ===========================
+    // 地区選択
+    // ===========================
     document.querySelectorAll(".district-item").forEach(a => {
         a.addEventListener("click", e => {
             e.preventDefault();
-            document.getElementById("search_district").value = a.dataset.value || "";
-            document.getElementById("districtBtn").textContent = `${a.dataset.label} ▼`;
+            e.stopPropagation();
+
+            const val = a.dataset.value || "";
+            const label = a.dataset.label || "地区別";
+
+            document.getElementById("search_district").value = val;
+            document.getElementById("districtBtn").textContent = `${label} ▼`;
+
+            // 選択後は閉じる
+            document.getElementById("areaMenu_btn").classList.remove("open");
         });
     });
 
+    // ===========================
+    // カテゴリ選択
+    // ===========================
     document.querySelectorAll(".category-item").forEach(a => {
         a.addEventListener("click", e => {
             e.preventDefault();
-            document.getElementById("search_category").value = a.dataset.value || "";
-            document.getElementById("categoryBtn").textContent = `${a.dataset.label} ▼`;
+            e.stopPropagation();
+
+            const val = a.dataset.value || "";
+            const label = a.dataset.label || "カテゴリ";
+
+            document.getElementById("search_category").value = val;
+            document.getElementById("categoryBtn").textContent = `${label} ▼`;
+
+            // 選択後は閉じる
+            document.getElementById("categoryMenu_btn").classList.remove("open");
         });
     });
 
+    // ===========================
     // 検索条件チェック
+    // ===========================
     const searchForm = document.getElementById("searchForm");
-    searchForm.addEventListener("submit", function (e) {
-        const d = search_district.value;
-        const c = search_category.value;
-        const q = search.value.trim();
+    if (searchForm) {
+        searchForm.addEventListener("submit", function (e) {
+            const d = document.getElementById("search_district").value;
+            const c = document.getElementById("search_category").value;
+            const q = document.getElementById("search").value.trim();
 
-        if (!d && !c && !q) {
-            e.preventDefault();
-            alert("検索するには地区・カテゴリかキーワードを入力してください");
-        }
-    });
+            if (!d && !c && !q) {
+                e.preventDefault();
+                alert("検索するには地区・カテゴリかキーワードを入力してください");
+            }
+        });
+    }
+
 });
 </script>
 
