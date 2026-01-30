@@ -40,7 +40,14 @@
                     <a href="#"
                        class="district-item"
                        data-value="{{ district.district_id }}"
-                       data-label="{{ district.district_name }}">
+                       data-label="{{ district.district_name }}"
+                       style="--district-color:
+                            {% if '県北' in district.district_name %}#2563eb
+                            {% elif '県南' in district.district_name %}#16a34a
+                            {% elif '県東' in district.district_name %}#f97316
+                            {% elif '県西' in district.district_name %}#a855f7
+                            {% elif '県央' in district.district_name %}#ef4444
+                            {% else %}#64748b{% endif %};">
                         {{ district.district_name }}
                     </a>
                 </li>
@@ -63,7 +70,13 @@
                     <a href="#"
                        class="category-item"
                        data-value="{{ category.category_id }}"
-                       data-label="{{ category.category_name }}">
+                       data-label="{{ category.category_name }}"
+                       style="--category-color:
+                            {% if '観光' in category.category_name %}#2563eb
+                            {% elif 'グルメ' in category.category_name %}#ef4444
+                            {% elif 'レジャー' in category.category_name %}#16a34a
+                            {% elif 'ショッピング' in category.category_name %}#f97316
+                            {% else %}#64748b{% endif %};">
                         {{ category.category_name }}
                     </a>
                 </li>
@@ -182,110 +195,198 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===========================
-    // ユーザーメニュー（右上）
-    // ===========================
-    const menuBtn = document.getElementById("userMenuBtn");
-    const menu = document.getElementById("userMenu");
+  // ------------------------
+  // 地区テーマ（sliderBg）
+  // ------------------------
+  const sliderBg = document.getElementById("sliderBg");
+  function applyDistrictTheme(label){
+    if (!sliderBg) return;
 
-    if (menuBtn && menu) {
-        menuBtn.addEventListener("click", function (e) {
-            e.stopPropagation();
-            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-        });
+    sliderBg.classList.remove(
+      "area-default","area-north","area-south","area-east","area-west","area-center"
+    );
+
+    if (!label || label === "地区別") { sliderBg.classList.add("area-default"); return; }
+
+    if (label.includes("県北")) sliderBg.classList.add("area-north");
+    else if (label.includes("県南")) sliderBg.classList.add("area-south");
+    else if (label.includes("県東")) sliderBg.classList.add("area-east");
+    else if (label.includes("県西")) sliderBg.classList.add("area-west");
+    else if (label.includes("県央")) sliderBg.classList.add("area-center");
+    else sliderBg.classList.add("area-default");
+  }
+
+  // ------------------------
+  // hidden & button（1回だけ）
+  // ------------------------
+  const districtHidden = document.getElementById("search_district");
+  const categoryHidden = document.getElementById("search_category");
+  const districtBtn = document.getElementById("districtBtn");
+  const categoryBtn = document.getElementById("categoryBtn");
+
+  // ------------------------
+  // ユーザーメニュー
+  // ------------------------
+  const menuBtn = document.getElementById("userMenuBtn");
+  const menu = document.getElementById("userMenu");
+  if (menuBtn && menu) {
+    menuBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    });
+  }
+
+  // ------------------------
+  // お気に入り（Ajax）
+  // ------------------------
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  document.addEventListener("click", async function (e) {
+    const btn = e.target.closest(".fav-btn");
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+
+    const url = btn.dataset.url;
+    if (!url) return;
+
+    btn.disabled = true;
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Accept": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        const t = await res.text();
+        console.log("favorite ajax failed:", res.status, t);
+        alert(`favorite失敗: ${res.status}`);
+        return;
+      }
+
+      const data = await res.json();
+      btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
+
+      if (data.favorited === false) {
+        const item = btn.closest(".favorite-item");
+        if (item) item.remove();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      btn.disabled = false;
     }
+  }, true);
 
-    // ===========================
-    // ナビのプルダウン制御（地区・カテゴリ・お知らせ）
-    // ===========================
-    const navBlocks = document.querySelectorAll(".Nav-block");
+  // ------------------------
+  // 地区クリック（色も反映）
+  // ------------------------
+  document.querySelectorAll(".district-item").forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    navBlocks.forEach(block => {
-        const btn = block.querySelector(".Menu_btn");
-        const down = block.querySelector(".menu_down");
-        if (!btn || !down) return;
+      const val = a.dataset.value || "";
+      const label = a.dataset.label || "地区別";
 
-        btn.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopPropagation();
+      if (districtHidden) districtHidden.value = val;
+      if (districtBtn) districtBtn.textContent = `${label} ▼`;
 
-            // 他のプルダウンを閉じる
-            navBlocks.forEach(b => {
-                if (b !== block) b.classList.remove("open");
-            });
+      // ✅ HTMLの style="--district-color: ...;" から取る
+      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#64748b";
+      districtBtn.style.setProperty("--district-color", color);
 
-            // 自分を開閉
-            block.classList.toggle("open");
-        });
+      applyDistrictTheme(label);
 
-        // メニュー内クリックでは閉じない
-        down.addEventListener("click", e => e.stopPropagation());
+      // 選んだら閉じる
+      const parent = a.closest(".Nav-block");
+      if (parent) parent.classList.remove("open");
+    });
+  });
+
+  // ------------------------
+  // カテゴリクリック
+  // ------------------------
+  document.querySelectorAll(".category-item").forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const val = a.dataset.value || "";
+      const label = a.dataset.label || "カテゴリ";
+
+      if (categoryHidden) categoryHidden.value = val;
+      if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
+
+      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#64748b";
+      categoryBtn.style.setProperty("--category-color", color);
+
+
+      const parent = a.closest(".Nav-block");
+      if (parent) parent.classList.remove("open");
+    });
+  });
+
+  // ------------------------
+  // 初期反映（地区）
+  // ------------------------
+  if (districtBtn) {
+    const initLabel = districtBtn.textContent.replace("▼", "").trim();
+    applyDistrictTheme(initLabel);
+  }
+
+  // ------------------------
+  // ナビのプルダウン（お知らせはPC hover / スマホ click）
+  // ------------------------
+  const navBlocks = document.querySelectorAll(".Nav-block");
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  navBlocks.forEach(block => {
+    const btn = block.querySelector(".Menu_btn");
+    const down = block.querySelector(".menu_down");
+    if (!btn || !down) return;
+
+    const isOsirase = (block.id === "osiraseMenu_btn");
+    if (isOsirase && canHover) return;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      navBlocks.forEach(b => { if (b !== block) b.classList.remove("open"); });
+      block.classList.toggle("open");
     });
 
-    // 画面クリックで全部閉じる
-    document.addEventListener("click", function () {
-        if (menu) menu.style.display = "none";
-        navBlocks.forEach(b => b.classList.remove("open"));
+    down.addEventListener("click", (e) => e.stopPropagation());
+  });
+
+  // 画面クリックで閉じる
+  document.addEventListener("click", function () {
+    navBlocks.forEach(b => b.classList.remove("open"));
+    if (menu && menu.style.display === "flex") menu.style.display = "none";
+  });
+
+  document.getElementById("searchForm")?.addEventListener("submit", (e) => {
+     const q = document.getElementById("search")?.value.trim();
+     const d = document.getElementById("search_district")?.value.trim();
+     const c = document.getElementById("search_category")?.value.trim();
+      if (!q && !d && !c) { e.preventDefault();
+        alert("キーワード or 地区 or カテゴリを選んでください"); 
+        } 
     });
-
-    // ===========================
-    // 地区選択
-    // ===========================
-    document.querySelectorAll(".district-item").forEach(a => {
-        a.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const val = a.dataset.value || "";
-            const label = a.dataset.label || "地区別";
-
-            document.getElementById("search_district").value = val;
-            document.getElementById("districtBtn").textContent = `${label} ▼`;
-
-            // 選択後は閉じる
-            document.getElementById("areaMenu_btn").classList.remove("open");
-        });
-    });
-
-    // ===========================
-    // カテゴリ選択
-    // ===========================
-    document.querySelectorAll(".category-item").forEach(a => {
-        a.addEventListener("click", e => {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const val = a.dataset.value || "";
-            const label = a.dataset.label || "カテゴリ";
-
-            document.getElementById("search_category").value = val;
-            document.getElementById("categoryBtn").textContent = `${label} ▼`;
-
-            // 選択後は閉じる
-            document.getElementById("categoryMenu_btn").classList.remove("open");
-        });
-    });
-
-    // ===========================
-    // 検索条件チェック
-    // ===========================
-    const searchForm = document.getElementById("searchForm");
-    if (searchForm) {
-        searchForm.addEventListener("submit", function (e) {
-            const d = document.getElementById("search_district").value;
-            const c = document.getElementById("search_category").value;
-            const q = document.getElementById("search").value.trim();
-
-            if (!d && !c && !q) {
-                e.preventDefault();
-                alert("検索するには地区・カテゴリかキーワードを入力してください");
-            }
-        });
-    }
 
 });
 </script>
-
 <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
 
