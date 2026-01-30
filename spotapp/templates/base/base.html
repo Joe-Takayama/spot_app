@@ -2,359 +2,237 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{%  block title %}メニューHTML{% endblock %}</title>
-    <!--共通css-->
+    <title>{% block title %}メニューHTML{% endblock %}</title>
+
+    <!-- 共通CSS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <!--テンプレごとのcss-->
-    {% block extra_css %} {% endblock %}
+
+    <!-- ページ固有CSS / JS -->
+    {% block extra_css %}{% endblock %}
     {% block extra_js %}{% endblock %}
 </head>
+
 <body>
 
-    <!-- ナビ -->
-    {% block nav %}
-    <nav>
-        <div class="nav-left">
-            <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
-        </div>
-
-        <div class="nav-center">
-            <div class="Nav-block" id="areaMenu_btn">
-                <button class="Menu_btn" type="button" id="districtBtn">
-                    {{ selected_district_name|default:"地区別" }} ▼
-                </button>
-
-                <ul class="menu_down" id="areaMenu_down">
-                    <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
-                    {% for district in districts %}
-                    <li>
-                        <a href="#"
-                            class="district-item"
-                            data-value="{{ district.district_id }}"
-                            data-label="{{ district.district_name }}"
-                            style="--district-color:
-                                {% if '県北' in district.district_name %}#2563eb
-                                {% elif '県南' in district.district_name %}#16a34a
-                                {% elif '県東' in district.district_name %}#f97316
-                                {% elif '県西' in district.district_name %}#a855f7
-                                {% elif '県央' in district.district_name %}#ef4444
-                                {% else %}#64748b{% endif %};">
-                            {{ district.district_name }}
-                        </a>
-                    </li>  
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn" type="button" id="categoryBtn">
-                    {{ selected_category_name|default:"カテゴリ" }} ▼
-                </button>
-
-                <ul class="menu_down" id="categoryMenu_down">
-                    <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
-                    {% for category in categories %}
-                        <li>
-                            <a href="#"
-                                class="category-item"
-                                data-value="{{ category.category_id }}"
-                                data-label="{{ category.category_name }}"
-                                style="--category-color:
-                                    {% if '観光' in category.category_name %}#2563eb
-                                    {% elif 'グルメ' in category.category_name %}#ef4444
-                                    {% elif 'レジャー' in category.category_name %}#16a34a
-                                    {% elif 'ショッピング' in category.category_name %}#f97316
-                                    {% else %}#64748b{% endif %};">
-                                {{ category.category_name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- ログインしなきゃ表示できない奴 -->
-            {% if user.is_authenticated %}
-            <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn nav-fav">
-                お気に入り一覧
-            </a>
-            {% else %}
-            {% endif %}
-
-            <div class="Nav-block" id="osiraseMenu_btn">
-                <button class="Menu_btn">
-                    お知らせ ▼
-                    {% if osirase_new_count %}
-                        <span class="new-badge">{{ osirase_new_count }}</span>
-                    {% endif %}
-                </button>
-
-                <ul id="osirase_down" class="menu_down anywhere">
-                    {% for o in osirase_list %}
-                        <li>
-                            <a href="{% url 'spotapp:news_detail' o.pk %}">
-                                {{ o.title }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <li>表示できるお知らせがありません。</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="nav-right">
-            {% if user.is_authenticated %}
-            <div class="user-menu-wrapper">
-
-                <div class="user-info" id="userMenuBtn">
-                    <div class="user-icon">
-                        {% if request.user.profile.icon %}
-                            <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                        {% else %}
-                            <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                        {% endif %}
-                    </div>
-                </div>
-
-                <ul class="user-menu" id="userMenu">
-                    <li><a href="{% url 'spotapp:profile' %}">プロフィール</a></li>
-
-                    <li>
-                        <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
-                            {% csrf_token %}
-                            <button type="submit" class="user-menu-btn logout">ログアウト</button>
-                        </form>
-                    </li>
-                </ul>
-
-            </div>
-            {% else %}
-                <a href="{% url 'spotapp:signup' %}" class="user-btn">
-                    <span class="pc-only">新規登録 / ログイン</span>
-                    <span class="sp-only">新規登録<br>ログイン</span>
-                </a>
-            {% endif %}
-        </div>
-    </nav>
-    {% endblock %}
-
-    <!-- 検索バー -->
-    {% block searchbar %}
-    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
-        <input type="text" name="q" id="search" value="{{ keyword|default:'' }}" placeholder="検索バー（あいまい検索可能）">
-
-        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
-        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
-
-        <button type="submit" class="submit">検索</button>
-    </form>
-    {% endblock %}
-
-    <!-- ★ 中央幅の基準 -->
-    <div class="page-container">
-        {% block body %}
-        {% endblock %}
+<!-- ================= ナビ ================= -->
+{% block nav %}
+<nav>
+    <div class="nav-left">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
     </div>
 
-    <!-- フッター -->
-    {% block footer %}
-    <footer class="footer">
-        <span>&copy; E班</span>
-        <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
-    </footer>
-    {% endblock %}
+    <div class="nav-center">
 
+        <!-- 地区 -->
+        <div class="Nav-block" id="areaMenu_btn">
+            <button class="Menu_btn" type="button" id="districtBtn">
+                {{ selected_district_name|default:"地区別" }} ▼
+            </button>
+
+            <ul class="menu_down" id="areaMenu_down">
+                <li>
+                    <a href="#" class="district-item" data-value="" data-label="地区別">地区別</a>
+                </li>
+                {% for district in districts %}
+                <li>
+                    <a href="#"
+                       class="district-item"
+                       data-value="{{ district.district_id }}"
+                       data-label="{{ district.district_name }}">
+                        {{ district.district_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- カテゴリ -->
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn" type="button" id="categoryBtn">
+                {{ selected_category_name|default:"カテゴリ" }} ▼
+            </button>
+
+            <ul class="menu_down" id="categoryMenu_down">
+                <li>
+                    <a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a>
+                </li>
+                {% for category in categories %}
+                <li>
+                    <a href="#"
+                       class="category-item"
+                       data-value="{{ category.category_id }}"
+                       data-label="{{ category.category_name }}">
+                        {{ category.category_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- お気に入り -->
+        {% if user.is_authenticated %}
+        <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn nav-fav">
+            お気に入り一覧
+        </a>
+        {% endif %}
+
+        <!-- お知らせ -->
+        <div class="Nav-block" id="osiraseMenu_btn">
+            <button class="Menu_btn">
+                お知らせ ▼
+                {% if osirase_new_count %}
+                <span class="new-badge">{{ osirase_new_count }}</span>
+                {% endif %}
+            </button>
+
+            <ul class="menu_down anywhere" id="osirase_down">
+                {% for o in osirase_list %}
+                <li>
+                    <a href="{% url 'spotapp:news_detail' o.pk %}">
+                        {{ o.title }}
+                    </a>
+                </li>
+                {% empty %}
+                <li>表示できるお知らせがありません。</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- 右側 -->
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+        <div class="user-menu-wrapper">
+
+            <div class="user-info" id="userMenuBtn">
+                <div class="user-icon">
+                    {% if request.user.profile.icon %}
+                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                    {% else %}
+                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                    {% endif %}
+                </div>
+            </div>
+
+            <ul class="user-menu" id="userMenu">
+                <li>
+                    <a href="{% url 'spotapp:profile' %}">プロフィール</a>
+                </li>
+                <li>
+                    <form action="{% url 'spotapp:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="user-menu-btn logout">
+                            ログアウト
+                        </button>
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+        {% else %}
+        <a href="{% url 'spotapp:signup' %}" class="user-btn">
+            <span class="pc-only">新規登録 / ログイン</span>
+            <span class="sp-only">新規登録<br>ログイン</span>
+        </a>
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}
+
+<!-- ================= 検索バー ================= -->
+{% block searchbar %}
+<form action="{% url 'spotapp:spot_searchresult' %}"
+      method="get"
+      id="searchForm"
+      style="text-align: center;">
+
+    <input type="text"
+           name="q"
+           id="search"
+           value="{{ keyword|default:'' }}"
+           placeholder="検索バー（あいまい検索可能）">
+
+    <input type="hidden" name="district" id="search_district"
+           value="{{ selected_district|default:'' }}">
+    <input type="hidden" name="category" id="search_category"
+           value="{{ selected_category|default:'' }}">
+
+    <button type="submit" class="submit">検索</button>
+</form>
+{% endblock %}
+
+<!-- ================= 本文 ================= -->
+<div class="page-container">
+    {% block body %}{% endblock %}
+</div>
+
+<!-- ================= フッター ================= -->
+{% block footer %}
+<footer class="footer">
+    <span>&copy; E班</span>
+    <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
+</footer>
+{% endblock %}
+
+<!-- ================= JS ================= -->
 {% block script %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-  // ------------------------
-  // 地区テーマ（sliderBg）
-  // ------------------------
-  const sliderBg = document.getElementById("sliderBg");
-  function applyDistrictTheme(label){
-    if (!sliderBg) return;
+    // ユーザーメニュー
+    const menuBtn = document.getElementById("userMenuBtn");
+    const menu = document.getElementById("userMenu");
 
-    sliderBg.classList.remove(
-      "area-default","area-north","area-south","area-east","area-west","area-center"
-    );
+    if (menuBtn && menu) {
+        menuBtn.addEventListener("click", function (e) {
+            e.stopPropagation();
+            menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+        });
 
-    if (!label || label === "地区別") { sliderBg.classList.add("area-default"); return; }
-
-    if (label.includes("県北")) sliderBg.classList.add("area-north");
-    else if (label.includes("県南")) sliderBg.classList.add("area-south");
-    else if (label.includes("県東")) sliderBg.classList.add("area-east");
-    else if (label.includes("県西")) sliderBg.classList.add("area-west");
-    else if (label.includes("県央")) sliderBg.classList.add("area-center");
-    else sliderBg.classList.add("area-default");
-  }
-
-  // ------------------------
-  // hidden & button（1回だけ）
-  // ------------------------
-  const districtHidden = document.getElementById("search_district");
-  const categoryHidden = document.getElementById("search_category");
-  const districtBtn = document.getElementById("districtBtn");
-  const categoryBtn = document.getElementById("categoryBtn");
-
-  // ------------------------
-  // ユーザーメニュー
-  // ------------------------
-  const menuBtn = document.getElementById("userMenuBtn");
-  const menu = document.getElementById("userMenu");
-  if (menuBtn && menu) {
-    menuBtn.addEventListener("click", function(e) {
-      e.stopPropagation();
-      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-    });
-  }
-
-  // ------------------------
-  // お気に入り（Ajax）
-  // ------------------------
-  function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
-  const csrftoken = getCookie('csrftoken');
-
-  document.addEventListener("click", async function (e) {
-    const btn = e.target.closest(".fav-btn");
-    if (!btn) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-    e.stopImmediatePropagation();
-
-    const url = btn.dataset.url;
-    if (!url) return;
-
-    btn.disabled = true;
-    try {
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": csrftoken,
-          "Accept": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        const t = await res.text();
-        console.log("favorite ajax failed:", res.status, t);
-        alert(`favorite失敗: ${res.status}`);
-        return;
-      }
-
-      const data = await res.json();
-      btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
-
-      if (data.favorited === false) {
-        const item = btn.closest(".favorite-item");
-        if (item) item.remove();
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      btn.disabled = false;
+        document.addEventListener("click", function () {
+            menu.style.display = "none";
+            document.querySelectorAll(".Nav-block.open")
+                .forEach(b => b.classList.remove("open"));
+        });
     }
-  }, true);
 
-  // ------------------------
-  // 地区クリック（色も反映）
-  // ------------------------
-  document.querySelectorAll(".district-item").forEach(a => {
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const val = a.dataset.value || "";
-      const label = a.dataset.label || "地区別";
-
-      if (districtHidden) districtHidden.value = val;
-      if (districtBtn) districtBtn.textContent = `${label} ▼`;
-
-      // ✅ HTMLの style="--district-color: ...;" から取る
-      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#64748b";
-      districtBtn.style.setProperty("--district-color", color);
-
-      applyDistrictTheme(label);
-
-      // 選んだら閉じる
-      const parent = a.closest(".Nav-block");
-      if (parent) parent.classList.remove("open");
-    });
-  });
-
-  // ------------------------
-  // カテゴリクリック
-  // ------------------------
-  document.querySelectorAll(".category-item").forEach(a => {
-    a.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const val = a.dataset.value || "";
-      const label = a.dataset.label || "カテゴリ";
-
-      if (categoryHidden) categoryHidden.value = val;
-      if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
-
-      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#64748b";
-      categoryBtn.style.setProperty("--category-color", color);
-
-
-      const parent = a.closest(".Nav-block");
-      if (parent) parent.classList.remove("open");
-    });
-  });
-
-  // ------------------------
-  // 初期反映（地区）
-  // ------------------------
-  if (districtBtn) {
-    const initLabel = districtBtn.textContent.replace("▼", "").trim();
-    applyDistrictTheme(initLabel);
-  }
-
-  // ------------------------
-  // ナビのプルダウン（お知らせはPC hover / スマホ click）
-  // ------------------------
-  const navBlocks = document.querySelectorAll(".Nav-block");
-  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-
-  navBlocks.forEach(block => {
-    const btn = block.querySelector(".Menu_btn");
-    const down = block.querySelector(".menu_down");
-    if (!btn || !down) return;
-
-    const isOsirase = (block.id === "osiraseMenu_btn");
-    if (isOsirase && canHover) return;
-
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-
-      navBlocks.forEach(b => { if (b !== block) b.classList.remove("open"); });
-      block.classList.toggle("open");
+    // 地区・カテゴリ
+    document.querySelectorAll(".district-item").forEach(a => {
+        a.addEventListener("click", e => {
+            e.preventDefault();
+            document.getElementById("search_district").value = a.dataset.value || "";
+            document.getElementById("districtBtn").textContent = `${a.dataset.label} ▼`;
+        });
     });
 
-    down.addEventListener("click", (e) => e.stopPropagation());
-  });
+    document.querySelectorAll(".category-item").forEach(a => {
+        a.addEventListener("click", e => {
+            e.preventDefault();
+            document.getElementById("search_category").value = a.dataset.value || "";
+            document.getElementById("categoryBtn").textContent = `${a.dataset.label} ▼`;
+        });
+    });
 
-  // 画面クリックで閉じる
-  document.addEventListener("click", function () {
-    navBlocks.forEach(b => b.classList.remove("open"));
-    if (menu && menu.style.display === "flex") menu.style.display = "none";
-  });
+    // 検索条件チェック
+    const searchForm = document.getElementById("searchForm");
+    searchForm.addEventListener("submit", function (e) {
+        const d = search_district.value;
+        const c = search_category.value;
+        const q = search.value.trim();
 
+        if (!d && !c && !q) {
+            e.preventDefault();
+            alert("検索するには地区・カテゴリかキーワードを入力してください");
+        }
+    });
 });
 </script>
-{% endblock %}
 
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}
 
 </body>
 </html>
