@@ -1,21 +1,19 @@
-    {% load static %}
-    <!DOCTYPE html>
-    <html lang="ja">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{%  block title %}メニューHTML{% endblock %}</title>
-        <!--共通css-->
-        <link href="{% static 'css/style.css' %}" rel="stylesheet">
-        <!--テンプレごとのcss-->
-        {% block extra_css %} {% endblock %}
-        {% block extra_js %}{% endblock %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{%  block title %}メニューHTML{% endblock %}</title>
+    <!--共通css-->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <!--テンプレごとのcss-->
+    {% block extra_css %} {% endblock %}
+    {% block extra_js %}{% endblock %}
+</head>
+<body>
 
-    </head>
-    <body>
-
-
-            <!-- ナビ -->
+    <!-- ナビ -->
     {% block nav %}
     <nav>
         <div class="nav-left">
@@ -35,34 +33,46 @@
                         <a href="#"
                             class="district-item"
                             data-value="{{ district.district_id }}"
-                            data-label="{{ district.district_name }}">
+                            data-label="{{ district.district_name }}"
+                            style="--district-color:
+                                {% if '県北' in district.district_name %}#2563eb
+                                {% elif '県南' in district.district_name %}#16a34a
+                                {% elif '県東' in district.district_name %}#f97316
+                                {% elif '県西' in district.district_name %}#a855f7
+                                {% elif '県央' in district.district_name %}#ef4444
+                                {% else %}#64748b{% endif %};">
                             {{ district.district_name }}
                         </a>
-                    </li>
+                    </li>  
                     {% endfor %}
                 </ul>
             </div>
 
-        <div class="Nav-block" id="categoryMenu_btn">
-            <button class="Menu_btn" type="button" id="categoryBtn">
-                {{ selected_category_name|default:"カテゴリ" }} ▼
-            </button>
+            <div class="Nav-block" id="categoryMenu_btn">
+                <button class="Menu_btn" type="button" id="categoryBtn">
+                    {{ selected_category_name|default:"カテゴリ" }} ▼
+                </button>
 
-            <ul class="menu_down" id="categoryMenu_down">
-                <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
-                {% for category in categories %}
-                    <li>
-                        <a href="#"
-                            class="category-item"
-                            data-value="{{ category.category_id }}"
-                            data-label="{{ category.category_name }}">
-                            {{ category.category_name }}
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-
+                <ul class="menu_down" id="categoryMenu_down">
+                    <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
+                    {% for category in categories %}
+                        <li>
+                            <a href="#"
+                                class="category-item"
+                                data-value="{{ category.category_id }}"
+                                data-label="{{ category.category_name }}"
+                                style="--category-color:
+                                    {% if '観光' in category.category_name %}#2563eb
+                                    {% elif 'グルメ' in category.category_name %}#ef4444
+                                    {% elif 'レジャー' in category.category_name %}#16a34a
+                                    {% elif 'ショッピング' in category.category_name %}#f97316
+                                    {% else %}#64748b{% endif %};">
+                                {{ category.category_name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
             <!-- ログインしなきゃ表示できない奴 -->
             {% if user.is_authenticated %}
@@ -70,10 +80,7 @@
                 お気に入り一覧
             </a>
             {% else %}
-                
             {% endif %}
-       
-
 
             <div class="Nav-block" id="osiraseMenu_btn">
                 <button class="Menu_btn">
@@ -81,20 +88,19 @@
                     {% if osirase_new_count %}
                         <span class="new-badge">{{ osirase_new_count }}</span>
                     {% endif %}
-
                 </button>
-            
-            <ul  id="osirase_down" class="menu_down anywhere">
-                {% for o in osirase_list %}
-                    <li>
-                        <a href="{% url 'spotapp:news_detail' o.pk %}">
-                            {{ o.title }}
-                        </a>
-                    </li>
-                {% empty %}
-                    <li>表示できるお知らせがありません。</li>
-                {% endfor %}
-            </ul>
+
+                <ul id="osirase_down" class="menu_down anywhere">
+                    {% for o in osirase_list %}
+                        <li>
+                            <a href="{% url 'spotapp:news_detail' o.pk %}">
+                                {{ o.title }}
+                            </a>
+                        </li>
+                    {% empty %}
+                        <li>表示できるお知らせがありません。</li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
 
@@ -110,7 +116,6 @@
                             <img src="{% static 'img/default_icon.png' %}" alt="icon">
                         {% endif %}
                     </div>
-   
                 </div>
 
                 <ul class="user-menu" id="userMenu">
@@ -120,7 +125,6 @@
                         <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
                             {% csrf_token %}
                             <button type="submit" class="user-menu-btn logout">ログアウト</button>
-
                         </form>
                     </li>
                 </ul>
@@ -136,9 +140,6 @@
     </nav>
     {% endblock %}
 
-
-
-
     <!-- 検索バー -->
     {% block searchbar %}
     <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
@@ -149,8 +150,6 @@
 
         <button type="submit" class="submit">検索</button>
     </form>
-
-
     {% endblock %}
 
     <!-- ★ 中央幅の基準 -->
@@ -159,8 +158,7 @@
         {% endblock %}
     </div>
 
-
-        <!-- フッター -->
+    <!-- フッター -->
     {% block footer %}
     <footer class="footer">
         <span>&copy; E班</span>
@@ -168,173 +166,195 @@
     </footer>
     {% endblock %}
 
-    {% block script %}
+{% block script %}
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-    // ------------------------
-    // ユーザーメニュー
-    // ------------------------
-    const menuBtn = document.getElementById("userMenuBtn");
-    const menu = document.getElementById("userMenu");
+  // ------------------------
+  // 地区テーマ（sliderBg）
+  // ------------------------
+  const sliderBg = document.getElementById("sliderBg");
+  function applyDistrictTheme(label){
+    if (!sliderBg) return;
 
-    // user menu は存在するページだけ動かす（無いページでも他JSは動かす）
-    if (menuBtn && menu) {
-      menuBtn.addEventListener("click", function(e) {
-        e.stopPropagation();
-        menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    sliderBg.classList.remove(
+      "area-default","area-north","area-south","area-east","area-west","area-center"
+    );
+
+    if (!label || label === "地区別") { sliderBg.classList.add("area-default"); return; }
+
+    if (label.includes("県北")) sliderBg.classList.add("area-north");
+    else if (label.includes("県南")) sliderBg.classList.add("area-south");
+    else if (label.includes("県東")) sliderBg.classList.add("area-east");
+    else if (label.includes("県西")) sliderBg.classList.add("area-west");
+    else if (label.includes("県央")) sliderBg.classList.add("area-center");
+    else sliderBg.classList.add("area-default");
+  }
+
+  // ------------------------
+  // hidden & button（1回だけ）
+  // ------------------------
+  const districtHidden = document.getElementById("search_district");
+  const categoryHidden = document.getElementById("search_category");
+  const districtBtn = document.getElementById("districtBtn");
+  const categoryBtn = document.getElementById("categoryBtn");
+
+  // ------------------------
+  // ユーザーメニュー
+  // ------------------------
+  const menuBtn = document.getElementById("userMenuBtn");
+  const menu = document.getElementById("userMenu");
+  if (menuBtn && menu) {
+    menuBtn.addEventListener("click", function(e) {
+      e.stopPropagation();
+      menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+    });
+  }
+
+  // ------------------------
+  // お気に入り（Ajax）
+  // ------------------------
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  const csrftoken = getCookie('csrftoken');
+
+  document.addEventListener("click", async function (e) {
+    const btn = e.target.closest(".fav-btn");
+    if (!btn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+    e.stopImmediatePropagation();
+
+    const url = btn.dataset.url;
+    if (!url) return;
+
+    btn.disabled = true;
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+          "Accept": "application/json",
+        },
       });
 
-      document.addEventListener("click", function() {
-        if (menu.style.display === "flex") {
-          menu.style.display = "none";
-        }
-        // ナビのプルダウン全部閉じる
-        document.querySelectorAll(".Nav-block.open").forEach(b => b.classList.remove("open"));
-      });
+      if (!res.ok) {
+        const t = await res.text();
+        console.log("favorite ajax failed:", res.status, t);
+        alert(`favorite失敗: ${res.status}`);
+        return;
+      }
+
+      const data = await res.json();
+      btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
+
+      if (data.favorited === false) {
+        const item = btn.closest(".favorite-item");
+        if (item) item.remove();
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      btn.disabled = false;
     }
+  }, true);
 
-    // ------------------------
-    // お気に入り（画面遷移なし / Ajax）
-    // 使い方: <button type="button" class="fav-btn" data-url="...">お気に入り登録</button>
-    // ------------------------
-    function getCookie(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    const csrftoken = getCookie('csrftoken');
-
-    document.addEventListener("click", async function (e) {
-      const btn = e.target.closest(".fav-btn");
-      if (!btn) return;
-
-      // 親の onclick（カード遷移）より先に止める
+  // ------------------------
+  // 地区クリック（色も反映）
+  // ------------------------
+  document.querySelectorAll(".district-item").forEach(a => {
+    a.addEventListener("click", (e) => {
       e.preventDefault();
       e.stopPropagation();
-      e.stopImmediatePropagation();
 
-      const url = btn.dataset.url;
-      if (!url) return;
+      const val = a.dataset.value || "";
+      const label = a.dataset.label || "地区別";
 
-      btn.disabled = true;
-      try {
-        const res = await fetch(url, {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": csrftoken,
-            "Accept": "application/json",
-          },
-        });
+      if (districtHidden) districtHidden.value = val;
+      if (districtBtn) districtBtn.textContent = `${label} ▼`;
 
-        if (!res.ok) {
-            const t = await res.text();
-            console.log("favorite ajax failed:", res.status, t);
-            alert(`favorite失敗: ${res.status}`);
-            return;
-        }
+      // ✅ HTMLの style="--district-color: ...;" から取る
+      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#64748b";
+      districtBtn.style.setProperty("--district-color", color);
 
+      applyDistrictTheme(label);
 
-        const data = await res.json();
-        btn.textContent = data.favorited ? "お気に入り済み" : "お気に入り登録";
-
-        // お気に入り一覧ページなら解除時に行を消す
-        if (data.favorited === false) {
-          const item = btn.closest(".favorite-item");
-          if (item) item.remove();
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        btn.disabled = false;
-      }
-    }, true); // capture
-
-    // ------------------------
-    // 地区・カテゴリ選択（検索はしない）
-    // ------------------------
-    const districtHidden = document.getElementById("search_district");
-    const categoryHidden = document.getElementById("search_category");
-
-    const districtBtn = document.getElementById("districtBtn");
-    const categoryBtn = document.getElementById("categoryBtn");
-
-    // 地区
-    document.querySelectorAll(".district-item").forEach(a => {
-        a.addEventListener("click", (e) => {
-        e.preventDefault();       // ← 遷移（検索）を止める
-        e.stopPropagation();
-
-        const val = a.dataset.value || "";
-        const label = a.dataset.label || "地区別";
-
-        if (districtHidden) districtHidden.value = val;
-        if (districtBtn) districtBtn.textContent = `${label} ▼`;
-        });
+      // 選んだら閉じる
+      const parent = a.closest(".Nav-block");
+      if (parent) parent.classList.remove("open");
     });
+  });
 
-    // カテゴリ
-    document.querySelectorAll(".category-item").forEach(a => {
-        a.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+  // ------------------------
+  // カテゴリクリック
+  // ------------------------
+  document.querySelectorAll(".category-item").forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-        const val = a.dataset.value || "";
-        const label = a.dataset.label || "カテゴリ";
+      const val = a.dataset.value || "";
+      const label = a.dataset.label || "カテゴリ";
 
-        if (categoryHidden) categoryHidden.value = val;
-        if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
-        });
+      if (categoryHidden) categoryHidden.value = val;
+      if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
+
+      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#64748b";
+      categoryBtn.style.setProperty("--category-color", color);
+
+
+      const parent = a.closest(".Nav-block");
+      if (parent) parent.classList.remove("open");
     });
-    // ------------------------
-    // ナビのプルダウン：基本クリック
-    // ただし「お知らせ」は PC=hover / スマホ=click
-    // ------------------------
-    const navBlocks = document.querySelectorAll(".Nav-block");
-    const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  });
 
-    navBlocks.forEach(block => {
+  // ------------------------
+  // 初期反映（地区）
+  // ------------------------
+  if (districtBtn) {
+    const initLabel = districtBtn.textContent.replace("▼", "").trim();
+    applyDistrictTheme(initLabel);
+  }
+
+  // ------------------------
+  // ナビのプルダウン（お知らせはPC hover / スマホ click）
+  // ------------------------
+  const navBlocks = document.querySelectorAll(".Nav-block");
+  const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+  navBlocks.forEach(block => {
     const btn = block.querySelector(".Menu_btn");
     const down = block.querySelector(".menu_down");
     if (!btn || !down) return;
 
     const isOsirase = (block.id === "osiraseMenu_btn");
-
-    // PCでお知らせは hover で開くので click 制御しない
     if (isOsirase && canHover) return;
 
     btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
+      e.preventDefault();
+      e.stopPropagation();
 
-        // 他のNav-blockは閉じる
-        navBlocks.forEach(b => {
-        if (b !== block) b.classList.remove("open");
-        });
-
-        block.classList.toggle("open");
+      navBlocks.forEach(b => { if (b !== block) b.classList.remove("open"); });
+      block.classList.toggle("open");
     });
 
     down.addEventListener("click", (e) => e.stopPropagation());
-    });
+  });
 
-    const searchForm = document.getElementById("searchForm");
-    if (searchForm) {
-        searchForm.addEventListener("submit", function (e) {
-            const districtVal = document.getElementById("search_district")?.value || "";
-            const categoryVal = document.getElementById("search_category")?.value || "";
-            const keywordVal = document.getElementById("search")?.value.trim() || "";
+  // 画面クリックで閉じる
+  document.addEventListener("click", function () {
+    navBlocks.forEach(b => b.classList.remove("open"));
+    if (menu && menu.style.display === "flex") menu.style.display = "none";
+  });
 
-            if (!districtVal && !categoryVal && !keywordVal) {
-                e.preventDefault(); // フォーム送信を止める
-                alert("検索するには地区・カテゴリかキーワードを入力してください");
-            }
-        });
-    }
 });
 </script>
-<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
 
-    </body>
-    </html>
+
+</body>
+</html>
