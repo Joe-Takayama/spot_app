@@ -94,6 +94,42 @@ nav {
     opacity: 0.85;
 }
 
+/* ▼ ドロップダウン項目に色バーを出す */
+.district-item, .category-item{
+  position: relative;
+  padding-left: 34px; /* バー分の余白 */
+}
+
+.district-item::before{
+  content:"";
+  position:absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--district-color, #64748b);
+}
+
+.category-item::before{
+  content:"";
+  position:absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--category-color, #64748b);
+}
+
+/* ▼ ボタンの背景に変数色を使う（既に入れてるならOK） */
+#districtBtn{ background: var(--district-color, #667eea); }
+#categoryBtn{ background: var(--category-color, #667eea); }
+
+
+
 /* ===============================
    ドロップダウン（地区・カテゴリ）
    =============================== */

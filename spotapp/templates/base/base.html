@@ -385,9 +385,24 @@ document.addEventListener("DOMContentLoaded", function () {
         } 
     });
 
+  function initBtnColor(btn, itemsSelector, cssVar){
+  if (!btn) return;
+  const label = btn.textContent.replace("▼","").trim();
+
+  const items = Array.from(document.querySelectorAll(itemsSelector));
+  const hit = items.find(a => (a.dataset.label || a.textContent).trim() === label);
+  if (!hit) return;
+
+  const color = getComputedStyle(hit).getPropertyValue(cssVar).trim();
+  if (color) btn.style.setProperty(cssVar, color);
+}
+
+initBtnColor(districtBtn, ".district-item", "--district-color");
+initBtnColor(categoryBtn, ".category-item", "--category-color");
+
 });
 </script>
-<script src="{% static 'js/main.js' %}"></script>
+
 {% endblock %}
 
 </body>

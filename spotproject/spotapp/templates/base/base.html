@@ -351,6 +351,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (menu && menu.style.display === "flex") menu.style.display = "none";
   });
 
+    document.getElementById("searchForm")?.addEventListener("submit", (e) => {
+     const q = document.getElementById("search")?.value.trim();
+     const d = document.getElementById("search_district")?.value.trim();
+     const c = document.getElementById("search_category")?.value.trim();
+      if (!q && !d && !c) { e.preventDefault();
+        alert("キーワード or 地区 or カテゴリを選んでください"); 
+        } 
+    });
+
 });
 </script>
 {% endblock %}
