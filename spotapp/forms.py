@@ -15,7 +15,9 @@ User = get_user_model()
 class SignupForm(forms.ModelForm):
     password = forms.CharField(
         label="パスワード",
-        widget=forms.PasswordInput
+        widget=forms.PasswordInput(attrs={
+            "placeholder": "パスワードを入力してください"
+        })
     )
 
     class Meta:
