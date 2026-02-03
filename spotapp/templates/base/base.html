@@ -303,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (districtBtn) districtBtn.textContent = `${label} ▼`;
 
       // ✅ HTMLの style="--district-color: ...;" から取る
-      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#64748b";
+      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#667eea";
       districtBtn.style.setProperty("--district-color", color);
 
       applyDistrictTheme(label);
@@ -328,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (categoryHidden) categoryHidden.value = val;
       if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
 
-      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#64748b";
+      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#667eea";
       categoryBtn.style.setProperty("--category-color", color);
 
 

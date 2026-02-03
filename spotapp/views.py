@@ -84,6 +84,7 @@ def profile_view(request):
 # プロフィール編集ビュー
 # ------------------------
 class ProfileEditView(LoginRequiredMixin, View):
+    login_url = "spotapp:login"
     def get(self, request):
         form = ProfileEditForm(instance=request.user, user=request.user)
         return render(request, "spotapp/profile_edit.html", {"form": form})
@@ -120,6 +121,7 @@ class ProfileEditView(LoginRequiredMixin, View):
 
 
 class ProfileEditCompleteView(LoginRequiredMixin, View):
+    login_url = "spotapp:login"
     def get(self, request):
         return render(request, "spotapp/profile_edit_complete.html")
 
@@ -128,6 +130,7 @@ class ProfileEditCompleteView(LoginRequiredMixin, View):
 # パスワード変更
 # ------------------------
 class PasswordChangeView(LoginRequiredMixin, View):
+    login_url = "spotapp:login"
     def get(self, request):
         form = PasswordChangeOnlyForm(request.user)
         return render(request, "spotapp/password_change.html", {"form": form})
@@ -146,6 +149,7 @@ class PasswordChangeView(LoginRequiredMixin, View):
 
 
 class PasswordChangeCompleteView(LoginRequiredMixin, View):
+    login_url = "spotapp:login"
     def get(self, request):
         return render(request, "spotapp/password_change_complete.html")
 
@@ -263,6 +267,7 @@ class SpotDetailView(View):
 # レビュー投稿
 # ------------------------
 class ReviewCreateView(LoginRequiredMixin,View):
+    login_url = "spotapp:login"
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/review_create.html', {'spot': spot})
@@ -283,6 +288,7 @@ class ReviewCreateView(LoginRequiredMixin,View):
 
 
 class ReviewCompleteView(LoginRequiredMixin, View):
+    login_url = "spotapp:login"
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(

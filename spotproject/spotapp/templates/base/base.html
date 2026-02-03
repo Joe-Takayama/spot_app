@@ -2,170 +2,195 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{%  block title %}メニューHTML{% endblock %}</title>
-    <!--共通css-->
+    <title>{% block title %}メニューHTML{% endblock %}</title>
+
+    <!-- 共通CSS -->
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
-    <!--テンプレごとのcss-->
-    {% block extra_css %} {% endblock %}
+
+    <!-- ページ固有CSS / JS -->
+    {% block extra_css %}{% endblock %}
     {% block extra_js %}{% endblock %}
 </head>
+
 <body>
 
-    <!-- ナビ -->
-    {% block nav %}
-    <nav>
-        <div class="nav-left">
-            <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
-        </div>
-
-        <div class="nav-center">
-            <div class="Nav-block" id="areaMenu_btn">
-                <button class="Menu_btn" type="button" id="districtBtn">
-                    {{ selected_district_name|default:"地区別" }} ▼
-                </button>
-
-                <ul class="menu_down" id="areaMenu_down">
-                    <li><a href="#" class="district-item" data-value="" data-label="地区別">地区別</a></li>
-                    {% for district in districts %}
-                    <li>
-                        <a href="#"
-                            class="district-item"
-                            data-value="{{ district.district_id }}"
-                            data-label="{{ district.district_name }}"
-                            style="--district-color:
-                                {% if '県北' in district.district_name %}#2563eb
-                                {% elif '県南' in district.district_name %}#16a34a
-                                {% elif '県東' in district.district_name %}#f97316
-                                {% elif '県西' in district.district_name %}#a855f7
-                                {% elif '県央' in district.district_name %}#ef4444
-                                {% else %}#64748b{% endif %};">
-                            {{ district.district_name }}
-                        </a>
-                    </li>  
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="Nav-block" id="categoryMenu_btn">
-                <button class="Menu_btn" type="button" id="categoryBtn">
-                    {{ selected_category_name|default:"カテゴリ" }} ▼
-                </button>
-
-                <ul class="menu_down" id="categoryMenu_down">
-                    <li><a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a></li>
-                    {% for category in categories %}
-                        <li>
-                            <a href="#"
-                                class="category-item"
-                                data-value="{{ category.category_id }}"
-                                data-label="{{ category.category_name }}"
-                                style="--category-color:
-                                    {% if '観光' in category.category_name %}#2563eb
-                                    {% elif 'グルメ' in category.category_name %}#ef4444
-                                    {% elif 'レジャー' in category.category_name %}#16a34a
-                                    {% elif 'ショッピング' in category.category_name %}#f97316
-                                    {% else %}#64748b{% endif %};">
-                                {{ category.category_name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- ログインしなきゃ表示できない奴 -->
-            {% if user.is_authenticated %}
-            <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn nav-fav">
-                お気に入り一覧
-            </a>
-            {% else %}
-            {% endif %}
-
-            <div class="Nav-block" id="osiraseMenu_btn">
-                <button class="Menu_btn">
-                    お知らせ ▼
-                    {% if osirase_new_count %}
-                        <span class="new-badge">{{ osirase_new_count }}</span>
-                    {% endif %}
-                </button>
-
-                <ul id="osirase_down" class="menu_down anywhere">
-                    {% for o in osirase_list %}
-                        <li>
-                            <a href="{% url 'spotapp:news_detail' o.pk %}">
-                                {{ o.title }}
-                            </a>
-                        </li>
-                    {% empty %}
-                        <li>表示できるお知らせがありません。</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-
-        <div class="nav-right">
-            {% if user.is_authenticated %}
-            <div class="user-menu-wrapper">
-
-                <div class="user-info" id="userMenuBtn">
-                    <div class="user-icon">
-                        {% if request.user.profile.icon %}
-                            <img src="{{ request.user.profile.icon.url }}" alt="icon">
-                        {% else %}
-                            <img src="{% static 'img/default_icon.png' %}" alt="icon">
-                        {% endif %}
-                    </div>
-                </div>
-
-                <ul class="user-menu" id="userMenu">
-                    <li><a href="{% url 'spotapp:profile' %}">プロフィール</a></li>
-
-                    <li>
-                        <form action="{% url 'spotapp:logout' %}" method="post" style="margin:0;">
-                            {% csrf_token %}
-                            <button type="submit" class="user-menu-btn logout">ログアウト</button>
-                        </form>
-                    </li>
-                </ul>
-
-            </div>
-            {% else %}
-                <a href="{% url 'spotapp:signup' %}" class="user-btn">
-                    <span class="pc-only">新規登録 / ログイン</span>
-                    <span class="sp-only">新規登録<br>ログイン</span>
-                </a>
-            {% endif %}
-        </div>
-    </nav>
-    {% endblock %}
-
-    <!-- 検索バー -->
-    {% block searchbar %}
-    <form action="{% url 'spotapp:spot_searchresult' %}" method="get" id="searchForm" style="text-align: center;">
-        <input type="text" name="q" id="search" value="{{ keyword|default:'' }}" placeholder="検索バー（あいまい検索可能）">
-
-        <input type="hidden" name="district" id="search_district" value="{{ selected_district|default:'' }}">
-        <input type="hidden" name="category" id="search_category" value="{{ selected_category|default:'' }}">
-
-        <button type="submit" class="submit">検索</button>
-    </form>
-    {% endblock %}
-
-    <!-- ★ 中央幅の基準 -->
-    <div class="page-container">
-        {% block body %}
-        {% endblock %}
+<!-- ================= ナビ ================= -->
+{% block nav %}
+<nav>
+    <div class="nav-left">
+        <a href="{% url 'spotapp:index' %}" class="btn-home">ホーム</a>
     </div>
 
-    <!-- フッター -->
-    {% block footer %}
-    <footer class="footer">
-        <span>&copy; E班</span>
-        <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
-    </footer>
-    {% endblock %}
+    <div class="nav-center">
 
+        <!-- 地区 -->
+        <div class="Nav-block" id="areaMenu_btn">
+            <button class="Menu_btn" type="button" id="districtBtn">
+                {{ selected_district_name|default:"地区別" }} ▼
+            </button>
+
+            <ul class="menu_down" id="areaMenu_down">
+                <li>
+                    <a href="#" class="district-item" data-value="" data-label="地区別">地区別</a>
+                </li>
+                {% for district in districts %}
+                <li>
+                    <a href="#"
+                       class="district-item"
+                       data-value="{{ district.district_id }}"
+                       data-label="{{ district.district_name }}"
+                       style="--district-color:
+                            {% if '県北' in district.district_name %}#2563eb
+                            {% elif '県南' in district.district_name %}#16a34a
+                            {% elif '県東' in district.district_name %}#f97316
+                            {% elif '県西' in district.district_name %}#a855f7
+                            {% elif '県央' in district.district_name %}#ef4444
+                            {% else %}#64748b{% endif %};">
+                        {{ district.district_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- カテゴリ -->
+        <div class="Nav-block" id="categoryMenu_btn">
+            <button class="Menu_btn" type="button" id="categoryBtn">
+                {{ selected_category_name|default:"カテゴリ" }} ▼
+            </button>
+
+            <ul class="menu_down" id="categoryMenu_down">
+                <li>
+                    <a href="#" class="category-item" data-value="" data-label="カテゴリ">カテゴリ</a>
+                </li>
+                {% for category in categories %}
+                <li>
+                    <a href="#"
+                       class="category-item"
+                       data-value="{{ category.category_id }}"
+                       data-label="{{ category.category_name }}"
+                       style="--category-color:
+                            {% if '観光' in category.category_name %}#2563eb
+                            {% elif 'グルメ' in category.category_name %}#ef4444
+                            {% elif 'レジャー' in category.category_name %}#16a34a
+                            {% elif 'ショッピング' in category.category_name %}#f97316
+                            {% else %}#64748b{% endif %};">
+                        {{ category.category_name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- お気に入り -->
+        {% if user.is_authenticated %}
+        <a href="{% url 'spotapp:favorite_list' %}" class="Menu_btn nav-fav">
+            お気に入り一覧
+        </a>
+        {% endif %}
+
+        <!-- お知らせ -->
+        <div class="Nav-block" id="osiraseMenu_btn">
+            <button class="Menu_btn">
+                お知らせ ▼
+                {% if osirase_new_count %}
+                <span class="new-badge">{{ osirase_new_count }}</span>
+                {% endif %}
+            </button>
+
+            <ul class="menu_down anywhere" id="osirase_down">
+                {% for o in osirase_list %}
+                <li>
+                    <a href="{% url 'spotapp:news_detail' o.pk %}">
+                        {{ o.title }}
+                    </a>
+                </li>
+                {% empty %}
+                <li>表示できるお知らせがありません。</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- 右側 -->
+    <div class="nav-right">
+        {% if user.is_authenticated %}
+        <div class="user-menu-wrapper">
+
+            <div class="user-info" id="userMenuBtn">
+                <div class="user-icon">
+                    {% if request.user.profile.icon %}
+                    <img src="{{ request.user.profile.icon.url }}" alt="icon">
+                    {% else %}
+                    <img src="{% static 'img/default_icon.png' %}" alt="icon">
+                    {% endif %}
+                </div>
+            </div>
+
+            <ul class="user-menu" id="userMenu">
+                <li>
+                    <a href="{% url 'spotapp:profile' %}">プロフィール</a>
+                </li>
+                <li>
+                    <form action="{% url 'spotapp:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="user-menu-btn logout">
+                            ログアウト
+                        </button>
+                    </form>
+                </li>
+            </ul>
+
+        </div>
+        {% else %}
+        <a href="{% url 'spotapp:signup' %}" class="user-btn">
+            <span class="pc-only">新規登録 / ログイン</span>
+            <span class="sp-only">新規登録<br>ログイン</span>
+        </a>
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}
+
+<!-- ================= 検索バー ================= -->
+{% block searchbar %}
+<form action="{% url 'spotapp:spot_searchresult' %}"
+      method="get"
+      id="searchForm"
+      style="text-align: center;">
+
+    <input type="text"
+           name="q"
+           id="search"
+           value="{{ keyword|default:'' }}"
+           placeholder="検索バー（あいまい検索可能）">
+
+    <input type="hidden" name="district" id="search_district"
+           value="{{ selected_district|default:'' }}">
+    <input type="hidden" name="category" id="search_category"
+           value="{{ selected_category|default:'' }}">
+
+    <button type="submit" class="submit">検索</button>
+</form>
+{% endblock %}
+
+<!-- ================= 本文 ================= -->
+<div class="page-container">
+    {% block body %}{% endblock %}
+</div>
+
+<!-- ================= フッター ================= -->
+{% block footer %}
+<footer class="footer">
+    <span>&copy; E班</span>
+    <a href="{% url 'spotapp:contact' %}">お問い合わせ</a>
+</footer>
+{% endblock %}
+
+<!-- ================= JS ================= -->
 {% block script %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -278,7 +303,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (districtBtn) districtBtn.textContent = `${label} ▼`;
 
       // ✅ HTMLの style="--district-color: ...;" から取る
-      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#64748b";
+      const color = getComputedStyle(a).getPropertyValue("--district-color").trim() || "#667eea";
       districtBtn.style.setProperty("--district-color", color);
 
       applyDistrictTheme(label);
@@ -303,7 +328,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (categoryHidden) categoryHidden.value = val;
       if (categoryBtn) categoryBtn.textContent = `${label} ▼`;
 
-      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#64748b";
+      const color = getComputedStyle(a).getPropertyValue("--category-color").trim() || "#667eea";
       categoryBtn.style.setProperty("--category-color", color);
 
 
@@ -351,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (menu && menu.style.display === "flex") menu.style.display = "none";
   });
 
-    document.getElementById("searchForm")?.addEventListener("submit", (e) => {
+  document.getElementById("searchForm")?.addEventListener("submit", (e) => {
      const q = document.getElementById("search")?.value.trim();
      const d = document.getElementById("search_district")?.value.trim();
      const c = document.getElementById("search_category")?.value.trim();
@@ -362,8 +387,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+<script src="{% static 'js/main.js' %}"></script>
 {% endblock %}
-
 
 </body>
 </html>

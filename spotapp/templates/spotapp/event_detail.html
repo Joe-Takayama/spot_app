@@ -83,28 +83,6 @@
             {% endif %}
         </div>
 
-        <div class="info-row">
-            <span class="info-label">口コミ</span>
-            {% if spot %}
-                {# ★ ここを review_detail に飛ばす #}
-                <a href="{% url 'spotapp:review_detail' spot.spot_id %}" class="info-link">
-                    口コミを見る
-                </a>
-            {% else %}
-                <span class="info-value">口コミなし</span>
-            {% endif %}
-        </div>
-
-        <div class="info-row">
-            <span class="info-label">評価</span>
-            <span class="info-value">
-                {% if avg_rating %}
-                    ⭐ {{ avg_rating|floatformat:1 }}（{{ review_count }}件）
-                {% else %}
-                    評価なし
-                {% endif %}
-            </span>
-        </div>
 
         {# 観光地ページへのリンクボタン #}
         {% if spot %}
