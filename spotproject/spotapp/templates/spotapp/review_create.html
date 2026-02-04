@@ -6,8 +6,9 @@
 {% block body %}
 <div class="review-container">
 
-    <form method="POST" action="">
+    <form method="POST" >
         {% csrf_token %}
+
         <div class="rating-wrapper">
             <h1 class="rating-label bad">悪い</h1>
 
@@ -30,6 +31,9 @@
 
             <h1 class="rating-label good">良い</h1>
         </div>
+        {% if error_message %}
+        <p style="color:red;">{{ error_message }}</p>
+        {% endif %}
 
         <textarea name="comment" placeholder="感想やレビューを書く" required></textarea>
         <button type="submit">投稿</button>

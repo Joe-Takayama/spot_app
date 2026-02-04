@@ -263,23 +263,34 @@ class SpotDetailView(View):
 # レビュー投稿
 # ------------------------
 class ReviewCreateView(LoginRequiredMixin,View):
+    login_url = "spotapp:login"
     def get(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
         return render(request, 'spotapp/review_create.html', {'spot': spot})
 
     def post(self, request, spot_id):
         spot = get_object_or_404(Spot, spot_id=spot_id)
+        rating=request.POST.get('rating')
+        comment=request.POST.get('comment')
+
+        #ここで星評価なしをはじく 
+        if not rating:
+            return render(request, 'spotapp/review_create.html', {
+            'spot': spot,
+            'error_message': '星を押して評価してください'
+        })
 
         Review.objects.create(
             user=request.user,
             spot=spot,
-            rating=request.POST.get('rating'),
-            comment=request.POST.get('comment')
+            rating=rating,
+            comment=comment
         )
 
         return redirect(
             reverse('spotapp:review_complete', kwargs={'spot_id': spot.spot_id})
         )
+
 
 
 class ReviewCompleteView(LoginRequiredMixin, View):
