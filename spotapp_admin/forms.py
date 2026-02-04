@@ -10,7 +10,7 @@ class StaffForm(ModelForm):
         fields = ['name', 'password']
         widgets = {
             'name':TextInput(attrs={
-                'placeholder': 'ユーザー名(職員の方は職員名)を入力してください'
+                'placeholder': '職員名を入力してください'
             }),
             'password':PasswordInput(attrs={
                 'placeholder': 'パスワードを入力してください'
