@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model, upd
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import EmailMessage
+from django.core.mail import get_connection, EmailMessage
 from django.contrib import messages
 
 
@@ -447,11 +447,21 @@ class ContactView(View):
 
     @staticmethod
     def send_mail_from_account(subject, body):
+        connection = get_connection(
+            backend='django.core.mail.backends.smtp.EmailBackend',
+            host='smtp.gmail.com',
+            port=587,
+            username='igakouga2n2n@gmail.com',
+            password='ustl imeu qdcn zaql',
+            use_tls=True,
+        )
         email = EmailMessage(
             subject=subject,
-            from_email=None,
             body=body,
-            to=['mit2471573@stu.o-hara.ac.jp'],
+            from_email='igakouga2n2n@gmail.com',
+            #↓ここにメールを増やせば受け取れる人が増える
+            to=['mit2471573@stu.o-hara.ac.jp'], 
+            connection=connection,
         )
         email.send()
 

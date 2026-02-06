@@ -156,16 +156,3 @@ MEDIA_ROOT = os.environ.get(
 # 職員ログイン用URL
 LOGIN_URL = '/admin_top/login/'
 
-# =========================
-# SendGrid メール設定
-# =========================
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-EMAIL_HOST = os.environ.get("EMAIL_HOST")          # smtp.sendgrid.net
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
-EMAIL_USE_TLS = True
-
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")        # apikey
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  # SG.xxxxx
-
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
