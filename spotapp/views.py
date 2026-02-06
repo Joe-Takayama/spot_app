@@ -5,9 +5,9 @@ from django.contrib.auth import authenticate, login, logout, get_user_model, upd
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.mail import get_connection, EmailMessage
+from django.core.mail import EmailMessage
 from django.contrib import messages
-
+from django.conf import settings
 
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -447,24 +447,18 @@ class ContactView(View):
 
     @staticmethod
     def send_mail_from_account(subject, body):
-        connection = get_connection(
-            backend='django.core.mail.backends.smtp.EmailBackend',
-            host='smtp.gmail.com',
-            port=587,
-            username='igakouga2n2n@gmail.com',
-            password='ustl imeu qdcn zaql',
-            use_tls=True,
-        )
-        email = EmailMessage(
-            subject=subject,
-            body=body,
-            from_email='igakouga2n2n@gmail.com',
-            #↓ここにメールを増やせば受け取れる人が増える
-            to=['mit2471573@stu.o-hara.ac.jp'], 
-            connection=connection,
-        )
-        email.send()
-
+        try:
+            email = EmailMessage(
+                subject=subject,
+                body=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                #↓ここにメールを増やせば受け取れる人が増える
+                to=[settings.CONTACT_EMAIL], 
+            )
+            email.send()
+        except Exception as e:
+            print("メール送信失敗: ", e)
+            
     def post(self, request):
         form = ContactForm(request.POST)
 
