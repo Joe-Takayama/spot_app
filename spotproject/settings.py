@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-m*t8ea__mn)h1=9)=g113d1+%g=#g+4#vxon^b0zn_(f1%&^+%
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUGをFalse、ALLOWED_HOSTを'*'にすると404ページが表示されるはず
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -156,3 +156,16 @@ MEDIA_ROOT = os.environ.get(
 # 職員ログイン用URL
 LOGIN_URL = '/admin_top/login/'
 
+# =========================
+# SendGrid メール設定
+# =========================
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST")          # smtp.sendgrid.net
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")        # apikey
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")  # SG.xxxxx
+
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
