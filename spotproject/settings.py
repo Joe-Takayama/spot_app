@@ -175,15 +175,15 @@ CONTACT_EMAIL = "mit2471573@stu.o-hara.ac.jp"
 
 EMAIL_TIMEOUT = 10
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-}
 
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+        "OPTIONS": {
+            "cloud_name": os.getenv('CLOUDINARY_CLOUD_NAME'),
+            "api_key": os.getenv('CLOUDINARY_API_KEY'),
+            "api_secret": os.getenv('CLOUDINARY_API_SECRET'),
+        },
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
