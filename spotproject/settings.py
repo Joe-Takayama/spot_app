@@ -179,11 +179,6 @@ EMAIL_TIMEOUT = 10
 STORAGES = {
     "default": {
         "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
-        "OPTIONS": {
-            "cloud_name": os.getenv('CLOUDINARY_CLOUD_NAME'),
-            "api_key": os.getenv('CLOUDINARY_API_KEY'),
-            "api_secret": os.getenv('CLOUDINARY_API_SECRET'),
-        },
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
