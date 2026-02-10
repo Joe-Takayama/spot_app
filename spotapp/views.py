@@ -453,7 +453,7 @@ class ContactView(View):
                 body=body,
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 #↓ここにメールを増やせば受け取れる人が増える
-                to=[settings.CONTACT_EMAIL], 
+                to=["mit2471573@stu.o-hara.ac.jp"], 
             )
             email.send()
         except Exception as e:
