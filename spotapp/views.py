@@ -451,7 +451,7 @@ class ContactView(View):
             email = EmailMessage(
                 subject=subject,
                 body=body,
-                from_email=settings.DEFAULT_FROM_EMAIL,
+                from_email='igakouga2n2n@gmail.com',
                 #↓ここにメールを増やせば受け取れる人が増える
                 to=["mit2471573@stu.o-hara.ac.jp"], 
             )
