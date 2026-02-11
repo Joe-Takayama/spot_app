@@ -32,9 +32,7 @@ from django.http import HttpResponseForbidden
 
 from django.urls import reverse
 
-# ------------------------
-# インデックス
-# ------------------------
+
 # ------------------------
 # インデックス
 # ------------------------
