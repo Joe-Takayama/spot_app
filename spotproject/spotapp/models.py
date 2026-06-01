@@ -77,7 +77,7 @@ class Favorite(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="登録日")
  
     def __str__(self):
-        return f"{self.user.user_name} - {self.spot}"
+        return f"{self.user} - {self.spot}"
  
  
 # レビュー

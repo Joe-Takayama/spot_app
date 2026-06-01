@@ -154,6 +154,9 @@
 .map-box li {
     line-height: 1.8;
     color: #444;
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word;
 }
 
 /* ===========================
